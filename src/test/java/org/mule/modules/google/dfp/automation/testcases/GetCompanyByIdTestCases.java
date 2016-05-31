@@ -1,50 +1,39 @@
 /**
- * (c) 2003-2015 Ricston, Ltd. The software in this package is published under the terms of the CPAL v1.0 license,
+ * (c) 2003-2016 Ricston, Ltd. The software in this package is published under the terms of the CPAL v1.0 license,
  * a copy of which has been included with this distribution in the LICENSE.md file.
  */
-
 package org.mule.modules.google.dfp.automation.testcases;
 
-import java.util.List;
-
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
-import org.junit.experimental.categories.Category;
-import org.mule.api.MuleEvent;
+import org.mule.modules.google.dfp.GoogleDfpConnector;
 import org.mule.tools.devkit.ctf.junit.AbstractTestCase;
-import org.mule.tools.devkit.ctf.junit.RegressionTests;
 import org.mule.transport.NullPayload;
 
-import com.google.api.ads.dfp.axis.v201505.Company;
+import com.google.api.ads.dfp.axis.v201602.Company;
 
-public class GetCompanyByIdTestCases extends AbstractTestCase {
+public class GetCompanyByIdTestCases extends AbstractTestCase<GoogleDfpConnector> {
 
-    Company company;
-
-    @Before
-    public void setup() throws Exception {
-//        initializeTestRunMessage("getAllCompaniesTestData");
-//        List<Company> allCompanies = runFlowAndGetPayload("get-all-companies");
-//        company = allCompanies.get(0);
+    public GetCompanyByIdTestCases() {
+        super(GoogleDfpConnector.class);
     }
 
-    @Category({ RegressionTests.class, })
     @Test
-    public void testGetCompanyById() throws Exception {
-//        MuleEvent response = runFlow("get-company-by-id", company.getId());
-//        Assert.assertNotNull(response);
-//        Assert.assertNotNull(response.getMessage());
-//        Assert.assertNotNull(response.getMessage().getPayload());
-//        Assert.assertTrue(response.getMessage().getPayload() instanceof Company);
-//        Assert.assertEquals(response.getMessage().getPayload(), company);
+    public void testGetCompanyById() throws Throwable {
+
+        Object company = getDispatcher().runMethod("getCompanyById", new Object[] {
+                59518088L
+        });
+        Assert.assertNotNull(company);
+        Assert.assertTrue(company instanceof Company);
     }
 
-    @Category({ RegressionTests.class, })
     @Test
-    public void testGetCompanyByIdNotFound() throws Exception {
-//        MuleEvent event = runFlow("get-company-by-id", 1L);
-//        Assert.assertTrue(event.getMessage().getPayload() instanceof NullPayload);
+    public void testGetCompanyByIdNotFound() throws Throwable {
+        Object company = getDispatcher().runMethod("getCompanyById", new Object[] {
+                22L
+        });
+        Assert.assertTrue(company instanceof NullPayload);
     }
 
 }

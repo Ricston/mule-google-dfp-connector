@@ -1,8 +1,7 @@
 /**
- * (c) 2003-2015 Ricston, Ltd. The software in this package is published under the terms of the CPAL v1.0 license,
+ * (c) 2003-2016 Ricston, Ltd. The software in this package is published under the terms of the CPAL v1.0 license,
  * a copy of which has been included with this distribution in the LICENSE.md file.
  */
-
 package org.mule.modules.google.dfp.services;
 
 import java.rmi.RemoteException;
@@ -22,319 +21,377 @@ import org.mule.modules.google.dfp.exceptions.TooManyCompaniesFoundException;
 import org.mule.modules.google.dfp.exceptions.UpdateFailedException;
 
 import com.google.api.ads.dfp.axis.factory.DfpServices;
-import com.google.api.ads.dfp.axis.utils.v201505.StatementBuilder;
-import com.google.api.ads.dfp.axis.v201505.ApiException;
-import com.google.api.ads.dfp.axis.v201505.Company;
-import com.google.api.ads.dfp.axis.v201505.CompanyPage;
-import com.google.api.ads.dfp.axis.v201505.CompanyServiceInterface;
-import com.google.api.ads.dfp.axis.v201505.CompanyType;
-import com.google.api.ads.dfp.axis.v201505.DateTime;
+import com.google.api.ads.dfp.axis.utils.v201602.StatementBuilder;
+import com.google.api.ads.dfp.axis.v201602.ApiException;
+import com.google.api.ads.dfp.axis.v201602.Company;
+import com.google.api.ads.dfp.axis.v201602.CompanyPage;
+import com.google.api.ads.dfp.axis.v201602.CompanyServiceInterface;
+import com.google.api.ads.dfp.axis.v201602.CompanyType;
+import com.google.api.ads.dfp.axis.v201602.DateTime;
 import com.google.api.ads.dfp.lib.client.DfpSession;
+import com.google.api.client.repackaged.com.google.common.base.Joiner;
+import com.google.common.collect.Lists;
 
 public class CompanyService {
 
-	private static final Logger logger = Logger.getLogger(CompanyService.class);
+    private static final Logger logger = Logger.getLogger(CompanyService.class);
 
-	protected CompanyServiceInterface createCompanyService(DfpSession session) {
-		DfpServices dfpServices = new DfpServices();
+    protected CompanyServiceInterface createCompanyService(DfpSession session) {
+        DfpServices dfpServices = new DfpServices();
 
-		// Get the CompanyService.
-		CompanyServiceInterface companyService = dfpServices.get(session,
-				CompanyServiceInterface.class);
+        // Get the CompanyService.
+        CompanyServiceInterface companyService = dfpServices.get(session,
+                CompanyServiceInterface.class);
 
-		return companyService;
-	}
+        return companyService;
+    }
 
-	public List<Company> getAllCompanies(DfpSession session,
-			DateTime lastModifiedDateTime, DateTime snapshotDateTime)
-			throws GetAllCompaniesException {
-		try {
-			// Get the CompanyService.
-			CompanyServiceInterface companyService = createCompanyService(session);
+    public List<Company> getAllCompanies(DfpSession session,
+            DateTime lastModifiedDateTime, DateTime snapshotDateTime)
+            throws GetAllCompaniesException {
+        try {
+            // Get the CompanyService.
+            CompanyServiceInterface companyService = createCompanyService(session);
 
-			// Create a statement to get company by name
-			StatementBuilder statementBuilder = new StatementBuilder()
-					.where("lastModifiedDateTime > :lastModifiedDateTime AND lastModifiedDateTime <= :snapshotDateTime")
-					.orderBy("lastModifiedDateTime ASC")
-					.limit(StatementBuilder.SUGGESTED_PAGE_LIMIT)
-					.withBindVariableValue("lastModifiedDateTime",
-							lastModifiedDateTime)
-					.withBindVariableValue("snapshotDateTime", snapshotDateTime);
+            // Create a statement to get company by name
+            StatementBuilder statementBuilder = new StatementBuilder()
+                    .where("lastModifiedDateTime > :lastModifiedDateTime AND lastModifiedDateTime <= :snapshotDateTime")
+                    .orderBy("id ASC")
+                    .limit(StatementBuilder.SUGGESTED_PAGE_LIMIT)
+                    .withBindVariableValue("lastModifiedDateTime",
+                            lastModifiedDateTime)
+                    .withBindVariableValue("snapshotDateTime", snapshotDateTime);
 
-			logger.info("Retrieving the last modified companies.");
+            logger.info("Retrieving the last modified companies.");
 
-			int totalResultSetSize = 0;
-			List<Company> results = new ArrayList<Company>();
-			
-			CompanyPage initialPage = companyService
-					.getCompaniesByStatement(statementBuilder.toStatement());
-			totalResultSetSize = initialPage.getTotalResultSetSize();
-			
-			do {
-				// Get companies by statement.
-				CompanyPage page = companyService
-						.getCompaniesByStatement(statementBuilder.toStatement());
+            int totalResultSetSize = 0;
+            List<Company> results = new ArrayList<Company>();
 
-				if (page.getResults() != null) {
-					for (Company company : page.getResults()) {
-						results.add(company);
-					}
-				}
+            CompanyPage initialPage = companyService
+                    .getCompaniesByStatement(statementBuilder.toStatement());
+            totalResultSetSize = initialPage.getTotalResultSetSize();
 
-				statementBuilder
-						.increaseOffsetBy(StatementBuilder.SUGGESTED_PAGE_LIMIT);
-			} while (statementBuilder.getOffset() < totalResultSetSize);
+            do {
+                // Get companies by statement.
+                CompanyPage page = companyService
+                        .getCompaniesByStatement(statementBuilder.toStatement());
 
-			logger.info("Number of results found: " + totalResultSetSize);
+                if (page.getResults() != null) {
+                    for (Company company : page.getResults()) {
+                        results.add(company);
+                    }
+                }
 
-			logger.info("Number of results retrieved: " + results.size());
-			return results;
+                statementBuilder
+                        .increaseOffsetBy(StatementBuilder.SUGGESTED_PAGE_LIMIT);
+            } while (statementBuilder.getOffset() < totalResultSetSize);
 
-		} catch (ApiException e) {
-			throw new GetAllCompaniesException(e);
-		} catch (RemoteException e) {
-			throw new GetAllCompaniesException(e);
-		} catch (Exception e) {
-			throw new GetAllCompaniesException(e);
-		}
-	}
+            logger.info("Number of results found: " + totalResultSetSize);
 
-	public String getCompanyCommentByName(DfpSession session, String name)
-			throws GetCompanyCommentByNameException,
-			TooManyCompaniesFoundException {
-		try {
-			// Get the CompanyService.
-			CompanyServiceInterface companyService = createCompanyService(session);
+            logger.info("Number of results retrieved: " + results.size());
+            return results;
 
-			// Create a statement to get company by name
-			StatementBuilder statementBuilder = new StatementBuilder().where(
-					"name = :name").withBindVariableValue("name", name);
+        } catch (ApiException e) {
+            throw new GetAllCompaniesException(e);
+        } catch (RemoteException e) {
+            throw new GetAllCompaniesException(e);
+        } catch (Exception e) {
+            throw new GetAllCompaniesException(e);
+        }
+    }
 
-			// Get companies by statement.
-			CompanyPage page = companyService
-					.getCompaniesByStatement(statementBuilder.toStatement());
+    public List<Company> getCompaniesById(DfpSession session,
+            List<Long> ids) throws GetAllCompaniesException {
+        try {
 
-			if (page.getResults() == null || page.getTotalResultSetSize() != 1) {
-				throw new TooManyCompaniesFoundException(
-						page.getTotalResultSetSize());
-			}
+            CompanyServiceInterface companyService = createCompanyService(session);
 
-			Company company = page.getResults(0);
+            List<List<Long>> idsBatches = Lists.partition(ids, 400);
+            List<Company> results = new ArrayList<Company>();
 
-			logger.info("Company with ID " + company.getId() + " , name "
-					+ company.getName() + " type " + company.getType()
-					+ " and comment " + company.getComment() + " was found.");
+            for (List<Long> currentBatch : idsBatches) {
 
-			return company.getComment();
-		} catch (ApiException e) {
-			throw new GetCompanyCommentByNameException(e);
-		} catch (RemoteException e) {
-			throw new GetCompanyCommentByNameException(e);
-		} catch (Exception e) {
-			throw new GetCompanyCommentByNameException(e);
-		}
-	}
+                String whereClauseFilter = Joiner.on(", ")
+                        .join(currentBatch);
+                String whereQueryStatement = "id IN (" + whereClauseFilter
+                        + ")";
 
-	public String getAdvertiserByName(DfpSession session, String name)
-			throws GetAdvertiserByNameException,
-			TooManyAdvertisersFoundException {
-		try {
-			CompanyServiceInterface companyService = createCompanyService(session);
+                StatementBuilder statementBuilder = new StatementBuilder()
+                        .where(whereQueryStatement)
+                        .limit(
+                                StatementBuilder.SUGGESTED_PAGE_LIMIT);
 
-			// Create a statement to only select companies that are advertisers.
-			StatementBuilder statementBuilder = new StatementBuilder()
-					.where("type = :type AND name = :name")
-					.orderBy("id ASC")
-					.limit(StatementBuilder.SUGGESTED_PAGE_LIMIT)
-					.withBindVariableValue("type",
-							CompanyType.ADVERTISER.toString())
-					.withBindVariableValue("name", name);
+                int totalResultSetSize = 0;
 
-			// Default for total result set size.
-			int totalResultSetSize = 0;
-			String externalId = "";
+                CompanyPage initialPage = companyService
+                        .getCompaniesByStatement(statementBuilder.toStatement());
+                totalResultSetSize = initialPage.getTotalResultSetSize();
 
-			do {
-				// Get companies by statement.
-				CompanyPage page = companyService
-						.getCompaniesByStatement(statementBuilder.toStatement());
+                do {
+                    CompanyPage page = companyService
+                            .getCompaniesByStatement(statementBuilder.toStatement());
 
-				if (page.getResults() != null) {
-					totalResultSetSize = page.getTotalResultSetSize();
-					if (totalResultSetSize > 1) {
-						logger.info("Duplicate Advertisers with the name: "
-								+ name);
-						throw new TooManyAdvertisersFoundException(
-								totalResultSetSize);
-					} else {
-						for (Company company : page.getResults()) {
-							externalId = company.getExternalId();
-						}
-					}
+                    if (page.getResults() != null) {
+                        for (Company company : page.getResults()) {
+                            results.add(company);
+                        }
+                    }
 
-				} else {
-					logger.info("No Advertisers with the name: " + name
-							+ " were found.");
-				}
+                    statementBuilder
+                            .increaseOffsetBy(StatementBuilder.SUGGESTED_PAGE_LIMIT);
+                } while (statementBuilder.getOffset() < totalResultSetSize);
 
-				statementBuilder
-						.increaseOffsetBy(StatementBuilder.SUGGESTED_PAGE_LIMIT);
-			} while (statementBuilder.getOffset() < totalResultSetSize);
+                logger.info("Number of results found: " + totalResultSetSize);
+                logger.info("Number of results retrieved: " + results.size());
+            }
+            return results;
 
-			logger.info("Number of Advertisers found:" + totalResultSetSize);
-			return externalId;
-		} catch (ApiException e) {
-			throw new GetAdvertiserByNameException(e);
-		} catch (RemoteException e) {
-			throw new GetAdvertiserByNameException(e);
-		} catch (Exception e) {
-			throw new GetAdvertiserByNameException(e);
-		}
-	}
+        } catch (RemoteException e) {
+            throw new GetAllCompaniesException(e);
+        }
 
-	public Company getAgencyByName(DfpSession session, String name)
-			throws GetAgencyByNameException, TooManyAgenciesFoundException {
+    }
 
-		try {
-			CompanyServiceInterface companyService = createCompanyService(session);
+    public String getCompanyCommentByName(DfpSession session, String name)
+            throws GetCompanyCommentByNameException,
+            TooManyCompaniesFoundException {
+        try {
+            // Get the CompanyService.
+            CompanyServiceInterface companyService = createCompanyService(session);
 
-			// Create a statement to only select companies that are advertisers.
-			StatementBuilder statementBuilder = new StatementBuilder()
-					.where("type = :type AND name = :name")
-					.orderBy("id ASC")
-					.limit(StatementBuilder.SUGGESTED_PAGE_LIMIT)
-					.withBindVariableValue("type",
-							CompanyType.AGENCY.toString())
-					.withBindVariableValue("name", name);
+            // Create a statement to get company by name
+            StatementBuilder statementBuilder = new StatementBuilder().where(
+                    "name = :name")
+                    .withBindVariableValue("name", name);
 
-			// Default for total result set size.
-			int totalResultSetSize = 0;
-			Company companyFound = null;
+            // Get companies by statement.
+            CompanyPage page = companyService
+                    .getCompaniesByStatement(statementBuilder.toStatement());
 
-			do {
-				// Get companies by statement.
-				CompanyPage page = companyService
-						.getCompaniesByStatement(statementBuilder.toStatement());
+            if (page.getResults() == null || page.getTotalResultSetSize() != 1) {
+                throw new TooManyCompaniesFoundException(
+                        page.getTotalResultSetSize());
+            }
 
-				if (page.getResults() != null) {
-					totalResultSetSize = page.getTotalResultSetSize();
-					if (totalResultSetSize > 1) {
-						logger.info("Duplicate Agencies with the name: " + name);
-						throw new TooManyAgenciesFoundException(
-								totalResultSetSize);
-					} else {
-						companyFound = page.getResults(0);
-					}
+            Company company = page.getResults(0);
 
-				} else {
-					logger.info("No Agency with the name: " + name
-							+ " were found.");
-				}
+            logger.info("Company with ID " + company.getId() + " , name "
+                    + company.getName() + " type " + company.getType()
+                    + " and comment " + company.getComment() + " was found.");
 
-				statementBuilder
-						.increaseOffsetBy(StatementBuilder.SUGGESTED_PAGE_LIMIT);
-			} while (statementBuilder.getOffset() < totalResultSetSize);
+            return company.getComment();
+        } catch (ApiException e) {
+            throw new GetCompanyCommentByNameException(e);
+        } catch (RemoteException e) {
+            throw new GetCompanyCommentByNameException(e);
+        } catch (Exception e) {
+            throw new GetCompanyCommentByNameException(e);
+        }
+    }
 
-			logger.info("Number of Agencies found:" + totalResultSetSize);
-			return companyFound;
-		} catch (ApiException e) {
-			throw new GetAgencyByNameException(e);
-		} catch (RemoteException e) {
-			throw new GetAgencyByNameException(e);
-		} catch (Exception e) {
-			throw new GetAgencyByNameException(e);
-		}
-	}
+    public String getAdvertiserByName(DfpSession session, String name)
+            throws GetAdvertiserByNameException,
+            TooManyAdvertisersFoundException {
+        try {
+            CompanyServiceInterface companyService = createCompanyService(session);
 
-	public Company getCompanyById(DfpSession session, Long companyId)
-			throws GetCompanyByIdException {
-		try {
+            // Create a statement to only select companies that are advertisers.
+            StatementBuilder statementBuilder = new StatementBuilder()
+                    .where("type = :type AND name = :name")
+                    .orderBy("id ASC")
+                    .limit(StatementBuilder.SUGGESTED_PAGE_LIMIT)
+                    .withBindVariableValue("type",
+                            CompanyType.ADVERTISER.toString())
+                    .withBindVariableValue("name", name);
 
-			// Get the CompanyService.
-			CompanyServiceInterface companyService = createCompanyService(session);
+            // Default for total result set size.
+            int totalResultSetSize = 0;
+            String externalId = "";
 
-			// Create a statement to get all companies.
-			StatementBuilder statementBuilder = new StatementBuilder().where(
-					"id = :id").withBindVariableValue("id", companyId);
+            do {
+                // Get companies by statement.
+                CompanyPage page = companyService
+                        .getCompaniesByStatement(statementBuilder.toStatement());
 
-			Company company = null;
+                if (page.getResults() != null) {
+                    totalResultSetSize = page.getTotalResultSetSize();
+                    if (totalResultSetSize > 1) {
+                        logger.info("Duplicate Advertisers with the name: "
+                                + name);
+                        throw new TooManyAdvertisersFoundException(
+                                totalResultSetSize);
+                    } else {
+                        for (Company company : page.getResults()) {
+                            externalId = company.getExternalId();
+                        }
+                    }
 
-			// Get companies by statement.
-			CompanyPage page = companyService
-					.getCompaniesByStatement(statementBuilder.toStatement());
+                } else {
+                    logger.info("No Advertisers with the name: " + name
+                            + " were found.");
+                }
 
-			if (page.getResults() != null) {
-				company = page.getResults(0);
-				logger.info("Company with ID " + company.getId() + " , name "
-						+ company.getName() + " type " + company.getType()
-						+ " was found.");
-			}
+                statementBuilder
+                        .increaseOffsetBy(StatementBuilder.SUGGESTED_PAGE_LIMIT);
+            } while (statementBuilder.getOffset() < totalResultSetSize);
 
-			return company;
-		} catch (ApiException e) {
-			throw new GetCompanyByIdException(e);
-		} catch (RemoteException e) {
-			throw new GetCompanyByIdException(e);
-		} catch (Exception e) {
-			throw new GetCompanyByIdException(e);
-		}
-	}
+            logger.info("Number of Advertisers found:" + totalResultSetSize);
+            return externalId;
+        } catch (ApiException e) {
+            throw new GetAdvertiserByNameException(e);
+        } catch (RemoteException e) {
+            throw new GetAdvertiserByNameException(e);
+        } catch (Exception e) {
+            throw new GetAdvertiserByNameException(e);
+        }
+    }
 
-	public Company createCompany(DfpSession session, Company company)
-			throws CreateFailedException {
+    public Company getAgencyByName(DfpSession session, String name)
+            throws GetAgencyByNameException, TooManyAgenciesFoundException {
 
-		try {
-			// Get the CompanyService.
-			CompanyServiceInterface companyService = createCompanyService(session);
+        try {
+            CompanyServiceInterface companyService = createCompanyService(session);
 
-			Company[] companies;
+            // Create a statement to only select companies that are advertisers.
+            StatementBuilder statementBuilder = new StatementBuilder()
+                    .where("type = :type AND name = :name")
+                    .orderBy("id ASC")
+                    .limit(StatementBuilder.SUGGESTED_PAGE_LIMIT)
+                    .withBindVariableValue("type",
+                            CompanyType.AGENCY.toString())
+                    .withBindVariableValue("name", name);
 
-			companies = companyService
-					.createCompanies(new Company[] { company });
+            // Default for total result set size.
+            int totalResultSetSize = 0;
+            Company companyFound = null;
 
-			Company createdCompany = companies[0];
+            do {
+                // Get companies by statement.
+                CompanyPage page = companyService
+                        .getCompaniesByStatement(statementBuilder.toStatement());
 
-			logger.info(String
-					.format("A company with ID \"%d\", name \"%s\", and type \"%s\" was created.\"%n\"",
-							createdCompany.getId(), createdCompany.getName(),
-							createdCompany.getType()));
+                if (page.getResults() != null) {
+                    totalResultSetSize = page.getTotalResultSetSize();
+                    if (totalResultSetSize > 1) {
+                        logger.info("Duplicate Agencies with the name: " + name);
+                        throw new TooManyAgenciesFoundException(
+                                totalResultSetSize);
+                    } else {
+                        companyFound = page.getResults(0);
+                    }
 
-			return createdCompany;
+                } else {
+                    logger.info("No Agency with the name: " + name
+                            + " were found.");
+                }
 
-		} catch (ApiException e) {
-			throw new CreateFailedException(e);
-		} catch (RemoteException e) {
-			throw new CreateFailedException(e);
-		} catch (Exception e) {
-			throw new CreateFailedException(e);
-		}
-	}
+                statementBuilder
+                        .increaseOffsetBy(StatementBuilder.SUGGESTED_PAGE_LIMIT);
+            } while (statementBuilder.getOffset() < totalResultSetSize);
 
-	public Company updateCompany(DfpSession session, Company company)
-			throws UpdateFailedException {
+            logger.info("Number of Agencies found:" + totalResultSetSize);
+            return companyFound;
+        } catch (ApiException e) {
+            throw new GetAgencyByNameException(e);
+        } catch (RemoteException e) {
+            throw new GetAgencyByNameException(e);
+        } catch (Exception e) {
+            throw new GetAgencyByNameException(e);
+        }
+    }
 
-		try {
-			CompanyServiceInterface companyService = createCompanyService(session);
+    public Company getCompanyById(DfpSession session, Long companyId)
+            throws GetCompanyByIdException {
+        try {
 
-			// Update the company on the server.
-			Company[] companies = companyService
-					.updateCompanies(new Company[] { company });
+            // Get the CompanyService.
+            CompanyServiceInterface companyService = createCompanyService(session);
 
-			Company updatedCompany = companies[0];
+            // Create a statement to get all companies.
+            StatementBuilder statementBuilder = new StatementBuilder().where(
+                    "id = :id")
+                    .withBindVariableValue("id", companyId);
 
-			logger.info(String
-					.format("Company with ID \"%d\", name \"%s\", and comment \"%s\" was updated.\"%n\"",
-							updatedCompany.getId(), updatedCompany.getName(),
-							updatedCompany.getComment()));
+            Company company = null;
 
-			return updatedCompany;
-		} catch (ApiException e) {
-			throw new UpdateFailedException(e);
-		} catch (RemoteException e) {
-			throw new UpdateFailedException(e);
-		} catch (Exception e) {
-			throw new UpdateFailedException(e);
-		}
-	}
+            // Get companies by statement.
+            CompanyPage page = companyService
+                    .getCompaniesByStatement(statementBuilder.toStatement());
+
+            if (page.getResults() != null) {
+                company = page.getResults(0);
+                logger.info("Company with ID " + company.getId() + " , name "
+                        + company.getName() + " type " + company.getType()
+                        + " was found.");
+            }
+
+            return company;
+        } catch (ApiException e) {
+            throw new GetCompanyByIdException(e);
+        } catch (RemoteException e) {
+            throw new GetCompanyByIdException(e);
+        } catch (Exception e) {
+            throw new GetCompanyByIdException(e);
+        }
+    }
+
+    public Company createCompany(DfpSession session, Company company)
+            throws CreateFailedException {
+
+        try {
+            // Get the CompanyService.
+            CompanyServiceInterface companyService = createCompanyService(session);
+
+            Company[] companies;
+
+            companies = companyService
+                    .createCompanies(new Company[] { company
+                    });
+
+            Company createdCompany = companies[0];
+
+            logger.info(String
+                    .format("A company with ID \"%d\", name \"%s\", and type \"%s\" was created.\"%n\"",
+                            createdCompany.getId(), createdCompany.getName(),
+                            createdCompany.getType()));
+
+            return createdCompany;
+
+        } catch (ApiException e) {
+            throw new CreateFailedException(e);
+        } catch (RemoteException e) {
+            throw new CreateFailedException(e);
+        } catch (Exception e) {
+            throw new CreateFailedException(e);
+        }
+    }
+
+    public Company updateCompany(DfpSession session, Company company)
+            throws UpdateFailedException {
+
+        try {
+            CompanyServiceInterface companyService = createCompanyService(session);
+
+            // Update the company on the server.
+            Company[] companies = companyService
+                    .updateCompanies(new Company[] { company
+                    });
+
+            Company updatedCompany = companies[0];
+
+            logger.info(String
+                    .format("Company with ID \"%d\", name \"%s\", and comment \"%s\" was updated.\"%n\"",
+                            updatedCompany.getId(), updatedCompany.getName(),
+                            updatedCompany.getComment()));
+
+            return updatedCompany;
+        } catch (ApiException e) {
+            throw new UpdateFailedException(e);
+        } catch (RemoteException e) {
+            throw new UpdateFailedException(e);
+        } catch (Exception e) {
+            throw new UpdateFailedException(e);
+        }
+    }
 
 }

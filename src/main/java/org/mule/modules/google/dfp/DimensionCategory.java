@@ -1,7 +1,10 @@
+/**
+ * (c) 2003-2016 Ricston, Ltd. The software in this package is published under the terms of the CPAL v1.0 license,
+ * a copy of which has been included with this distribution in the LICENSE.md file.
+ */
 package org.mule.modules.google.dfp;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,15 +22,13 @@ import org.mule.common.metadata.builder.DefaultMetaDataBuilder;
 import org.mule.common.metadata.builder.DynamicObjectBuilder;
 import org.mule.common.metadata.datatype.DataType;
 
-import com.google.api.ads.dfp.axis.v201505.Dimension;
-
 @MetaDataCategory
 public class DimensionCategory {
 
     @Inject
     private GoogleDfpConnector connector;
-    
-    private final String DIMENSION = "com.google.api.ads.dfp.axis.v201505.Dimension";
+
+    private final String DIMENSION = "com.google.api.ads.dfp.axis.v201602.Dimension";
 
     @MetaDataKeyRetriever
     public List<MetaDataKey> getMetaDataKeys() throws Exception {
@@ -45,7 +46,8 @@ public class DimensionCategory {
 
             DynamicObjectBuilder<?> dynamicObject = builder.createDynamicObject("dynamicobject");
 
-            for (Field dimension : Class.forName(DIMENSION).getDeclaredFields()) {
+            for (Field dimension : Class.forName(DIMENSION)
+                    .getDeclaredFields()) {
                 if (dimension.getType() == Class.forName(DIMENSION))
                     dynamicObject.addSimpleField(dimension.getName(), DataType.STRING);
             }

@@ -1,49 +1,56 @@
 /**
- * (c) 2003-2015 Ricston, Ltd. The software in this package is published under the terms of the CPAL v1.0 license,
+ * (c) 2003-2016 Ricston, Ltd. The software in this package is published under the terms of the CPAL v1.0 license,
  * a copy of which has been included with this distribution in the LICENSE.md file.
  */
-
 package org.mule.modules.google.dfp.automation.testcases;
 
 import java.io.InputStream;
 
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
-import org.junit.experimental.categories.Category;
-import org.mule.api.MuleEvent;
+import org.mule.modules.google.dfp.GoogleDfpConnector;
 import org.mule.tools.devkit.ctf.junit.AbstractTestCase;
-import org.mule.tools.devkit.ctf.junit.RegressionTests;
 
-import com.google.api.ads.dfp.axis.v201505.ReportJob;
+import com.google.api.ads.dfp.axis.v201602.Date;
+import com.google.api.ads.dfp.axis.v201602.ReportJob;
 
-public class DownloadReportTestCases extends AbstractTestCase {
+public class DownloadReportTestCases extends AbstractTestCase<GoogleDfpConnector> {
 
-    ReportJob createdReport;
-
-    @Before
-    public void setup() throws Exception {
-//        initializeTestRunMessage("createReportTestData");
-//        createdReport = (ReportJob) runFlowAndGetPayload("create-report");
+    public DownloadReportTestCases() {
+        super(GoogleDfpConnector.class);
     }
 
-//    protected InputStream downloadReport(ReportJob reportJob) throws Exception {
-//        MuleEvent response =   runFlow("download-report", reportJob);
-//        Assert.assertNotNull(response);
-//        Assert.assertNotNull(response.getMessage());
-//        Assert.assertNotNull(response.getMessage().getPayload());
-//        Assert.assertTrue(response.getMessage().getPayload() instanceof InputStream);
-//
-//        return (InputStream) response.getMessage().getPayload();
-//    }
+    ReportJob createdReport;
+    GoogleDfpConnector dfp;
 
-    @Category({ RegressionTests.class })
+    @Before
+    public void setup() throws Throwable {
+
+        // IMPORTANT!!
+        // Reach reports need to include date ranges that can be broken down into full weeks (or months).
+        // For example, valid full weeks have a Sunday start date and a Saturday end date.
+        //
+        Date startDate = new Date(2015, 1, 1);
+        Date endDate = new Date(2015, 1, 31);
+        dfp = getDispatcher().createMockup();
+        createdReport = dfp.createReachReport(startDate, endDate);
+
+    }
+
+    protected InputStream downloadReport(ReportJob reportJob) throws Throwable {
+        Object downloadedReport = getDispatcher().runMethod("downloadReport", new Object[] { createdReport
+        });
+
+        Assert.assertTrue(downloadedReport instanceof InputStream);
+
+        return (InputStream) downloadedReport;
+    }
+
     @Test
-    @Ignore
-    public void testDownloadReport() throws Exception {
-//        InputStream report = downloadReport(createdReport);
-//        report.close();
+    public void testDownloadReport() throws Throwable {
+        InputStream report = downloadReport(createdReport);
+        report.close();
     }
 
 }
