@@ -12,9 +12,9 @@ import org.junit.Test;
 import org.mule.modules.google.dfp.GoogleDfpConnector;
 import org.mule.tools.devkit.ctf.junit.AbstractTestCase;
 
-import com.google.api.ads.dfp.axis.v201602.Company;
-import com.google.api.ads.dfp.axis.v201602.Date;
-import com.google.api.ads.dfp.axis.v201602.DateTime;
+import com.google.api.ads.dfp.axis.v201605.Company;
+import com.google.api.ads.dfp.axis.v201605.Date;
+import com.google.api.ads.dfp.axis.v201605.DateTime;
 
 public class GetAllCompaniesTestCases extends AbstractTestCase<GoogleDfpConnector> {
 

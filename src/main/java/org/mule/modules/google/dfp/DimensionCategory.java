@@ -28,7 +28,7 @@ public class DimensionCategory {
     @Inject
     private GoogleDfpConnector connector;
 
-    private final String DIMENSION = "com.google.api.ads.dfp.axis.v201602.Dimension";
+    private final String DIMENSION = "com.google.api.ads.dfp.axis.v201605.Dimension";
 
     @MetaDataKeyRetriever
     public List<MetaDataKey> getMetaDataKeys() throws Exception {

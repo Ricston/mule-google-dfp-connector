@@ -13,19 +13,18 @@
 	<parent>
 		<groupId>org.mule.tools.devkit</groupId>
 		<artifactId>mule-devkit-parent</artifactId>
-		<version>3.8.0</version>
+		<version>3.8.1</version>
 	</parent>
 
 	<properties>
-		<category>Community</category>
+		<category>Certified</category>
 		<junit.version>4.9</junit.version>
 		<mockito.version>1.8.2</mockito.version>
 		<jersey.version>1.16</jersey.version>
 		<gson.version>2.2.2</gson.version>
-		<category>Community</category>
 		<licensePath>LICENSE.md</licensePath>
 		<devkit.studio.package.skip>false</devkit.studio.package.skip>
-		<api.version>2.13.1</api.version>
+		<api.version>2.15.0</api.version>
 	</properties>
 	<dependencies>
 		<dependency>

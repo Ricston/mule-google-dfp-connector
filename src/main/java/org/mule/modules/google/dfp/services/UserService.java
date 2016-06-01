@@ -12,10 +12,10 @@ import org.apache.log4j.Logger;
 import org.mule.modules.google.dfp.exceptions.GetUsersException;
 
 import com.google.api.ads.dfp.axis.factory.DfpServices;
-import com.google.api.ads.dfp.axis.utils.v201602.StatementBuilder;
-import com.google.api.ads.dfp.axis.v201602.User;
-import com.google.api.ads.dfp.axis.v201602.UserPage;
-import com.google.api.ads.dfp.axis.v201602.UserServiceInterface;
+import com.google.api.ads.dfp.axis.utils.v201605.StatementBuilder;
+import com.google.api.ads.dfp.axis.v201605.User;
+import com.google.api.ads.dfp.axis.v201605.UserPage;
+import com.google.api.ads.dfp.axis.v201605.UserServiceInterface;
 import com.google.api.ads.dfp.lib.client.DfpSession;
 import com.google.api.client.repackaged.com.google.common.base.Joiner;
 import com.google.common.collect.Lists;

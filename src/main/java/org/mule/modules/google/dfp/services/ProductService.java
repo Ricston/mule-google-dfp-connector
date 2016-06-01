@@ -12,12 +12,12 @@ import org.apache.log4j.Logger;
 import org.mule.modules.google.dfp.exceptions.GetProductsByStatementException;
 
 import com.google.api.ads.dfp.axis.factory.DfpServices;
-import com.google.api.ads.dfp.axis.utils.v201602.StatementBuilder;
-import com.google.api.ads.dfp.axis.v201602.ApiException;
-import com.google.api.ads.dfp.axis.v201602.DateTime;
-import com.google.api.ads.dfp.axis.v201602.Product;
-import com.google.api.ads.dfp.axis.v201602.ProductPage;
-import com.google.api.ads.dfp.axis.v201602.ProductServiceInterface;
+import com.google.api.ads.dfp.axis.utils.v201605.StatementBuilder;
+import com.google.api.ads.dfp.axis.v201605.ApiException;
+import com.google.api.ads.dfp.axis.v201605.DateTime;
+import com.google.api.ads.dfp.axis.v201605.Product;
+import com.google.api.ads.dfp.axis.v201605.ProductPage;
+import com.google.api.ads.dfp.axis.v201605.ProductServiceInterface;
 import com.google.api.ads.dfp.lib.client.DfpSession;
 import com.google.api.client.repackaged.com.google.common.base.Joiner;
 import com.google.common.collect.Lists;

@@ -12,6 +12,7 @@ import org.mule.api.annotations.Config;
 import org.mule.api.annotations.Connector;
 import org.mule.api.annotations.MetaDataScope;
 import org.mule.api.annotations.Processor;
+import org.mule.api.annotations.licensing.RequiresEnterpriseLicense;
 import org.mule.api.annotations.param.Default;
 import org.mule.modules.google.dfp.exceptions.AudienceSegmentException;
 import org.mule.modules.google.dfp.exceptions.CreateFailedException;
@@ -40,27 +41,27 @@ import org.mule.modules.google.dfp.exceptions.UpdateFailedException;
 import org.mule.modules.google.dfp.reconciliationreport.ReconciliationQueryParams;
 import org.mule.modules.google.dfp.strategy.GoogleDfpConnectionStrategy;
 
-import com.google.api.ads.dfp.axis.v201602.ApiException;
-import com.google.api.ads.dfp.axis.v201602.AudienceSegment;
-import com.google.api.ads.dfp.axis.v201602.Company;
-import com.google.api.ads.dfp.axis.v201602.Contact;
-import com.google.api.ads.dfp.axis.v201602.CustomField;
-import com.google.api.ads.dfp.axis.v201602.CustomFieldOption;
-import com.google.api.ads.dfp.axis.v201602.CustomTargetingKey;
-import com.google.api.ads.dfp.axis.v201602.CustomTargetingValue;
-import com.google.api.ads.dfp.axis.v201602.Date;
-import com.google.api.ads.dfp.axis.v201602.DateTime;
-import com.google.api.ads.dfp.axis.v201602.LineItem;
-import com.google.api.ads.dfp.axis.v201602.Order;
-import com.google.api.ads.dfp.axis.v201602.Product;
-import com.google.api.ads.dfp.axis.v201602.ProductTemplate;
-import com.google.api.ads.dfp.axis.v201602.Proposal;
-import com.google.api.ads.dfp.axis.v201602.ProposalLineItem;
-import com.google.api.ads.dfp.axis.v201602.RateCard;
-import com.google.api.ads.dfp.axis.v201602.ReconciliationReport;
-import com.google.api.ads.dfp.axis.v201602.ReconciliationReportRow;
-import com.google.api.ads.dfp.axis.v201602.ReportJob;
-import com.google.api.ads.dfp.axis.v201602.User;
+import com.google.api.ads.dfp.axis.v201605.ApiException;
+import com.google.api.ads.dfp.axis.v201605.AudienceSegment;
+import com.google.api.ads.dfp.axis.v201605.Company;
+import com.google.api.ads.dfp.axis.v201605.Contact;
+import com.google.api.ads.dfp.axis.v201605.CustomField;
+import com.google.api.ads.dfp.axis.v201605.CustomFieldOption;
+import com.google.api.ads.dfp.axis.v201605.CustomTargetingKey;
+import com.google.api.ads.dfp.axis.v201605.CustomTargetingValue;
+import com.google.api.ads.dfp.axis.v201605.Date;
+import com.google.api.ads.dfp.axis.v201605.DateTime;
+import com.google.api.ads.dfp.axis.v201605.LineItem;
+import com.google.api.ads.dfp.axis.v201605.Order;
+import com.google.api.ads.dfp.axis.v201605.Product;
+import com.google.api.ads.dfp.axis.v201605.ProductTemplate;
+import com.google.api.ads.dfp.axis.v201605.Proposal;
+import com.google.api.ads.dfp.axis.v201605.ProposalLineItem;
+import com.google.api.ads.dfp.axis.v201605.RateCard;
+import com.google.api.ads.dfp.axis.v201605.ReconciliationReport;
+import com.google.api.ads.dfp.axis.v201605.ReconciliationReportRow;
+import com.google.api.ads.dfp.axis.v201605.ReportJob;
+import com.google.api.ads.dfp.axis.v201605.User;
 
 /**
  * Google DFP Connector
@@ -68,6 +69,7 @@ import com.google.api.ads.dfp.axis.v201602.User;
  * @author Ricston, Ltd.
  */
 @MetaDataScope(DimensionCategory.class)
+@RequiresEnterpriseLicense
 @Connector(name = "google-dfp", schemaVersion = "1.0", friendlyName = "GoogleDfp")
 public class GoogleDfpConnector {
 

@@ -7,11 +7,11 @@ import org.apache.log4j.Logger;
 import org.mule.modules.google.dfp.exceptions.ReportDownloadException;
 
 import com.google.api.ads.dfp.axis.factory.DfpServices;
-import com.google.api.ads.dfp.axis.utils.v201602.Pql;
-import com.google.api.ads.dfp.axis.utils.v201602.StatementBuilder;
-import com.google.api.ads.dfp.axis.v201602.ApiException;
-import com.google.api.ads.dfp.axis.v201602.PublisherQueryLanguageServiceInterface;
-import com.google.api.ads.dfp.axis.v201602.ResultSet;
+import com.google.api.ads.dfp.axis.utils.v201605.Pql;
+import com.google.api.ads.dfp.axis.utils.v201605.StatementBuilder;
+import com.google.api.ads.dfp.axis.v201605.ApiException;
+import com.google.api.ads.dfp.axis.v201605.PublisherQueryLanguageServiceInterface;
+import com.google.api.ads.dfp.axis.v201605.ResultSet;
 import com.google.api.ads.dfp.lib.client.DfpSession;
 
 public class PqlService {

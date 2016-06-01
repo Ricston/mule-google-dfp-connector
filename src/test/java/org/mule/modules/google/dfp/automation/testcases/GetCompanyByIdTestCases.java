@@ -10,7 +10,7 @@ import org.mule.modules.google.dfp.GoogleDfpConnector;
 import org.mule.tools.devkit.ctf.junit.AbstractTestCase;
 import org.mule.transport.NullPayload;
 
-import com.google.api.ads.dfp.axis.v201602.Company;
+import com.google.api.ads.dfp.axis.v201605.Company;
 
 public class GetCompanyByIdTestCases extends AbstractTestCase<GoogleDfpConnector> {
 

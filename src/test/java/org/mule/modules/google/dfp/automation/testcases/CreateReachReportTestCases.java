@@ -9,8 +9,8 @@ import org.junit.Test;
 import org.mule.modules.google.dfp.GoogleDfpConnector;
 import org.mule.tools.devkit.ctf.junit.AbstractTestCase;
 
-import com.google.api.ads.dfp.axis.v201602.Date;
-import com.google.api.ads.dfp.axis.v201602.ReportJob;
+import com.google.api.ads.dfp.axis.v201605.Date;
+import com.google.api.ads.dfp.axis.v201605.ReportJob;
 
 public class CreateReachReportTestCases extends AbstractTestCase<GoogleDfpConnector> {
 

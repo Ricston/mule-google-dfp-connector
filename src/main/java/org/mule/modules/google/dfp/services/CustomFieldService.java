@@ -12,12 +12,12 @@ import org.apache.log4j.Logger;
 import org.mule.modules.google.dfp.exceptions.GetCustomFieldsException;
 
 import com.google.api.ads.dfp.axis.factory.DfpServices;
-import com.google.api.ads.dfp.axis.utils.v201602.StatementBuilder;
-import com.google.api.ads.dfp.axis.v201602.ApiException;
-import com.google.api.ads.dfp.axis.v201602.CustomField;
-import com.google.api.ads.dfp.axis.v201602.CustomFieldOption;
-import com.google.api.ads.dfp.axis.v201602.CustomFieldPage;
-import com.google.api.ads.dfp.axis.v201602.CustomFieldServiceInterface;
+import com.google.api.ads.dfp.axis.utils.v201605.StatementBuilder;
+import com.google.api.ads.dfp.axis.v201605.ApiException;
+import com.google.api.ads.dfp.axis.v201605.CustomField;
+import com.google.api.ads.dfp.axis.v201605.CustomFieldOption;
+import com.google.api.ads.dfp.axis.v201605.CustomFieldPage;
+import com.google.api.ads.dfp.axis.v201605.CustomFieldServiceInterface;
 import com.google.api.ads.dfp.lib.client.DfpSession;
 import com.google.api.client.repackaged.com.google.common.base.Joiner;
 import com.google.common.collect.Lists;

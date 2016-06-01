@@ -8,13 +8,13 @@ import org.apache.log4j.Logger;
 import org.mule.modules.google.dfp.exceptions.CustomTargetingException;
 
 import com.google.api.ads.dfp.axis.factory.DfpServices;
-import com.google.api.ads.dfp.axis.utils.v201602.StatementBuilder;
-import com.google.api.ads.dfp.axis.v201602.ApiException;
-import com.google.api.ads.dfp.axis.v201602.CustomTargetingKey;
-import com.google.api.ads.dfp.axis.v201602.CustomTargetingKeyPage;
-import com.google.api.ads.dfp.axis.v201602.CustomTargetingServiceInterface;
-import com.google.api.ads.dfp.axis.v201602.CustomTargetingValue;
-import com.google.api.ads.dfp.axis.v201602.CustomTargetingValuePage;
+import com.google.api.ads.dfp.axis.utils.v201605.StatementBuilder;
+import com.google.api.ads.dfp.axis.v201605.ApiException;
+import com.google.api.ads.dfp.axis.v201605.CustomTargetingKey;
+import com.google.api.ads.dfp.axis.v201605.CustomTargetingKeyPage;
+import com.google.api.ads.dfp.axis.v201605.CustomTargetingServiceInterface;
+import com.google.api.ads.dfp.axis.v201605.CustomTargetingValue;
+import com.google.api.ads.dfp.axis.v201605.CustomTargetingValuePage;
 import com.google.api.ads.dfp.lib.client.DfpSession;
 
 public class CustomTargetingService {
