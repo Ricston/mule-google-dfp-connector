@@ -25,4 +25,44 @@ public class TestDataBuilder {
     public static DateTime getGetAllCompaniesSnapshotDateTime() {
         return DateTimes.toDateTime("2017-01-31T00:00:00", "Europe/Madrid");
     }
+
+    public static Date getCreateAudienceReportStartDate() {
+        return new Date(2015, 1, 1);
+    }
+
+    public static Date getCreateAudienceReportEndDate() {
+        return new Date(2015, 1, 31);
+    }
+
+    public static Date getCreateTargetingReportStartDate() {
+        return new Date(2015, 1, 1);
+    }
+
+    public static Date getCreateTargetingReportEndDate() {
+        return new Date(2015, 1, 31);
+    }
+
+    public static Date getCreateTotalContractedImpressionsReportStartDate() {
+        return new Date(2015, 1, 1);
+    }
+
+    public static Date getCreateTotalContractedImpressionsReportEndDate() {
+        return new Date(2015, 1, 31);
+    }
+
+    public static Date getCreateReachReportStartDate() {
+        return new Date(2015, 1, 1);
+    }
+
+    public static Date getCreateReachReportEndDate() {
+        return new Date(2015, 1, 31);
+    }
+
+    public static Date getDownloadReportStartDate() {
+        return new Date(2015, 1, 1);
+    }
+
+    public static Date getDownloadReportEndDate() {
+        return new Date(2015, 1, 31);
+    }
 }

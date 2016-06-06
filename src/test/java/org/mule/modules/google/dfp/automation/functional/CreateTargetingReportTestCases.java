@@ -13,29 +13,24 @@ import org.mule.tools.devkit.ctf.junit.AbstractTestCase;
 import com.google.api.ads.dfp.axis.v201605.Date;
 import com.google.api.ads.dfp.axis.v201605.ReportJob;
 
-public class CreateReachReportTestCases extends AbstractTestCase<GoogleDfpConnector> {
+public class CreateTargetingReportTestCases extends AbstractTestCase<GoogleDfpConnector> {
 
-    public CreateReachReportTestCases() {
+    public CreateTargetingReportTestCases() {
         super(GoogleDfpConnector.class);
     }
 
-    private Date startDate;
-    private Date endDate;
+    Date startDate;
+    Date endDate;
 
     @Before
     public void setup() {
-
-        // IMPORTANT!!
-        // Reach reports need to include date ranges that can be broken down into full weeks (or months).
-        // For example, valid full weeks have a Sunday start date and a Saturday end date.
-
-        startDate = TestDataBuilder.getCreateReachReportStartDate();
-        endDate = TestDataBuilder.getCreateReachReportEndDate();
+        startDate = TestDataBuilder.getCreateTargetingReportStartDate();
+        endDate = TestDataBuilder.getCreateTargetingReportEndDate();
     }
 
     @Test
-    public void testCreateReachReport() throws Exception {
-        ReportJob report = getConnector().createReachReport(startDate, endDate);
+    public void testCreateTargetingReport() throws Exception {
+        ReportJob report = getConnector().createTargetingReport(startDate, endDate);
         Assert.assertNotNull(report);
     }
 

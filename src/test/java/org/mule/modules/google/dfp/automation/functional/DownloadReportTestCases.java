@@ -23,32 +23,31 @@ public class DownloadReportTestCases extends AbstractTestCase<GoogleDfpConnector
 
     ReportJob createdReport;
     GoogleDfpConnector dfp;
+    Date startDate;
+    Date endDate;
 
     @Before
-    public void setup() throws Throwable {
+    public void setup() throws Exception {
 
         // IMPORTANT!!
         // Reach reports need to include date ranges that can be broken down into full weeks (or months).
         // For example, valid full weeks have a Sunday start date and a Saturday end date.
         //
-        Date startDate = new Date(2015, 1, 1);
-        Date endDate = new Date(2015, 1, 31);
-        dfp = getDispatcher().createMockup();
+        startDate = TestDataBuilder.getDownloadReportStartDate();
+        endDate = TestDataBuilder.getDownloadReportEndDate();
+        dfp = getConnector();
         createdReport = dfp.createReachReport(startDate, endDate);
 
     }
 
-    protected InputStream downloadReport(ReportJob reportJob) throws Throwable {
-        Object downloadedReport = getDispatcher().runMethod("downloadReport", new Object[] { createdReport
-        });
-
-        Assert.assertTrue(downloadedReport instanceof InputStream);
-
-        return (InputStream) downloadedReport;
+    protected InputStream downloadReport(ReportJob reportJob) throws Exception {
+        InputStream downloadedReport = dfp.downloadReport(createdReport);
+        Assert.assertNotNull(downloadedReport);
+        return downloadedReport;
     }
 
     @Test
-    public void testDownloadReport() throws Throwable {
+    public void testDownloadReport() throws Exception {
         InputStream report = downloadReport(createdReport);
         report.close();
     }
