@@ -5,6 +5,8 @@
 package org.mule.modules.google.dfp.automation.functional;
 
 import com.google.api.ads.dfp.axis.utils.v201605.DateTimes;
+import com.google.api.ads.dfp.axis.v201605.Company;
+import com.google.api.ads.dfp.axis.v201605.CompanyType;
 import com.google.api.ads.dfp.axis.v201605.Date;
 import com.google.api.ads.dfp.axis.v201605.DateTime;
 
@@ -24,5 +26,23 @@ public class TestDataBuilder {
 
     public static DateTime getGetAllCompaniesSnapshotDateTime() {
         return DateTimes.toDateTime("2017-01-31T00:00:00", "Europe/Madrid");
+    }
+
+    public static Long getGetCompanyByIdCorrectId() {
+        return 59518088L;
+    }
+
+    public static Long getGetCompanyByIdIncorrectId() {
+        return 22L;
+    }
+
+    public static Company getCreateCompanyNewCompany() {
+        Company newCompany = new Company();
+        newCompany.setName("Ricston Ltd2");
+        newCompany.setAddress("Mosta Malta");
+        newCompany.setEmail("dfp@ricston.com");
+        newCompany.setType(CompanyType.AGENCY);
+
+        return newCompany;
     }
 }
