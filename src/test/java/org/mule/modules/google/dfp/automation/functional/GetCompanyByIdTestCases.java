@@ -5,35 +5,43 @@
 package org.mule.modules.google.dfp.automation.functional;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.mule.modules.google.dfp.GoogleDfpConnector;
 import org.mule.tools.devkit.ctf.junit.AbstractTestCase;
-import org.mule.transport.NullPayload;
 
 import com.google.api.ads.dfp.axis.v201605.Company;
 
 public class GetCompanyByIdTestCases extends AbstractTestCase<GoogleDfpConnector> {
 
+    private Long correctId;
+    private Long incorrectId;
+
     public GetCompanyByIdTestCases() {
         super(GoogleDfpConnector.class);
+    }
+
+    @Before
+    public void setup() {
+
+        correctId = TestDataBuilder.getGetCompanyByIdCorrectId();
+        incorrectId = TestDataBuilder.getGetCompanyByIdIncorrectId();
     }
 
     @Test
     public void testGetCompanyById() throws Throwable {
 
-        Object company = getDispatcher().runMethod("getCompanyById", new Object[] {
-                59518088L
-        });
+        Object company = getConnector().getCompanyById(correctId);
         Assert.assertNotNull(company);
         Assert.assertTrue(company instanceof Company);
+        Assert.assertEquals(correctId, ((Company) company).getId());
     }
 
     @Test
     public void testGetCompanyByIdNotFound() throws Throwable {
-        Object company = getDispatcher().runMethod("getCompanyById", new Object[] {
-                22L
-        });
-        Assert.assertTrue(company instanceof NullPayload);
+
+        Object company = getConnector().getCompanyById(incorrectId);
+        Assert.assertNull(company);
     }
 
 }

@@ -11,7 +11,6 @@ import org.mule.modules.google.dfp.GoogleDfpConnector;
 import org.mule.tools.devkit.ctf.junit.AbstractTestCase;
 
 import com.google.api.ads.dfp.axis.v201605.Company;
-import com.google.api.ads.dfp.axis.v201605.CompanyType;
 
 public class CreateCompanyTestCases extends AbstractTestCase<GoogleDfpConnector> {
 
@@ -19,21 +18,16 @@ public class CreateCompanyTestCases extends AbstractTestCase<GoogleDfpConnector>
         super(GoogleDfpConnector.class);
     }
 
-    Company newCompany;
+    private Company newCompany;
 
     @Before
     public void setup() throws Exception {
-        newCompany = new Company();
-        newCompany.setName("Ricston Ltd2");
-        newCompany.setAddress("Mosta Malta");
-        newCompany.setEmail("dfp@ricston.com");
-        newCompany.setType(CompanyType.AGENCY);
+        newCompany = TestDataBuilder.getCreateCompanyNewCompany();
     }
 
     @Test
-    public void testCreateCompany() throws Throwable {
-        Company comp = (Company) getDispatcher().runMethod("createCompany", new Object[] { newCompany
-        });
+    public void testCreateCompany() throws Exception {
+        Company comp = getConnector().createCompany(newCompany);
         Assert.assertNotNull(comp);
         Assert.assertEquals(newCompany.getName(), comp.getName());
     }
