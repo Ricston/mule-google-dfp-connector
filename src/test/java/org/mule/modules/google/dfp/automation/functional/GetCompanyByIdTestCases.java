@@ -29,18 +29,17 @@ public class GetCompanyByIdTestCases extends AbstractTestCase<GoogleDfpConnector
     }
 
     @Test
-    public void testGetCompanyById() throws Throwable {
+    public void testGetCompanyById() throws Exception {
 
-        Object company = getConnector().getCompanyById(correctId);
+        Company company = getConnector().getCompanyById(correctId);
         Assert.assertNotNull(company);
-        Assert.assertTrue(company instanceof Company);
-        Assert.assertEquals(correctId, ((Company) company).getId());
+        Assert.assertEquals(correctId, company.getId());
     }
 
     @Test
-    public void testGetCompanyByIdNotFound() throws Throwable {
+    public void testGetCompanyByIdNotFound() throws Exception {
 
-        Object company = getConnector().getCompanyById(incorrectId);
+        Company company = getConnector().getCompanyById(incorrectId);
         Assert.assertNull(company);
     }
 

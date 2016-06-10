@@ -26,17 +26,12 @@ public class CreateContractedReportTestCases extends AbstractTestCase<GoogleDfpC
 
     @Before
     public void setup() {
-
-        // IMPORTANT!!
-        // Reach reports need to include date ranges that can be broken down into full weeks (or months).
-        // For example, valid full weeks have a Sunday start date and a Saturday end date.
-
         startDate = TestDataBuilder.getCreateContractedReportStartDate();
         endDate = TestDataBuilder.getCreateContractedReportEndDate();
     }
 
     @Test
-    public void testCreateContratedReport() throws Throwable {
+    public void testCreateContratedReport() throws Exception {
 
         ArrayList<Long> listIDs = new ArrayList<Long>();
         listIDs.add((long) 1);
@@ -44,9 +39,8 @@ public class CreateContractedReportTestCases extends AbstractTestCase<GoogleDfpC
         listIDs.add((long) 3);
         listIDs.add((long) 4);
 
-        Object report = getConnector().createContractedReport(startDate, endDate, listIDs);
+        ReportJob report = getConnector().createContractedReport(startDate, endDate, listIDs);
         Assert.assertNotNull(report);
-        Assert.assertTrue(report instanceof ReportJob);
     }
 
 }

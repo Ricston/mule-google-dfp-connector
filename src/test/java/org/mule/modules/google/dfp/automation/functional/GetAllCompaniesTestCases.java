@@ -33,14 +33,13 @@ public class GetAllCompaniesTestCases extends AbstractTestCase<GoogleDfpConnecto
     }
 
     @Test
-    public void testGetAllCompanies() throws Throwable {
+    public void testGetAllCompanies() throws Exception {
 
-        Object companies = getConnector().getAllCompanies(lastModifiedTime, snapshotDate);
+        List<Company> companies = getConnector().getAllCompanies(lastModifiedTime, snapshotDate);
 
         Assert.assertNotNull(companies);
-        Assert.assertTrue(companies instanceof List);
         if (CollectionUtils.isNotEmpty((List<Company>) companies)) {
-            Assert.assertTrue(((List<Company>) companies).get(0) instanceof Company);
+            Assert.assertTrue(companies.get(0) instanceof Company);
         }
     }
 
