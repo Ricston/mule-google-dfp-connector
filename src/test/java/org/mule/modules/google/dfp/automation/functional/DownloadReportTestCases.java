@@ -21,10 +21,10 @@ public class DownloadReportTestCases extends AbstractTestCase<GoogleDfpConnector
         super(GoogleDfpConnector.class);
     }
 
-    ReportJob createdReport;
-    GoogleDfpConnector dfp;
-    Date startDate;
-    Date endDate;
+    private ReportJob createdReport;
+    private GoogleDfpConnector dfp;
+    private Date startDate;
+    private Date endDate;
 
     @Before
     public void setup() throws Exception {
@@ -37,7 +37,6 @@ public class DownloadReportTestCases extends AbstractTestCase<GoogleDfpConnector
         endDate = TestDataBuilder.getDownloadReportEndDate();
         dfp = getConnector();
         createdReport = dfp.createReachReport(startDate, endDate);
-
     }
 
     protected InputStream downloadReport(ReportJob reportJob) throws Exception {

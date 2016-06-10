@@ -85,4 +85,12 @@ public class TestDataBuilder {
     public static Date getDownloadReportEndDate() {
         return new Date(2015, 1, 31);
     }
+
+    public static DateTime GetOrdersByStatementLastModifiedDate() {
+        return DateTimes.toDateTime("2015-01-01T00:00:00", "Europe/Madrid");
+    }
+
+    public static DateTime GetOrdersByStatementSnapshotDateTime() {
+        return DateTimes.toDateTime("2017-01-31T00:00:00", "Europe/Madrid");
+    }
 }
