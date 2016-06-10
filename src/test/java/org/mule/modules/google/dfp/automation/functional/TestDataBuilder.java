@@ -4,6 +4,9 @@
  */
 package org.mule.modules.google.dfp.automation.functional;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.google.api.ads.dfp.axis.utils.v201605.DateTimes;
 import com.google.api.ads.dfp.axis.v201605.Company;
 import com.google.api.ads.dfp.axis.v201605.CompanyType;
@@ -84,5 +87,87 @@ public class TestDataBuilder {
 
     public static Date getDownloadReportEndDate() {
         return new Date(2015, 1, 31);
+    }
+
+    public static List<Long> getGetProductsByIdCorrectIds() {
+        List<Long> correctIds = new ArrayList<Long>();
+        // XXX Products can not be created without a premium account of DFP, so we can not retrieve them
+        return correctIds;
+    }
+
+    public static List<Long> getGetProductsByIdWrongIds() {
+        List<Long> wrongIds = new ArrayList<Long>();
+        wrongIds.add(5000L);
+        return wrongIds;
+    }
+
+    public static DateTime getGetProductsByStatementLastModifiedDate() {
+        return DateTimes.toDateTime("2015-01-01T00:00:00", "Europe/Madrid");
+    }
+
+    public static DateTime getGetProductsByStatementSnapshotDateTime() {
+        return DateTimes.toDateTime("2017-01-31T00:00:00", "Europe/Madrid");
+    }
+
+    public static List<Long> getGetLineItemsByIdCorrectIds() {
+        List<Long> correctIds = new ArrayList<Long>();
+        correctIds.add(113219888L);
+        return correctIds;
+    }
+
+    public static List<Long> getGetLineItemsByIdWrongIds() {
+        List<Long> wrongIds = new ArrayList<Long>();
+        wrongIds.add(5000L);
+        return wrongIds;
+    }
+
+    public static DateTime getGetLineItemsByStatementLastModifiedDate() {
+        return DateTimes.toDateTime("2015-01-01T00:00:00", "Europe/Madrid");
+    }
+
+    public static DateTime getGetLineItemsByStatementSnapshotDateTime() {
+        return DateTimes.toDateTime("2099-01-31T00:00:00", "Europe/Madrid");
+    }
+
+    public static DateTime getGetLineItemsByStatementLastModifiedDateNoResults() {
+        return DateTimes.toDateTime("2099-01-01T00:00:00", "Europe/Madrid");
+    }
+
+    public static DateTime getGetLineItemsByStatementSnapshotDateTimeNoResults() {
+        return DateTimes.toDateTime("2099-01-01T00:00:00", "Europe/Madrid");
+    }
+
+    public static List<Long> getGetFilteredLineItemsByStatementCorrectIds() {
+        List<Long> correctIds = new ArrayList<Long>();
+        correctIds.add(312984608L);
+        return correctIds;
+    }
+
+    public static List<Long> getGetFilteredLineItemsByStatementWrongIds() {
+        List<Long> wrongIds = new ArrayList<Long>();
+        wrongIds.add(5000L);
+        return wrongIds;
+    }
+
+    public static DateTime getGetRateCardsByStatementLastModifiedDate() {
+        return DateTimes.toDateTime("2005-01-01T00:00:00", "Europe/Madrid");
+    }
+
+    public static DateTime getGetRateCardsByStatementSnapshotDateTime() {
+        return DateTimes.toDateTime("2099-01-31T00:00:00", "Europe/Madrid");
+    }
+
+    public static List<Long> getGetCompaniesByIdCorrectIds() {
+        List<Long> correctIds = new ArrayList<Long>();
+        correctIds.add(54797168L);
+        correctIds.add(55993208L);
+        correctIds.add(59518208L);
+        return correctIds;
+    }
+
+    public static List<Long> getGetCompaniesByIdWrongIds() {
+        List<Long> wrongIds = new ArrayList<Long>();
+        wrongIds.add(5000L);
+        return wrongIds;
     }
 }
