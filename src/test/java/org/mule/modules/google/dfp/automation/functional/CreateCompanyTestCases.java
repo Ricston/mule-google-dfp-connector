@@ -4,6 +4,7 @@
  */
 package org.mule.modules.google.dfp.automation.functional;
 
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,6 +20,7 @@ public class CreateCompanyTestCases extends AbstractTestCase<GoogleDfpConnector>
     }
 
     private Company newCompany;
+    private Company createdCompany;
 
     @Before
     public void setup() throws Exception {
@@ -27,8 +29,14 @@ public class CreateCompanyTestCases extends AbstractTestCase<GoogleDfpConnector>
 
     @Test
     public void testCreateCompany() throws Exception {
-        Company comp = getConnector().createCompany(newCompany);
-        Assert.assertNotNull(comp);
-        Assert.assertEquals(newCompany.getName(), comp.getName());
+        createdCompany = getConnector().createCompany(newCompany);
+        Assert.assertNotNull(createdCompany);
+        Assert.assertEquals(newCompany.getName(), createdCompany.getName());
+    }
+
+    @After
+    public void tearDown() throws Exception {
+        createdCompany.setName(createdCompany.getName() + createdCompany.getId());
+        getConnector().updateCompany(createdCompany);
     }
 }

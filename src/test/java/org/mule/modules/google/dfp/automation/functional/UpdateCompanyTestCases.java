@@ -25,14 +25,14 @@ public class UpdateCompanyTestCases extends AbstractTestCase<GoogleDfpConnector>
     String externalID;
 
     @Before
-    public void setupBefore() throws Exception {
+    public void setup() throws Exception {
         companyToUpdate = getConnector().getCompanyById(59503568L);
         externalID = companyToUpdate.getExternalId();
         companyToUpdate.setExternalId("123456789");
     }
 
     @After
-    public void setupAfter() throws Exception {
+    public void tearDown() throws Exception {
         companyToUpdate = getConnector().getCompanyById(59503568L);
         companyToUpdate.setExternalId(externalID);
         getConnector().updateCompany(companyToUpdate);

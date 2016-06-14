@@ -23,6 +23,8 @@ import org.mule.modules.google.dfp.exceptions.GetAgencyByNameException;
 import org.mule.modules.google.dfp.exceptions.GetAllCompaniesException;
 import org.mule.modules.google.dfp.exceptions.GetAllContactsException;
 import org.mule.modules.google.dfp.exceptions.GetCompanyByIdException;
+import org.mule.modules.google.dfp.exceptions.GetContactByIdException;
+import org.mule.modules.google.dfp.exceptions.GetContactByNameException;
 import org.mule.modules.google.dfp.exceptions.GetCustomFieldsException;
 import org.mule.modules.google.dfp.exceptions.GetLineItemsException;
 import org.mule.modules.google.dfp.exceptions.GetOrdersException;
@@ -70,9 +72,9 @@ import com.google.api.ads.dfp.axis.v201605.User;
  */
 @MetaDataScope(DimensionCategory.class)
 @RequiresEnterpriseLicense
-@Connector(name = "google-dfp", schemaVersion = "1.0", friendlyName = "GoogleDfp",minMuleVersion = "3.5") 
+@Connector(name = "google-dfp", schemaVersion = "1.0", friendlyName = "GoogleDfp", minMuleVersion = "3.5")
 public class GoogleDfpConnector {
-		
+
     @Config
     GoogleDfpConnectionStrategy connectionStrategy;
 
@@ -461,8 +463,8 @@ public class GoogleDfpConnector {
      * @param ids
      *            list of ids
      * @return List of companies
-     * @throws GetAllCompaniesException 
-     * 			Get All Companies Exception
+     * @throws GetAllCompaniesException
+     *             Get All Companies Exception
      */
     @Processor
     public List<Company> getCompaniesById(List<Long> ids) throws GetAllCompaniesException {
@@ -523,8 +525,8 @@ public class GoogleDfpConnector {
      * @param ids
      *            the ids of the products
      * @return List of products
-     * @throws GetProductsByStatementException 
-     * 			Get Products By Statement Exception
+     * @throws GetProductsByStatementException
+     *             Get Products By Statement Exception
      */
     @Processor
     public List<Product> getProductsById(List<Long> ids) throws GetProductsByStatementException {
@@ -556,7 +558,7 @@ public class GoogleDfpConnector {
      *            the ids of the product templates
      * @return List of product templates by id
      * @throws GetProductTemplatesException
-     * 			Get Product Templates Exception
+     *             Get Product Templates Exception
      */
     @Processor
     public List<ProductTemplate> getProductTemplatesById(List<Long> ids) throws GetProductTemplatesException {
@@ -585,8 +587,8 @@ public class GoogleDfpConnector {
      * Retrieve audience segments
      * 
      * @return List of Audience Segments
-     * @throws AudienceSegmentException 
-     * 			Audience Segment Exception
+     * @throws AudienceSegmentException
+     *             Audience Segment Exception
      */
     @Processor
     public List<AudienceSegment> getAudienceSegmentsByStatement() throws AudienceSegmentException {
@@ -600,7 +602,7 @@ public class GoogleDfpConnector {
      * 
      * @return List of Custom Targeting Keys
      * @throws CustomTargetingException
-     * 			Custom Targeting Exception
+     *             Custom Targeting Exception
      * 
      */
     @Processor
@@ -615,7 +617,7 @@ public class GoogleDfpConnector {
      * 
      * @return List of Custom Targeting Values
      * @throws CustomTargetingException
-     * 			Custom Targeting Exception
+     *             Custom Targeting Exception
      * 
      */
     @Processor
@@ -674,7 +676,7 @@ public class GoogleDfpConnector {
      *            the ids of the custom fields
      * @return List of custom fields
      * @throws GetCustomFieldsException
-     * 			Get Custom Fields Exception
+     *             Get Custom Fields Exception
      */
     @Processor
     public List<CustomField> getCustomFieldsById(List<Long> ids) throws GetCustomFieldsException {
@@ -721,7 +723,7 @@ public class GoogleDfpConnector {
      *            the ids of the orders
      * @return a list of Orders
      * @throws GetOrdersException
-     * 			Get Orders Exception
+     *             Get Orders Exception
      */
     @Processor
     public List<Order> getOrdersById(List<Long> ids) throws GetOrdersException {
@@ -753,7 +755,7 @@ public class GoogleDfpConnector {
      *            the ids of the proposals
      * @return a list of proposals
      * @throws GetProposalsException
-     * 			Get Proposals Exception
+     *             Get Proposals Exception
      */
     @Processor
     public List<Proposal> getProposalsById(List<Long> ids) throws GetProposalsException {
@@ -822,6 +824,66 @@ public class GoogleDfpConnector {
     }
 
     /**
+     * Retrieve a contact by a given ID
+     * 
+     * @return The searched contact
+     * @param contactId
+     *            the id of the contact
+     * @throws GetContactByIdException
+     *             Get Contact By Id Exception
+     */
+    @Processor
+    public Contact getContactById(Long contactId) throws GetContactByIdException {
+        return connectionStrategy.getContactService()
+                .getContactById(connectionStrategy.getSession(), contactId);
+    }
+
+    /**
+     * Retrieve a contact by a given name
+     * 
+     * @return The searched contact
+     * @param contactName
+     *            the name of the contact
+     * @throws GetContactByNameException
+     *             Get Contact By Name Exception
+     */
+    @Processor
+    public Contact getContactByName(String contactName) throws GetContactByNameException {
+        return connectionStrategy.getContactService()
+                .getContactByName(connectionStrategy.getSession(), contactName);
+    }
+
+    /**
+     * Create a contact
+     * 
+     * @param contact
+     *            The Contact to create
+     * @return The created contact
+     * @throws CreateFailedException
+     *             Create Failed Exception
+     */
+    @Processor
+    public Contact createContact(Contact contact) throws CreateFailedException {
+        return connectionStrategy.getContactService()
+                .createContact(connectionStrategy.getSession(), contact);
+    }
+
+    /**
+     * Update a contact
+     * 
+     * @param contact
+     *            The Contact to update
+     * @return The updated contact
+     * @throws CreateFailedException
+     *             Create Failed Exception
+     */
+    @Processor
+    public Contact updateContact(Contact contact) throws UpdateFailedException {
+        return connectionStrategy.getContactService()
+                .updateContact(connectionStrategy.getSession(), contact);
+    }
+
+    /**
      * Retrieve users
      * 
      * @return List of Users
@@ -841,7 +903,7 @@ public class GoogleDfpConnector {
      *            the ids of the users
      * @return List of users
      * @throws GetUsersException
-     * 				Get Users Exception
+     *             Get Users Exception
      */
     @Processor
     public List<User> getUsersById(List<Long> ids) throws GetUsersException {
@@ -856,14 +918,17 @@ public class GoogleDfpConnector {
      * @throws GetRateCardsException
      *             Get Rate Cards Exception
      */
-    
+
     /**
      * Retrieve modified rate cards
-     * @param lastModifiedDate last modified date
-     * @param snapshotDateTime snapshot date
+     * 
+     * @param lastModifiedDate
+     *            last modified date
+     * @param snapshotDateTime
+     *            snapshot date
      * @return List of modified rate cards
      * @throws GetRateCardsException
-     * 			Get Rate Cards Exception
+     *             Get Rate Cards Exception
      */
     @Processor
     public List<RateCard> getRateCardsByLastModifiedDate(DateTime lastModifiedDate, DateTime snapshotDateTime) throws GetRateCardsException {
@@ -876,13 +941,13 @@ public class GoogleDfpConnector {
      * 
      * @return List of Retraction Reasons
      * @throws ReportDownloadException
-     * 			Report Download Exception
+     *             Report Download Exception
      * @throws IllegalAccessException
-     * 			Illegal Access Exception
+     *             Illegal Access Exception
      * @throws RemoteException
-     * 			Remote Exception
+     *             Remote Exception
      * @throws ApiException
-     * 			Api Exception
+     *             Api Exception
      */
     @Processor
     public List<String[]> getProposalRetractionReasonPql() throws ApiException, RemoteException, IllegalAccessException, ReportDownloadException {
@@ -896,13 +961,13 @@ public class GoogleDfpConnector {
      * 
      * @return List of an Array of Strings
      * @throws ReportDownloadException
-     * 			Report Download Exception
+     *             Report Download Exception
      * @throws ApiException
-     * 			Api Exception
+     *             Api Exception
      * @throws RemoteException
-     * 			Remote Exception
+     *             Remote Exception
      * @throws IllegalAccessException
-     * 			Illegal Access Exception
+     *             Illegal Access Exception
      */
     @Processor
     public List<String[]> getAllLineItemsPql() throws ReportDownloadException, ApiException, RemoteException, IllegalAccessException {

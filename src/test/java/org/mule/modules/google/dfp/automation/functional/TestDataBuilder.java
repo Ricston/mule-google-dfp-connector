@@ -41,7 +41,7 @@ public class TestDataBuilder {
 
     public static Company getCreateCompanyNewCompany() {
         Company newCompany = new Company();
-        newCompany.setName("Ricston Ltd2");
+        newCompany.setName("TestCompany");
         newCompany.setAddress("Mosta Malta");
         newCompany.setEmail("dfp@ricston.com");
         newCompany.setType(CompanyType.AGENCY);
@@ -177,6 +177,14 @@ public class TestDataBuilder {
         List<Long> wrongIds = new ArrayList<Long>();
         wrongIds.add(5000L);
         return wrongIds;
+    }
+
+    public static Long getGetContactByIdCorrectId() {
+        return 1061648L;
+    }
+
+    public static Long getGetContactByIdWrongId() {
+        return 22L;
     }
 
 }
