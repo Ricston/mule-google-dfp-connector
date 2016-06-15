@@ -24,14 +24,6 @@ From the Package Explorer view, navigate to src/main/resources and open demo.pro
 
 Note that the Google-DFP connector library may not have been added automatically to the project build path. To add the library, open the Mule Flow, right-click on a Google-DFP connector on the flow and click 'Add GoogleDFP libraries to the project'.
 
-### Running the Create Company Demo
-
-Run the demo as a Mule Application and in your browser hit this endpoint: **http://localhost:8081/createCompany?name=\<companyName\>** by sending a PUT request.
-
-Congratulations, your company has been created!
-
-### Running the Update Company Demo
-
-Run the demo as a Mule Application and in your browser hit this endpoint: **http://localhost:8081/updateCompany?name=\<oldCompanyName\>&newname=\<newCompanyName\>** by sending a PUT request.
-
-Congratulations, your company has been updated!
+### Running the Demo
+-------------------
+Run the demo application and hit the following URL in your browser: http://localhost:8081. An accordian style form will show up which allows to run the different aspects of this demo (create and update a company)
