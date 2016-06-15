@@ -874,8 +874,8 @@ public class GoogleDfpConnector {
      * @param contact
      *            The Contact to update
      * @return The updated contact
-     * @throws CreateFailedException
-     *             Create Failed Exception
+     * @throws UpdateFailedException
+     *             Update Failed Exception
      */
     @Processor
     public Contact updateContact(Contact contact) throws UpdateFailedException {
