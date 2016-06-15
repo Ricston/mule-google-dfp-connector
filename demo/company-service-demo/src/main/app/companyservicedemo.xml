@@ -27,6 +27,11 @@ http://www.mulesoft.org/schema/mule/ee/dw http://www.mulesoft.org/schema/mule/ee
 		refreshToken="${google-dfp.refreshToken}" networkCode="${google-dfp.networkCode}"
 		applicationName="${google-dfp.applicationName}" endpoint="${google-dfp.endpoint}"
 		tokenServerUrl="${google-dfp.tokenServerUrl}" doc:name="GoogleDfp"/>
+    <flow name="companyservicedemoFlow">
+        <http:listener config-ref="HTTP_Listener_Configuration" path="/" doc:name="HTTP"/>
+        <parse-template location="src/main/resources/form.html" doc:name="Parse Template"/>
+        <set-property propertyName="Content-Type" value="text/html" doc:name="Property"/>
+    </flow>
 	
 	<flow name="createCompanyFlow">
 		<http:listener config-ref="HTTP_Listener_Configuration"
@@ -42,15 +47,13 @@ http://www.mulesoft.org/schema/mule/ee/dw http://www.mulesoft.org/schema/mule/ee
 	<flow name="updateCompanyFlow">
 		<http:listener config-ref="HTTP_Listener_Configuration"
 			path="/updateCompany" doc:name="HTTP" allowedMethods="PUT" />
-		<set-session-variable variableName="newname"
-			value="#[message.inboundProperties.'http.query.params'.newname]"
-			doc:name="Store name" />
+        <set-session-variable variableName="newname" value="#[payload.get(&quot;newCompanyName&quot;)]" doc:name="Store name"/>
 		<google-dfp:get-agency-by-name
-			config-ref="GoogleDfp__Config" agencyName="#[message.inboundProperties.'http.query.params'.name]"
+			config-ref="GoogleDfp__Config" agencyName="#[payload.get(&quot;oldCompanyName&quot;)]"
 			doc:name="Get Agency" />
         <logger level="INFO" doc:name="Logger"/>
         <choice doc:name="Choice">
-            <when expression="#[payload instanceof com.google.api.ads.dfp.axis.v201602.Company]">
+            <when expression="#[payload instanceof com.google.api.ads.dfp.axis.v201605.Company]">
                 <expression-component doc:name="Expression"><![CDATA[#[payload.name=sessionVars.'newname']]]></expression-component>
                 <google-dfp:update-company config-ref="GoogleDfp__Config" doc:name="GoogleDfp">
                     <google-dfp:company ref="#[payload]"/>
