@@ -19,13 +19,18 @@ public class GoogleCompany extends AbstractMessageTransformer {
             throws TransformerException {
          
         String name = ((ParameterMap) message.getPayload()).get("companyName");
+        String address = ((ParameterMap) message.getPayload()).get("companyAddress");
+        String email = ((ParameterMap) message.getPayload()).get("companyEmail");
 
         Company newCompany = new Company();
         newCompany.setName(name);
-        newCompany.setAddress("Mosta, Malta");
-        newCompany.setType(CompanyType.AGENCY);
-        newCompany.setEmail("googledfp@ricston.com");
+        
+        newCompany.setAddress(address);
+                
+        newCompany.setEmail(email);
 
+        newCompany.setType(CompanyType.AGENCY);
+        
         message.setPayload(newCompany);
 
         return message;

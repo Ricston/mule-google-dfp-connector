@@ -65,5 +65,32 @@ http://www.mulesoft.org/schema/mule/ee/dw http://www.mulesoft.org/schema/mule/ee
         </choice>
         <json:object-to-json-transformer doc:name="Object to JSON"/>
 	</flow>
+    <flow name="createContactFlow">
+        <http:listener config-ref="HTTP_Listener_Configuration" path="/createContact" doc:name="HTTP"/>
+        <custom-transformer class="com.ricston.googledemo.transformer.GoogleContact" doc:name="Create Google Contact"/>
+        <google-dfp:create-contact config-ref="GoogleDfp__Config" doc:name="GoogleDfp">
+            <google-dfp:contact ref="#[payload]"/>
+        </google-dfp:create-contact>
+        <json:object-to-json-transformer doc:name="Object to JSON"/>
+        <logger message="#[payload]" level="INFO" doc:name="Logger"/>
+    </flow>
+    <flow name="updateContactFlow">
+        <http:listener config-ref="HTTP_Listener_Configuration" path="/updateContact" allowedMethods="PUT" doc:name="HTTP"/>
+        <set-session-variable variableName="contacttitle" value="#[payload.get(&quot;contactTitle&quot;)]" doc:name="Store Title"/>
+        <google-dfp:get-contact-by-name config-ref="GoogleDfp__Config" contactName="#[payload.get(&quot;contactName&quot;)]" doc:name="Get Contact"/>
+        <logger level="INFO" doc:name="Logger"/>
+        <choice doc:name="Choice">
+            <when expression="#[payload instanceof com.google.api.ads.dfp.axis.v201605.Contact]">
+                <expression-component doc:name="Expression"><![CDATA[#[payload.title=sessionVars.contacttitle]]]></expression-component>
+                <google-dfp:update-contact config-ref="GoogleDfp__Config" doc:name="GoogleDfp">
+                    <google-dfp:contact ref="#[payload]"/>
+                </google-dfp:update-contact>
+            </when>
+            <otherwise>
+                <logger message="No contacts to update" level="INFO" doc:name="Logger"/>
+            </otherwise>
+        </choice>
+        <json:object-to-json-transformer doc:name="Object to JSON"/>
+    </flow>
 
 </mule>
