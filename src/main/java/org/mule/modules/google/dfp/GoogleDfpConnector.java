@@ -72,7 +72,7 @@ import com.google.api.ads.dfp.axis.v201605.User;
  */
 @MetaDataScope(DimensionCategory.class)
 @RequiresEnterpriseLicense
-@Connector(name = "google-dfp", schemaVersion = "1.0", friendlyName = "GoogleDfp", minMuleVersion = "3.5")
+@Connector(name = "google-dfp", schemaVersion = "1.0", friendlyName = "GoogleDfp", minMuleVersion = "3.6")
 public class GoogleDfpConnector {
 
     @Config
