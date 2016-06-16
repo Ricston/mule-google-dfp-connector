@@ -27,10 +27,6 @@
     <google-dfp:get-all-companies config-ref="Google-dfp" />
 <!-- END_INCLUDE(google-dfp:get-all-companies) -->
 
-<!-- BEGIN_INCLUDE(google-dfp:get-company-comment-by-name) -->
-    <google-dfp:get-company-comment-by-name config-ref="Google-dfp" companyName="Company Name"  />
-<!-- END_INCLUDE(google-dfp:get-company-comment-by-name) -->
-
 <!-- BEGIN_INCLUDE(google-dfp:get-agency-by-name) -->
     <google-dfp:get-agency-by-name config-ref="Google-dfp" agencyName="Agency Name"  />
 <!-- END_INCLUDE(google-dfp:get-agency-by-name) -->
@@ -125,16 +121,16 @@
     </google-dfp:create-actuals-report>
 <!-- END_INCLUDE(google-dfp:create-actuals-report) -->
 
-<!-- BEGIN_INCLUDE(google-dfp:create-actuals-without-ads-report) -->
-    <google-dfp:create-actuals-without-ads-report config-ref="Google-dfp">
+<!-- BEGIN_INCLUDE(google-dfp:create-actuals-report-without-ads) -->
+    <google-dfp:create-actuals-report-without-ads config-ref="Google-dfp">
     	<google-dfp:start-date year="2014" month="06" day="01" />
     	<google-dfp:end-date year="2015" month="06" day="01" />
     	<google-dfp:custom-ids>
 			<google-dfp:custom-id>123</google-dfp:custom-id>
 			<google-dfp:custom-id>456</google-dfp:custom-id>
 		</google-dfp:custom-ids>
-    </google-dfp:create-actuals-without-ads-report>
-<!-- END_INCLUDE(google-dfp:create-actuals-without-ads-report) -->
+    </google-dfp:create-actuals-report-without-ads>
+<!-- END_INCLUDE(google-dfp:create-actuals-report-without-ads) -->
 
 <!-- BEGIN_INCLUDE(google-dfp:active-line-items-report) -->
     <google-dfp:active-line-items-report config-ref="Google-dfp">
@@ -203,13 +199,6 @@
     </google-dfp:get-custom-field-option>
 <!-- END_INCLUDE(google-dfp:get-custom-field-option) -->
 
-<!-- BEGIN_INCLUDE(google-dfp:get-products-by-statement) -->
-    <google-dfp:get-products-by-statement config-ref="Google-dfp">
-    	<google-dfp:snapshot-date-time year="2014" month="06" day="01" />
-    	<google-dfp:last-modified-date year="2015" month="06" day="01" />
-    </google-dfp:get-products-by-statement>
-<!-- END_INCLUDE(google-dfp:get-products-by-statement) -->
-
 <!-- BEGIN_INCLUDE(google-dfp:get-proposals-by-statement) -->
     <google-dfp:get-proposals-by-statement config-ref="Google-dfp">
     	<google-dfp:snapshot-date-time year="2014" month="06" day="01" />
@@ -250,3 +239,154 @@
     <google-dfp:get-users-by-statement config-ref="Google-dfp"/>
 <!-- END_INCLUDE(google-dfp:get-users-by-statement) -->
 
+<!-- BEGIN_INCLUDE(google-dfp:get-companies-by-id) -->
+    <google-dfp:get-companies-by-id config-ref="Google-dfp">
+    	<google-dfp:custom-ids>
+			<google-dfp:custom-id>123</google-dfp:custom-id>
+			<google-dfp:custom-id>456</google-dfp:custom-id>
+		</google-dfp:custom-ids>
+    </google-dfp:get-companies-by-id>
+<!-- END_INCLUDE(google-dfp:get-companies-by-id) -->
+
+<!-- BEGIN_INCLUDE(google-dfp:get-products-by-id) -->
+    <google-dfp:get-products-by-id config-ref="Google-dfp">
+    	<google-dfp:custom-ids>
+			<google-dfp:custom-id>123</google-dfp:custom-id>
+			<google-dfp:custom-id>456</google-dfp:custom-id>
+		</google-dfp:custom-ids>
+    </google-dfp:get-products-by-id>
+<!-- END_INCLUDE(google-dfp:get-products-by-id) -->   
+
+<!-- BEGIN_INCLUDE(google-dfp:get-product-templates-by-id) -->
+    <google-dfp:get-product-templates-by-id config-ref="Google-dfp">
+    	<google-dfp:custom-ids>
+			<google-dfp:custom-id>123</google-dfp:custom-id>
+			<google-dfp:custom-id>456</google-dfp:custom-id>
+		</google-dfp:custom-ids>
+    </google-dfp:get-product-templates-by-id>
+<!-- END_INCLUDE(google-dfp:get-product-templates-by-id) -->           
+
+<!-- BEGIN_INCLUDE(google-dfp:get-custom-fileds-by-id) -->
+    <google-dfp:get-custom-fileds-by-id config-ref="Google-dfp">
+    	<google-dfp:custom-ids>
+			<google-dfp:custom-id>123</google-dfp:custom-id>
+			<google-dfp:custom-id>456</google-dfp:custom-id>
+		</google-dfp:custom-ids>
+    </google-dfp:get-custom-fileds-by-id>
+<!-- END_INCLUDE(google-dfp:get-custom-fileds-by-id) -->
+
+<!-- BEGIN_INCLUDE(google-dfp:get-orders-by-id) -->
+    <google-dfp:get-orders-by-id config-ref="Google-dfp">
+    	<google-dfp:custom-ids>
+			<google-dfp:custom-id>123</google-dfp:custom-id>
+			<google-dfp:custom-id>456</google-dfp:custom-id>
+		</google-dfp:custom-ids>
+    </google-dfp:get-orders-by-id>
+<!-- END_INCLUDE(google-dfp:get-orders-by-id) -->
+
+<!-- BEGIN_INCLUDE(google-dfp:get-proposals-by-id) -->
+    <google-dfp:get-proposals-by-id config-ref="Google-dfp">
+    	<google-dfp:custom-ids>
+			<google-dfp:custom-id>123</google-dfp:custom-id>
+			<google-dfp:custom-id>456</google-dfp:custom-id>
+		</google-dfp:custom-ids>
+    </google-dfp:get-proposals-by-id>
+<!-- END_INCLUDE(google-dfp:get-proposals-by-id) -->
+
+<!-- BEGIN_INCLUDE(google-dfp:get-users-by-id) -->
+    <google-dfp:get-users-by-id config-ref="Google-dfp">
+    	<google-dfp:custom-ids>
+			<google-dfp:custom-id>123</google-dfp:custom-id>
+			<google-dfp:custom-id>456</google-dfp:custom-id>
+		</google-dfp:custom-ids>
+    </google-dfp:get-users-by-id>
+<!-- END_INCLUDE(google-dfp:get-users-by-id) -->
+
+<!-- BEGIN_INCLUDE(google-dfp:get-audience-segments-by-statement) -->
+    <google-dfp:get-audience-segments-by-statement config-ref="Google-dfp"/>
+<!-- END_INCLUDE(google-dfp:get-audience-segments-by-statement) -->
+
+<!-- BEGIN_INCLUDE(google-dfp:get-custom-targeting-keys-by-statement) -->
+    <google-dfp:get-custom-targeting-keys-by-statement config-ref="Google-dfp"/>
+<!-- END_INCLUDE(google-dfp:get-custom-targeting-keys-by-statement) -->
+
+<!-- BEGIN_INCLUDE(google-dfp:get-custom-targeting-values-by-statement) -->
+    <google-dfp:get-custom-targeting-values-by-statement config-ref="Google-dfp"/>
+<!-- END_INCLUDE(google-dfp:get-custom-targeting-values-by-statement) -->
+
+<!-- BEGIN_INCLUDE(google-dfp:get-proposal-retraction-reason-pql) -->
+    <google-dfp:get-proposal-retraction-reason-pql config-ref="Google-dfp"/>
+<!-- END_INCLUDE(google-dfp:get-proposal-retraction-reason-pql) -->
+
+<!-- BEGIN_INCLUDE(google-dfp:get-all-line-items-pql) -->
+    <google-dfp:get-all-line-items-pql config-ref="Google-dfp"/>
+<!-- END_INCLUDE(google-dfp:get-all-line-items-pql) --> 
+
+<!-- BEGIN_INCLUDE(google-dfp:create-audience-report) -->
+    <google-dfp:create-audience-report config-ref="Google-dfp">
+    	<google-dfp:start-date year="2014" month="06" day="01" />
+    	<google-dfp:end-date year="2015" month="06" day="01" />
+    </google-dfp:create-audience-report>
+<!-- END_INCLUDE(google-dfp:create-audience-report) -->
+
+<!-- BEGIN_INCLUDE(google-dfp:google-dfp:create-targeting-report) -->
+    <google-dfp:google-dfp:create-targeting-report config-ref="Google-dfp">
+    	<google-dfp:start-date year="2014" month="06" day="01" />
+    	<google-dfp:end-date year="2015" month="06" day="01" />
+    </google-dfp:google-dfp:create-targeting-report>
+<!-- END_INCLUDE(google-dfp:google-dfp:create-targeting-report) -->
+
+<!-- BEGIN_INCLUDE(google-dfp:create-total-contracted-impressions-report) -->
+    <google-dfp:create-total-contracted-impressions-report config-ref="Google-dfp">
+    	<google-dfp:start-date year="2014" month="06" day="01" />
+    	<google-dfp:end-date year="2015" month="06" day="01" />
+    </google-dfp:create-total-contracted-impressions-report>
+<!-- END_INCLUDE(google-dfp:create-total-contracted-impressions-report) -->
+
+<!-- BEGIN_INCLUDE(google-dfp:create-total-delivered-impressions-report) -->
+    <google-dfp:create-total-delivered-impressions-report config-ref="Google-dfp">
+    	<google-dfp:start-date year="2014" month="06" day="01" />
+    	<google-dfp:end-date year="2015" month="06" day="01" />
+    </google-dfp:create-total-delivered-impressions-report>
+<!-- END_INCLUDE(google-dfp:create-total-delivered-impressions-report) -->
+
+<!-- BEGIN_INCLUDE(google-dfp:get-rate-cards-by-last-modified-date) -->
+    <google-dfp:get-rate-cards-by-last-modified-date config-ref="Google-dfp">
+		<google-dfp:snapshot-date-time year="2014" month="06" day="01" />
+    	<google-dfp:last-modified-date year="2015" month="06" day="01" />
+    </google-dfp:get-rate-cards-by-last-modified-date>
+<!-- END_INCLUDE(google-dfp:get-rate-cards-by-last-modified-date) -->
+
+<!-- BEGIN_INCLUDE(google-dfp:get-orders-by-statement) -->
+    <google-dfp:get-orders-by-statement config-ref="Google-dfp">
+		<google-dfp:snapshot-date-time year="2014" month="06" day="01" />
+    	<google-dfp:last-modified-date year="2015" month="06" day="01" />
+    </google-dfp:get-orders-by-statement>
+<!-- END_INCLUDE(google-dfp:get-orders-by-statement) -->
+
+<!-- BEGIN_INCLUDE(google-dfp:get-all-companies) -->
+    <google-dfp:get-all-companies config-ref="Google-dfp">
+		<google-dfp:snapshot-date-time year="2014" month="06" day="01" />
+    	<google-dfp:last-modified-date year="2015" month="06" day="01" />
+    </google-dfp:get-all-companies>
+<!-- END_INCLUDE(google-dfp:get-all-companies) -->
+
+<!-- BEGIN_INCLUDE(google-dfp:create-contact) -->
+    <google-dfp:create-contact config-ref="Google-dfp">
+    	<google-dfp:contact ref="#[payload]" />
+    </google-dfp:create-contact>
+<!-- END_INCLUDE(google-dfp:create-contact) -->
+
+<!-- BEGIN_INCLUDE(google-dfp:update-contact) -->
+    <google-dfp:update-contact config-ref="Google-dfp">
+    	<google-dfp:contact ref="#[payload]" />
+    </google-dfp:update-contact>
+<!-- END_INCLUDE(google-dfp:update-contact) -->
+
+<!-- BEGIN_INCLUDE(google-dfp:get-contact-by-name) -->
+    <google-dfp:get-contact-by-name config-ref="Google-dfp" contactName="Contact Name"  />
+<!-- END_INCLUDE(google-dfp:get-contact-by-name) -->
+
+<!-- BEGIN_INCLUDE(google-dfp:get-contact-by-id) -->
+    <google-dfp:get-contact-by-id config-ref="Google-dfp" contactId="123"/>
+<!-- END_INCLUDE(google-dfp:get-contact-by-id) -->
