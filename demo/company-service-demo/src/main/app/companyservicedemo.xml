@@ -36,8 +36,7 @@ http://www.mulesoft.org/schema/mule/ee/dw http://www.mulesoft.org/schema/mule/ee
 	<flow name="createCompanyFlow">
 		<http:listener config-ref="HTTP_Listener_Configuration"
 			path="/createCompany" doc:name="HTTP" allowedMethods="PUT" />
-		<custom-transformer class="com.ricston.googledemo.transformer.GoogleCompany"
-			doc:name="Create Google Company" />
+        <custom-transformer class="com.ricston.googledemo.transformer.GoogleCompany" doc:name="Create Google Company"/>
         <google-dfp:create-company config-ref="GoogleDfp__Config" doc:name="Create GoogleDfp Company">
             <google-dfp:company ref="#[payload]"/>
         </google-dfp:create-company>
@@ -67,7 +66,16 @@ http://www.mulesoft.org/schema/mule/ee/dw http://www.mulesoft.org/schema/mule/ee
 	</flow>
     <flow name="createContactFlow">
         <http:listener config-ref="HTTP_Listener_Configuration" path="/createContact" doc:name="HTTP"/>
-        <custom-transformer class="com.ricston.googledemo.transformer.GoogleContact" doc:name="Create Google Contact"/>
+        <dw:transform-message metadata:id="a13adadd-2d8f-4d46-839e-704b49ea54d8" doc:name="Transform Message">
+            <dw:set-payload><![CDATA[%dw 1.0
+%output application/java
+---
+{
+	companyId: payload.companyId,
+    name: payload.contactName,
+    email: payload.contactEmail
+} as :object {class: "com.google.api.ads.dfp.axis.v201605.Contact"}]]></dw:set-payload>
+        </dw:transform-message>
         <google-dfp:create-contact config-ref="GoogleDfp__Config" doc:name="GoogleDfp">
             <google-dfp:contact ref="#[payload]"/>
         </google-dfp:create-contact>
