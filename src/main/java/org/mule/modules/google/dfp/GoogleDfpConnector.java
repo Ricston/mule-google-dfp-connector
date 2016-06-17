@@ -863,7 +863,7 @@ public class GoogleDfpConnector {
      *             Create Failed Exception
      */
     @Processor
-    public Contact createContact(Contact contact) throws CreateFailedException {
+    public Contact createContact(@Default("#[payload]") Contact contact) throws CreateFailedException {
         return connectionStrategy.getContactService()
                 .createContact(connectionStrategy.getSession(), contact);
     }
@@ -878,7 +878,7 @@ public class GoogleDfpConnector {
      *             Update Failed Exception
      */
     @Processor
-    public Contact updateContact(Contact contact) throws UpdateFailedException {
+    public Contact updateContact(@Default("#[payload]") Contact contact) throws UpdateFailedException {
         return connectionStrategy.getContactService()
                 .updateContact(connectionStrategy.getSession(), contact);
     }
