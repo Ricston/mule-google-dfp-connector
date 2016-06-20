@@ -29,7 +29,7 @@ http://www.mulesoft.org/schema/mule/ee/dw http://www.mulesoft.org/schema/mule/ee
 		tokenServerUrl="${google-dfp.tokenServerUrl}" doc:name="GoogleDfp"/>
     <flow name="companyservicedemoFlow">
         <http:listener config-ref="HTTP_Listener_Configuration" path="/" doc:name="HTTP"/>
-        <parse-template location="src/main/resources/form.html" doc:name="Parse Template"/>
+        <parse-template location="form.html" doc:name="Parse Template"/>
         <set-property propertyName="Content-Type" value="text/html" doc:name="Property"/>
     </flow>
 	
