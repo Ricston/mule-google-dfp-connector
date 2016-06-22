@@ -11,7 +11,7 @@
 <!-- END_INCLUDE(google-dfp:config) -->
 
 <!-- BEGIN_INCLUDE(google-dfp:create-report) -->
-    <google-dfp:create-report config-ref="Google-dfp">
+    <google-dfp:create-report config-ref="Google-dfp" dimensions="LINE_ITEM_ID,MONTH_AND_YEAR" columns="REACH" dimensionAttributes="">
     	<google-dfp:start-date year="2014" month="06" day="01" />
     	<google-dfp:end-date year="2014" month="07" day="01" />
     </google-dfp:create-report>
@@ -62,93 +62,6 @@
     	<google-dfp:company ref="#[payload]" />
     </google-dfp:update-company>
 <!-- END_INCLUDE(google-dfp:update-company) -->
-
-<!-- BEGIN_INCLUDE(google-dfp:create-contracted-report) -->
-    <google-dfp:create-contracted-report config-ref="Google-dfp">
-    	<google-dfp:start-date year="2014" month="06" day="01" />
-    	<google-dfp:end-date year="2015" month="06" day="01" />
-    	<google-dfp:custom-ids>
-			<google-dfp:custom-id>123</google-dfp:custom-id>
-			<google-dfp:custom-id>456</google-dfp:custom-id>
-		</google-dfp:custom-ids>
-    </google-dfp:create-contracted-report>
-<!-- END_INCLUDE(google-dfp:create-contracted-report) -->
-
-<!-- BEGIN_INCLUDE(google-dfp:create-contracted-report-with-ad-units) -->
-    <google-dfp:create-contracted-report-with-ad-units config-ref="Google-dfp">
-    	<google-dfp:start-date year="2014" month="06" day="01" />
-    	<google-dfp:end-date year="2015" month="06" day="01" />
-    	<google-dfp:custom-ids>
-			<google-dfp:custom-id>123</google-dfp:custom-id>
-			<google-dfp:custom-id>456</google-dfp:custom-id>
-		</google-dfp:custom-ids>
-    </google-dfp:create-contracted-report-with-ad-units>
-<!-- END_INCLUDE(google-dfp:create-contracted-report-with-ad-units) -->
-
-<!-- BEGIN_INCLUDE(google-dfp:create-reach-report) -->
-    <google-dfp:create-reach-report config-ref="Google-dfp">
-    	<google-dfp:start-date year="2014" month="06" day="01" />
-    	<google-dfp:end-date year="2015" month="06" day="01" />
-    </google-dfp:create-reach-report>
-<!-- END_INCLUDE(google-dfp:create-reach-report) -->
-
-<!-- BEGIN_INCLUDE(google-dfp:create-if-report-is-ready) -->
-    <google-dfp:create-if-report-is-ready config-ref="Google-dfp">
-    	<google-dfp:start-date year="2014" month="06" day="01" />
-    	<google-dfp:end-date year="2015" month="06" day="01" />
-    </google-dfp:create-if-report-is-ready>
-<!-- END_INCLUDE(google-dfp:create-if-report-is-ready) -->
-
-<!-- BEGIN_INCLUDE(google-dfp:create-reach-lifetime-report) -->
-    <google-dfp:create-reach-lifetime-report config-ref="Google-dfp"7>
-<!-- END_INCLUDE(google-dfp:create-reach-lifetime-report) -->
-
-<!-- BEGIN_INCLUDE(google-dfp:create-all-active-line-items-report) -->
-    <google-dfp:create-all-active-line-items-report config-ref="Google-dfp">
-    	<google-dfp:start-date year="2014" month="06" day="01" />
-    	<google-dfp:end-date year="2015" month="06" day="01" />
-    </google-dfp:create-all-active-line-items-report>
-<!-- END_INCLUDE(google-dfp:create-all-active-line-items-report) -->
-
-<!-- BEGIN_INCLUDE(google-dfp:create-actuals-report) -->
-    <google-dfp:create-actuals-report config-ref="Google-dfp">
-    	<google-dfp:start-date year="2014" month="06" day="01" />
-    	<google-dfp:end-date year="2015" month="06" day="01" />
-    	<google-dfp:custom-ids>
-			<google-dfp:custom-id>123</google-dfp:custom-id>
-			<google-dfp:custom-id>456</google-dfp:custom-id>
-		</google-dfp:custom-ids>
-    </google-dfp:create-actuals-report>
-<!-- END_INCLUDE(google-dfp:create-actuals-report) -->
-
-<!-- BEGIN_INCLUDE(google-dfp:create-actuals-report-without-ads) -->
-    <google-dfp:create-actuals-report-without-ads config-ref="Google-dfp">
-    	<google-dfp:start-date year="2014" month="06" day="01" />
-    	<google-dfp:end-date year="2015" month="06" day="01" />
-    	<google-dfp:custom-ids>
-			<google-dfp:custom-id>123</google-dfp:custom-id>
-			<google-dfp:custom-id>456</google-dfp:custom-id>
-		</google-dfp:custom-ids>
-    </google-dfp:create-actuals-report-without-ads>
-<!-- END_INCLUDE(google-dfp:create-actuals-report-without-ads) -->
-
-<!-- BEGIN_INCLUDE(google-dfp:active-line-items-report) -->
-    <google-dfp:active-line-items-report config-ref="Google-dfp">
-    	<google-dfp:start-date year="2014" month="06" day="01" />
-    	<google-dfp:end-date year="2015" month="06" day="01" />
-    </google-dfp:active-line-items-report>
-<!-- END_INCLUDE(google-dfp:active-line-items-report) -->
-
-<!-- BEGIN_INCLUDE(google-dfp:age-and-gender-report) -->
-    <google-dfp:age-and-gender-report config-ref="Google-dfp">
-    	<google-dfp:start-date year="2014" month="06" day="01" />
-    	<google-dfp:end-date year="2015" month="06" day="01" />
-    	<google-dfp:custom-ids>
-			<google-dfp:custom-id>123</google-dfp:custom-id>
-			<google-dfp:custom-id>456</google-dfp:custom-id>
-		</google-dfp:custom-ids>
-    </google-dfp:age-and-gender-report>
-<!-- END_INCLUDE(google-dfp:age-and-gender-report) -->
 
 <!-- BEGIN_INCLUDE(google-dfp:get-products-by-statement) -->
     <google-dfp:get-products-by-statement config-ref="Google-dfp">
@@ -321,34 +234,6 @@
 <!-- BEGIN_INCLUDE(google-dfp:get-all-line-items-pql) -->
     <google-dfp:get-all-line-items-pql config-ref="Google-dfp"/>
 <!-- END_INCLUDE(google-dfp:get-all-line-items-pql) --> 
-
-<!-- BEGIN_INCLUDE(google-dfp:create-audience-report) -->
-    <google-dfp:create-audience-report config-ref="Google-dfp">
-    	<google-dfp:start-date year="2014" month="06" day="01" />
-    	<google-dfp:end-date year="2015" month="06" day="01" />
-    </google-dfp:create-audience-report>
-<!-- END_INCLUDE(google-dfp:create-audience-report) -->
-
-<!-- BEGIN_INCLUDE(google-dfp:google-dfp:create-targeting-report) -->
-    <google-dfp:google-dfp:create-targeting-report config-ref="Google-dfp">
-    	<google-dfp:start-date year="2014" month="06" day="01" />
-    	<google-dfp:end-date year="2015" month="06" day="01" />
-    </google-dfp:google-dfp:create-targeting-report>
-<!-- END_INCLUDE(google-dfp:google-dfp:create-targeting-report) -->
-
-<!-- BEGIN_INCLUDE(google-dfp:create-total-contracted-impressions-report) -->
-    <google-dfp:create-total-contracted-impressions-report config-ref="Google-dfp">
-    	<google-dfp:start-date year="2014" month="06" day="01" />
-    	<google-dfp:end-date year="2015" month="06" day="01" />
-    </google-dfp:create-total-contracted-impressions-report>
-<!-- END_INCLUDE(google-dfp:create-total-contracted-impressions-report) -->
-
-<!-- BEGIN_INCLUDE(google-dfp:create-total-delivered-impressions-report) -->
-    <google-dfp:create-total-delivered-impressions-report config-ref="Google-dfp">
-    	<google-dfp:start-date year="2014" month="06" day="01" />
-    	<google-dfp:end-date year="2015" month="06" day="01" />
-    </google-dfp:create-total-delivered-impressions-report>
-<!-- END_INCLUDE(google-dfp:create-total-delivered-impressions-report) -->
 
 <!-- BEGIN_INCLUDE(google-dfp:get-rate-cards-by-last-modified-date) -->
     <google-dfp:get-rate-cards-by-last-modified-date config-ref="Google-dfp">

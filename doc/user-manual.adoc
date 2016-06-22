@@ -92,7 +92,6 @@ To use the GoogleDFP connector, you must configure:
 |*Network Code*			|Enter the header networkCode associated with your application created in the API console.
 |*Refresh Token* 		|Enter the refresh token.
 |*Token Server URL* 	|Enter the DFP API token server URL. Optional.
-|*Custom Ids*		 	|Enter the custom IDs specific to your environment for the 'Create Report' feature.
 |===
 +
 - _Anypoint™ Studio XML Editor_

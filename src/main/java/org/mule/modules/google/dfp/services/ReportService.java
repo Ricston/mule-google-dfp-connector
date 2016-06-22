@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.rmi.RemoteException;
-import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.mule.modules.google.dfp.exceptions.CreateReportException;
@@ -16,7 +15,6 @@ import org.mule.modules.google.dfp.exceptions.ReportDownloadException;
 
 import com.google.api.ads.dfp.axis.factory.DfpServices;
 import com.google.api.ads.dfp.axis.utils.v201605.ReportDownloader;
-import com.google.api.ads.dfp.axis.utils.v201605.StatementBuilder;
 import com.google.api.ads.dfp.axis.v201605.ApiException;
 import com.google.api.ads.dfp.axis.v201605.Column;
 import com.google.api.ads.dfp.axis.v201605.Date;
@@ -30,15 +28,11 @@ import com.google.api.ads.dfp.axis.v201605.ReportQuery;
 import com.google.api.ads.dfp.axis.v201605.ReportQueryAdUnitView;
 import com.google.api.ads.dfp.axis.v201605.ReportServiceInterface;
 import com.google.api.ads.dfp.lib.client.DfpSession;
-import com.google.api.client.repackaged.com.google.common.base.Joiner;
 import com.google.common.io.Resources;
 
 public class ReportService {
 
     private static final Logger logger = Logger.getLogger(ReportService.class);
-
-    // Set the ID of the custom field to include in the report.
-    private long[] customFieldsIds;
 
     protected ReportServiceInterface createReportService(DfpSession session) {
         DfpServices dfpServices = new DfpServices();
@@ -50,31 +44,12 @@ public class ReportService {
         return reportService;
     }
 
-    public ReportJob createContractedProposalLineItemsReport(
-            DfpSession session, Date startDateWithTimezone,
-            Date endDateWithTimezone, List<Long> proposalLineIds)
+    public ReportJob createReport(DfpSession session,
+            Date startDateWithTimezone, Date endDateWithTimezone, String dimensions,
+            String columns, String dimensionAttributes)
             throws CreateReportException {
 
-        logger.info("Creating the contracted Proposal Line Items report");
-
-        // Dimensions to include in the report
-        Dimension[] dimensions = new Dimension[] {
-                Dimension.PROPOSAL_LINE_ITEM_ID,
-                Dimension.DATE
-        };
-
-        DimensionAttribute[] dimensionAttributes = new DimensionAttribute[] { DimensionAttribute.PROPOSAL_LINE_ITEM_SIZE
-        };
-
-        // Columns to include in the report
-        Column[] columns = new Column[] {
-                Column.CONTRACTED_REVENUE_LOCAL_CONTRACTED_AGENCY_COMMISSION,
-                Column.CONTRACTED_REVENUE_LOCAL_CONTRACTED_GROSS_REVENUE,
-                Column.CONTRACTED_REVENUE_LOCAL_CONTRACTED_NET_REVENUE,
-                Column.SALES_CONTRACT_CONTRACTED_IMPRESSIONS,
-                Column.SALES_CONTRACT_CONTRACTED_CLICKS,
-                Column.CONTRACTED_REVENUE_LOCAL_CONTRACTED_VAT
-        };
+        logger.info("Creating a report");
 
         try {
             // Get the ReportService.
@@ -82,178 +57,10 @@ public class ReportService {
 
             // Create report query.
             ReportQuery reportQuery = new ReportQuery();
-            reportQuery.setDimensions(dimensions);
-            reportQuery.setDimensionAttributes(dimensionAttributes);
+            reportQuery.setDimensions(transformStringToDimensions(dimensions));
             reportQuery.setAdUnitView(ReportQueryAdUnitView.TOP_LEVEL);
-            reportQuery.setColumns(columns);
-            reportQuery.setCustomFieldIds(customFieldsIds);
-
-            // Create report date range
-            reportQuery.setDateRangeType(DateRangeType.CUSTOM_DATE);
-
-            reportQuery.setStartDate(startDateWithTimezone);
-            reportQuery.setEndDate(endDateWithTimezone);
-
-            String whereClauseFilter = Joiner.on(", ")
-                    .join(proposalLineIds);
-            String queryStatement = "PROPOSAL_LINE_ITEM_ID IN ("
-                    + whereClauseFilter + ")";
-
-            return runReportJobByStatement(reportService, reportQuery, queryStatement);
-
-        } catch (ApiException e) {
-            throw new CreateReportException(e);
-        } catch (RemoteException e) {
-            throw new CreateReportException(e);
-        } catch (Exception e) {
-            throw new CreateReportException(e);
-        }
-
-    }
-
-    private ReportJob runReportJobByStatement(ReportServiceInterface reportService, ReportQuery reportQuery, String queryStatement) throws RemoteException, ApiException {
-        StatementBuilder statementBuilder = new StatementBuilder()
-                .where(queryStatement);
-
-        reportQuery.setStatement(statementBuilder.toStatement());
-
-        // Create report job.
-        ReportJob reportJob = new ReportJob();
-        reportJob.setReportQuery(reportQuery);
-
-        // Run report job.
-        return reportService.runReportJob(reportJob);
-    }
-
-    public ReportJob createContractedProposalLineItemsReportWithAdUnits(
-            DfpSession session, Date startDateWithTimezone,
-            Date endDateWithTimezone, List<Long> proposalLineIds)
-            throws CreateReportException {
-
-        logger.info("Creating the contracted Proposal Line Items with Ad Units report");
-
-        // Dimensions to include in the report
-        Dimension[] dimensions = new Dimension[] {
-                Dimension.PROPOSAL_LINE_ITEM_ID,
-                Dimension.DATE,
-                Dimension.AD_UNIT_ID,
-                Dimension.AD_UNIT_NAME
-        };
-
-        // Columns to include in the report
-        Column[] columns = new Column[] {
-                Column.UNIFIED_REVENUE_LOCAL_UNIFIED_AGENCY_COMMISSION,
-                Column.UNIFIED_REVENUE_LOCAL_UNIFIED_GROSS_REVENUE,
-                Column.UNIFIED_REVENUE_LOCAL_UNIFIED_NET_REVENUE
-        };
-
-        try {
-            // Get the ReportService.
-            ReportServiceInterface reportService = createReportService(session);
-
-            // Create report query.
-            ReportQuery reportQuery = new ReportQuery();
-            reportQuery.setDimensions(dimensions);
-            reportQuery.setAdUnitView(ReportQueryAdUnitView.HIERARCHICAL);
-            reportQuery.setColumns(columns);
-
-            // Create report date range
-            reportQuery.setDateRangeType(DateRangeType.CUSTOM_DATE);
-
-            reportQuery.setStartDate(startDateWithTimezone);
-            reportQuery.setEndDate(endDateWithTimezone);
-
-            String whereClauseFilter = Joiner.on(", ")
-                    .join(proposalLineIds);
-            String queryStatement = "PROPOSAL_LINE_ITEM_ID IN ("
-                    + whereClauseFilter + ")";
-
-            return runReportJobByStatement(reportService, reportQuery, queryStatement);
-
-        } catch (ApiException e) {
-            throw new CreateReportException(e);
-        } catch (RemoteException e) {
-            throw new CreateReportException(e);
-        } catch (Exception e) {
-            throw new CreateReportException(e);
-        }
-
-    }
-
-    public ReportJob createReachLifetimeReport(DfpSession session)
-            throws CreateReportException {
-
-        logger.info("Creating the reach lifetime report");
-
-        // Dimensions to include in the report
-        Dimension[] dimensions = new Dimension[] { Dimension.LINE_ITEM_ID
-        };
-
-        // Columns to include in the report
-        Column[] columns = new Column[] {
-                Column.REACH,
-                Column.REACH_AVERAGE_REVENUE,
-                Column.REACH_FREQUENCY
-        };
-
-        try {
-            // Get the ReportService.
-            ReportServiceInterface reportService = createReportService(session);
-
-            // Create report query.
-            ReportQuery reportQuery = new ReportQuery();
-            reportQuery.setDimensions(dimensions);
-            reportQuery.setAdUnitView(ReportQueryAdUnitView.TOP_LEVEL);
-            reportQuery.setColumns(columns);
-
-            // Create report date range
-            reportQuery.setDateRangeType(DateRangeType.REACH_LIFETIME);
-
-            // Create report job.
-            ReportJob reportJob = new ReportJob();
-            reportJob.setReportQuery(reportQuery);
-
-            // Run report job.
-            return reportService.runReportJob(reportJob);
-
-        } catch (ApiException e) {
-            throw new CreateReportException(e);
-        } catch (RemoteException e) {
-            throw new CreateReportException(e);
-        } catch (Exception e) {
-            throw new CreateReportException(e);
-        }
-
-    }
-
-    public ReportJob createReachReport(DfpSession session,
-            Date startDateWithTimezone, Date endDateWithTimezone)
-            throws CreateReportException {
-
-        logger.info("Creating the reach report");
-
-        // Dimensions to include in the report
-        Dimension[] dimensions = new Dimension[] {
-                Dimension.LINE_ITEM_ID,
-                Dimension.MONTH_AND_YEAR
-        };
-
-        // Columns to include in the report
-        Column[] columns = new Column[] {
-                Column.REACH,
-                Column.REACH_AVERAGE_REVENUE,
-                Column.REACH_FREQUENCY
-        };
-
-        try {
-            // Get the ReportService.
-            ReportServiceInterface reportService = createReportService(session);
-
-            // Create report query.
-            ReportQuery reportQuery = new ReportQuery();
-            reportQuery.setDimensions(dimensions);
-            reportQuery.setAdUnitView(ReportQueryAdUnitView.TOP_LEVEL);
-            reportQuery.setColumns(columns);
+            reportQuery.setColumns(transformStringToColumns(columns));
+            reportQuery.setDimensionAttributes(transformStringToDimensionAttributes(dimensionAttributes));
 
             // Create report date range
             reportQuery.setDateRangeType(DateRangeType.CUSTOM_DATE);
@@ -272,68 +79,7 @@ public class ReportService {
             throw new CreateReportException(e);
         } catch (RemoteException e) {
             throw new CreateReportException(e);
-        } catch (Exception e) {
-            throw new CreateReportException(e);
-        }
-
-    }
-
-    public ReportJob createActualsReport(DfpSession session,
-            Date startDateWithTimezone, Date endDateWithTimezone,
-            List<Long> lineItemIds) throws CreateReportException {
-
-        logger.info("Creating the actuals report");
-
-        // Dimensions to include in the report
-        Dimension[] dimensions = new Dimension[] {
-                Dimension.LINE_ITEM_ID,
-                Dimension.DATE,
-                Dimension.AD_UNIT_ID,
-                Dimension.AD_UNIT_NAME
-        };
-
-        // Columns to include in the report
-        Column[] columns = new Column[] {
-                Column.TOTAL_LINE_ITEM_LEVEL_IMPRESSIONS,
-                Column.TOTAL_LINE_ITEM_LEVEL_CLICKS,
-                Column.TOTAL_LINE_ITEM_LEVEL_ALL_REVENUE,
-                Column.TOTAL_LINE_ITEM_LEVEL_CTR,
-                Column.UNIFIED_REVENUE_LOCAL_UNRECONCILED_NET_REVENUE,
-                Column.UNIFIED_REVENUE_LOCAL_UNRECONCILED_GROSS_REVENUE,
-                Column.UNIFIED_REVENUE_LOCAL_UNIFIED_AGENCY_COMMISSION,
-                Column.UNIFIED_REVENUE_LOCAL_UNIFIED_GROSS_REVENUE,
-                Column.UNIFIED_REVENUE_LOCAL_UNIFIED_NET_REVENUE,
-                Column.UNIFIED_REVENUE_UNIFIED_NET_REVENUE,
-                Column.UNIFIED_REVENUE_UNIFIED_AGENCY_COMMISSION,
-                Column.UNIFIED_REVENUE_UNIFIED_GROSS_REVENUE
-        };
-
-        try {
-            // Get the ReportService.
-            ReportServiceInterface reportService = createReportService(session);
-
-            // Create report query.
-            ReportQuery reportQuery = new ReportQuery();
-            reportQuery.setDimensions(dimensions);
-            reportQuery.setAdUnitView(ReportQueryAdUnitView.HIERARCHICAL);
-            reportQuery.setColumns(columns);
-
-            // Create report date range
-            reportQuery.setDateRangeType(DateRangeType.CUSTOM_DATE);
-
-            reportQuery.setStartDate(startDateWithTimezone);
-            reportQuery.setEndDate(endDateWithTimezone);
-
-            String whereClauseFilter = Joiner.on(", ")
-                    .join(lineItemIds);
-            String queryStatement = "LINE_ITEM_ID IN (" + whereClauseFilter
-                    + ")";
-
-            return runReportJobByStatement(reportService, reportQuery, queryStatement);
-
-        } catch (ApiException e) {
-            throw new CreateReportException(e);
-        } catch (RemoteException e) {
+        } catch (IllegalArgumentException e) {
             throw new CreateReportException(e);
         } catch (Exception e) {
             throw new CreateReportException(e);
@@ -341,504 +87,74 @@ public class ReportService {
 
     }
 
-    public ReportJob createActualsReportWithoutAds(DfpSession session,
-            Date startDateWithTimezone, Date endDateWithTimezone,
-            List<Long> lineItemIds) throws CreateReportException {
+    private Dimension[] transformStringToDimensions(String items) throws IllegalArgumentException {
+        Dimension[] dimArray;
+        if (items == null) {
+            dimArray = null;
+        } else {
+            String[] dimensions = items.split(",");
+            dimArray = new Dimension[dimensions.length];
+            int i = 0;
+            try {
+                for (String dim : dimensions) {
+                    dimArray[i] = Dimension.fromValue(dim.toUpperCase()
+                            .trim());
+                    i++;
+                }
 
-        logger.info("Creating the actuals report");
-
-        // Dimensions to include in the report
-        Dimension[] dimensions = new Dimension[] {
-                Dimension.LINE_ITEM_ID,
-                Dimension.DATE
-        };
-
-        // Columns to include in the report
-        Column[] columns = new Column[] {
-                Column.TOTAL_LINE_ITEM_LEVEL_IMPRESSIONS,
-                Column.TOTAL_LINE_ITEM_LEVEL_CLICKS,
-                Column.TOTAL_LINE_ITEM_LEVEL_ALL_REVENUE,
-                Column.TOTAL_LINE_ITEM_LEVEL_CTR,
-                Column.UNIFIED_REVENUE_LOCAL_UNRECONCILED_NET_REVENUE,
-                Column.UNIFIED_REVENUE_LOCAL_UNRECONCILED_GROSS_REVENUE,
-                Column.UNIFIED_REVENUE_LOCAL_UNIFIED_AGENCY_COMMISSION,
-                Column.UNIFIED_REVENUE_LOCAL_UNIFIED_GROSS_REVENUE,
-                Column.UNIFIED_REVENUE_LOCAL_UNIFIED_NET_REVENUE,
-                Column.UNIFIED_REVENUE_UNIFIED_NET_REVENUE,
-                Column.UNIFIED_REVENUE_UNIFIED_AGENCY_COMMISSION,
-                Column.UNIFIED_REVENUE_UNIFIED_GROSS_REVENUE
-        };
-
-        try {
-            // Get the ReportService.
-            ReportServiceInterface reportService = createReportService(session);
-
-            // Create report query.
-            ReportQuery reportQuery = new ReportQuery();
-            reportQuery.setDimensions(dimensions);
-            reportQuery.setAdUnitView(ReportQueryAdUnitView.HIERARCHICAL);
-            reportQuery.setColumns(columns);
-
-            // Create report date range
-            reportQuery.setDateRangeType(DateRangeType.CUSTOM_DATE);
-
-            reportQuery.setStartDate(startDateWithTimezone);
-            reportQuery.setEndDate(endDateWithTimezone);
-
-            String whereClauseFilter = Joiner.on(", ")
-                    .join(lineItemIds);
-            String queryStatement = "LINE_ITEM_ID IN (" + whereClauseFilter
-                    + ")";
-
-            return runReportJobByStatement(reportService, reportQuery, queryStatement);
-
-        } catch (ApiException e) {
-            throw new CreateReportException(e);
-        } catch (RemoteException e) {
-            throw new CreateReportException(e);
-        } catch (Exception e) {
-            throw new CreateReportException(e);
+            } catch (IllegalArgumentException e) {
+                String failString = dimensions[i];
+                throw new IllegalArgumentException("Unknown Dimension: " + failString);
+            }
         }
-
+        return dimArray;
     }
 
-    public ReportJob activeLineItemsReport(DfpSession session,
-            Date startDateWithTimezone, Date endDateWithTimezone)
-            throws CreateReportException {
+    private DimensionAttribute[] transformStringToDimensionAttributes(String items) throws IllegalArgumentException {
+        DimensionAttribute[] dimArray;
+        if (items == null) {
+            dimArray = null;
+        } else {
+            String[] dimensionsAtt = items.split(",");
+            dimArray = new DimensionAttribute[dimensionsAtt.length];
+            int i = 0;
+            try {
+                for (String dim : dimensionsAtt) {
+                    dimArray[i] = DimensionAttribute.fromValue(dim.toUpperCase()
+                            .trim());
+                    i++;
+                }
 
-        logger.info("Creating the actuals report");
-
-        // Dimensions to include in the report
-        Dimension[] dimensions = new Dimension[] {
-                Dimension.LINE_ITEM_ID,
-                Dimension.DATE
-        };
-
-        // Columns to include in the report
-        Column[] columns = new Column[] {
-                Column.TOTAL_LINE_ITEM_LEVEL_IMPRESSIONS,
-                Column.TOTAL_LINE_ITEM_LEVEL_CLICKS,
-                Column.TOTAL_LINE_ITEM_LEVEL_ALL_REVENUE,
-                Column.TOTAL_LINE_ITEM_LEVEL_CTR,
-                Column.UNIFIED_REVENUE_LOCAL_UNRECONCILED_NET_REVENUE,
-                Column.UNIFIED_REVENUE_LOCAL_UNRECONCILED_GROSS_REVENUE,
-                Column.UNIFIED_REVENUE_LOCAL_UNIFIED_AGENCY_COMMISSION,
-                Column.UNIFIED_REVENUE_LOCAL_UNIFIED_GROSS_REVENUE,
-                Column.UNIFIED_REVENUE_LOCAL_UNIFIED_NET_REVENUE,
-                Column.UNIFIED_REVENUE_UNIFIED_NET_REVENUE,
-                Column.UNIFIED_REVENUE_UNIFIED_AGENCY_COMMISSION,
-                Column.UNIFIED_REVENUE_UNIFIED_GROSS_REVENUE
-        };
-
-        try {
-            // Get the ReportService.
-            ReportServiceInterface reportService = createReportService(session);
-
-            // Create report query.
-            ReportQuery reportQuery = new ReportQuery();
-            reportQuery.setDimensions(dimensions);
-            reportQuery.setAdUnitView(ReportQueryAdUnitView.HIERARCHICAL);
-            reportQuery.setColumns(columns);
-
-            // Create report date range
-            reportQuery.setDateRangeType(DateRangeType.CUSTOM_DATE);
-
-            reportQuery.setStartDate(startDateWithTimezone);
-            reportQuery.setEndDate(endDateWithTimezone);
-
-            // Create report job.
-            ReportJob reportJob = new ReportJob();
-            reportJob.setReportQuery(reportQuery);
-
-            // Run report job.
-            return reportService.runReportJob(reportJob);
-
-        } catch (ApiException e) {
-            throw new CreateReportException(e);
-        } catch (RemoteException e) {
-            throw new CreateReportException(e);
-        } catch (Exception e) {
-            throw new CreateReportException(e);
+            } catch (IllegalArgumentException e) {
+                String failString = dimensionsAtt[i];
+                throw new IllegalArgumentException("Unknown DimensionAttribute: " + failString);
+            }
         }
 
+        return dimArray;
     }
 
-    public ReportJob createAllActiveLineItemsReport(DfpSession session,
-            Date startDateWithTimezone, Date endDateWithTimezone)
-            throws CreateReportException {
+    private Column[] transformStringToColumns(String items) throws IllegalArgumentException {
+        Column[] dimArray;
+        if (items == null) {
+            dimArray = null;
+        } else {
+            String[] dimensionsAtt = items.split(",");
+            dimArray = new Column[dimensionsAtt.length];
+            int i = 0;
+            try {
+                for (String dim : dimensionsAtt) {
+                    dimArray[i] = Column.fromValue(dim.toUpperCase()
+                            .trim());
+                    i++;
+                }
 
-        logger.info("Creating the ongoing line items report");
-
-        // Dimensions to include in the report
-        Dimension[] dimensions = new Dimension[] {
-                Dimension.LINE_ITEM_ID,
-                Dimension.PROPOSAL_LINE_ITEM_ID
-        };
-
-        // Columns to include in the report
-        Column[] columns = new Column[] {
-                Column.TOTAL_LINE_ITEM_LEVEL_IMPRESSIONS,
-                Column.UNIFIED_REVENUE_LOCAL_UNIFIED_GROSS_REVENUE,
-                Column.UNIFIED_REVENUE_LOCAL_UNIFIED_NET_REVENUE
-        };
-
-        try {
-            // Get the ReportService.
-            ReportServiceInterface reportService = createReportService(session);
-
-            // Create report query.
-            ReportQuery reportQuery = new ReportQuery();
-            reportQuery.setDimensions(dimensions);
-            reportQuery.setAdUnitView(ReportQueryAdUnitView.TOP_LEVEL);
-            reportQuery.setColumns(columns);
-
-            // Create report date range
-            reportQuery.setDateRangeType(DateRangeType.CUSTOM_DATE);
-
-            reportQuery.setStartDate(startDateWithTimezone);
-            reportQuery.setEndDate(endDateWithTimezone);
-
-            // Create report job.
-            ReportJob reportJob = new ReportJob();
-            reportJob.setReportQuery(reportQuery);
-
-            // Run report job.
-            return reportService.runReportJob(reportJob);
-
-        } catch (ApiException e) {
-            throw new CreateReportException(e);
-        } catch (RemoteException e) {
-            throw new CreateReportException(e);
-        } catch (Exception e) {
-            throw new CreateReportException(e);
+            } catch (IllegalArgumentException e) {
+                String failString = dimensionsAtt[i];
+                throw new IllegalArgumentException("Unknown Column: " + failString);
+            }
         }
-
-    }
-
-    public ReportJob checkIfReportIsReady(DfpSession session,
-            Date startDateWithTimezone, Date endDateWithTimezone)
-            throws CreateReportException {
-
-        logger.info("Checking if actuals reports are ready");
-
-        // Dimensions to include in the report
-        Dimension[] dimensions = new Dimension[] {
-                Dimension.DATE,
-                Dimension.HOUR
-        };
-
-        // Columns to include in the report
-        Column[] columns = new Column[] { Column.TOTAL_INVENTORY_LEVEL_IMPRESSIONS
-        };
-
-        try {
-            // Get the ReportService.
-            ReportServiceInterface reportService = createReportService(session);
-
-            // Create report query.
-            ReportQuery reportQuery = new ReportQuery();
-            reportQuery.setDimensions(dimensions);
-            reportQuery.setAdUnitView(ReportQueryAdUnitView.TOP_LEVEL);
-            reportQuery.setColumns(columns);
-
-            // Create report date range
-            reportQuery.setDateRangeType(DateRangeType.CUSTOM_DATE);
-
-            reportQuery.setStartDate(startDateWithTimezone);
-            reportQuery.setEndDate(endDateWithTimezone);
-
-            // Create report job.
-            ReportJob reportJob = new ReportJob();
-            reportJob.setReportQuery(reportQuery);
-
-            // Run report job.
-            return reportService.runReportJob(reportJob);
-
-        } catch (ApiException e) {
-            throw new CreateReportException(e);
-        } catch (RemoteException e) {
-            throw new CreateReportException(e);
-        } catch (Exception e) {
-            throw new CreateReportException(e);
-        }
-
-    }
-
-    public ReportJob ageAndGenderReport(DfpSession session,
-            Date startDateWithTimezone, Date endDateWithTimezone,
-            List<Integer> lineItems) throws CreateReportException {
-
-        logger.info("Creating the age and gender report");
-
-        // Dimensions to include in the report
-        Dimension[] dimensions = new Dimension[] {
-                Dimension.CUSTOM_CRITERIA,
-                Dimension.DATE,
-                Dimension.LINE_ITEM_ID,
-                Dimension.PROPOSAL_ID
-        };
-
-        // Columns to include in the report
-        Column[] columns = new Column[] {
-                Column.TOTAL_LINE_ITEM_LEVEL_IMPRESSIONS,
-                Column.TOTAL_LINE_ITEM_LEVEL_CLICKS
-        };
-
-        try {
-            // Get the ReportService.
-            ReportServiceInterface reportService = createReportService(session);
-
-            // Create report query.
-            ReportQuery reportQuery = new ReportQuery();
-            reportQuery.setDimensions(dimensions);
-            reportQuery.setColumns(columns);
-
-            // Create report date range
-            reportQuery.setDateRangeType(DateRangeType.CUSTOM_DATE);
-
-            reportQuery.setStartDate(startDateWithTimezone);
-            reportQuery.setEndDate(endDateWithTimezone);
-
-            String whereClauseFilter = Joiner.on(", ")
-                    .join(lineItems);
-            String queryStatement = "LINE_ITEM_ID IN (" + whereClauseFilter
-                    + ")";
-            return runReportJobByStatement(reportService, reportQuery, queryStatement);
-
-        } catch (ApiException e) {
-            throw new CreateReportException(e);
-        } catch (RemoteException e) {
-            throw new CreateReportException(e);
-        } catch (Exception e) {
-            throw new CreateReportException(e);
-        }
-
-    }
-
-    public ReportJob totalContractedImpressions(DfpSession session,
-            Date startDateWithTimezone, Date endDateWithTimezone)
-            throws CreateReportException {
-
-        logger.info("Creating total contracted impressions report");
-
-        // Dimensions to include in the report
-        Dimension[] dimensions = new Dimension[] {
-                Dimension.PROPOSAL_LINE_ITEM_ID,
-                Dimension.MONTH_AND_YEAR
-        };
-
-        DimensionAttribute[] dimensionAttributes = new DimensionAttribute[] {
-                DimensionAttribute.PROPOSAL_LINE_ITEM_START_DATE_TIME,
-                DimensionAttribute.PROPOSAL_LINE_ITEM_END_DATE_TIME
-        };
-
-        // Columns to include in the report
-        Column[] columns = new Column[] {
-                Column.CONTRACTED_REVENUE_LOCAL_CONTRACTED_GROSS_REVENUE,
-                Column.SALES_CONTRACT_CONTRACTED_IMPRESSIONS
-        };
-
-        try {
-            // Get the ReportService.
-            ReportServiceInterface reportService = createReportService(session);
-
-            // Create report query.
-            ReportQuery reportQuery = new ReportQuery();
-            reportQuery.setDimensions(dimensions);
-            reportQuery.setDimensionAttributes(dimensionAttributes);
-            reportQuery.setAdUnitView(ReportQueryAdUnitView.TOP_LEVEL);
-            reportQuery.setColumns(columns);
-
-            // Create report date range
-            reportQuery.setDateRangeType(DateRangeType.CUSTOM_DATE);
-
-            reportQuery.setStartDate(startDateWithTimezone);
-            reportQuery.setEndDate(endDateWithTimezone);
-
-            StatementBuilder statementBuilder = new StatementBuilder();
-
-            reportQuery.setStatement(statementBuilder.toStatement());
-
-            // Create report job.
-            ReportJob reportJob = new ReportJob();
-            reportJob.setReportQuery(reportQuery);
-
-            // Run report job.
-            return reportService.runReportJob(reportJob);
-
-        } catch (ApiException e) {
-            throw new CreateReportException(e);
-        } catch (RemoteException e) {
-            throw new CreateReportException(e);
-        } catch (Exception e) {
-            throw new CreateReportException(e);
-        }
-    }
-
-    public ReportJob totalDeliveredImpressions(DfpSession session,
-            Date startDateWithTimezone, Date endDateWithTimezone)
-            throws CreateReportException {
-
-        logger.info("Creating total delivered impressons report");
-
-        // Dimensions to include in the report
-        Dimension[] dimensions = new Dimension[] {
-                Dimension.LINE_ITEM_ID,
-                Dimension.PROPOSAL_LINE_ITEM_ID,
-                Dimension.MONTH_AND_YEAR
-        };
-
-        DimensionAttribute[] dimensionAttributes = new DimensionAttribute[] {
-                DimensionAttribute.LINE_ITEM_START_DATE_TIME,
-                DimensionAttribute.LINE_ITEM_END_DATE_TIME
-        };
-
-        // Columns to include in the report
-        Column[] columns = new Column[] {
-                Column.TOTAL_LINE_ITEM_LEVEL_IMPRESSIONS,
-                Column.UNIFIED_REVENUE_LOCAL_UNIFIED_GROSS_REVENUE
-        };
-
-        try {
-            // Get the ReportService.
-            ReportServiceInterface reportService = createReportService(session);
-
-            // Create report query.
-            ReportQuery reportQuery = new ReportQuery();
-            reportQuery.setDimensions(dimensions);
-            reportQuery.setDimensionAttributes(dimensionAttributes);
-            reportQuery.setAdUnitView(ReportQueryAdUnitView.TOP_LEVEL);
-            reportQuery.setColumns(columns);
-
-            // Create report date range
-            reportQuery.setDateRangeType(DateRangeType.CUSTOM_DATE);
-
-            reportQuery.setStartDate(startDateWithTimezone);
-            reportQuery.setEndDate(endDateWithTimezone);
-
-            // Create report job.
-            ReportJob reportJob = new ReportJob();
-            reportJob.setReportQuery(reportQuery);
-
-            // Run report job.
-            return reportService.runReportJob(reportJob);
-
-        } catch (ApiException e) {
-            throw new CreateReportException(e);
-        } catch (RemoteException e) {
-            throw new CreateReportException(e);
-        } catch (Exception e) {
-            throw new CreateReportException(e);
-        }
-
-    }
-
-    public ReportJob createTargetingReport(DfpSession session,
-            Date startDateWithTimezone, Date endDateWithTimezone)
-            throws CreateReportException {
-
-        logger.info("Creating Targeting report");
-
-        // Dimensions to include in the report
-        Dimension[] dimensions = new Dimension[] {
-                Dimension.LINE_ITEM_ID,
-                Dimension.TARGETING,
-                Dimension.MONTH_AND_YEAR
-        };
-
-        Column[] columns = new Column[] {
-                Column.TOTAL_LINE_ITEM_LEVEL_IMPRESSIONS,
-                Column.TOTAL_LINE_ITEM_LEVEL_CLICKS,
-                Column.TOTAL_LINE_ITEM_LEVEL_CPM_AND_CPC_REVENUE
-        };
-
-        try {
-            // Get the ReportService.
-            ReportServiceInterface reportService = createReportService(session);
-
-            // Create report query.
-            ReportQuery reportQuery = new ReportQuery();
-            reportQuery.setDimensions(dimensions);
-            reportQuery.setAdUnitView(ReportQueryAdUnitView.TOP_LEVEL);
-            reportQuery.setColumns(columns);
-
-            // Create report date range
-            reportQuery.setDateRangeType(DateRangeType.CUSTOM_DATE);
-
-            reportQuery.setStartDate(startDateWithTimezone);
-            reportQuery.setEndDate(endDateWithTimezone);
-
-            // Create report job.
-            ReportJob reportJob = new ReportJob();
-            reportJob.setReportQuery(reportQuery);
-
-            // Run report job.
-            return reportService.runReportJob(reportJob);
-
-        } catch (ApiException e) {
-            throw new CreateReportException(e);
-        } catch (RemoteException e) {
-            throw new CreateReportException(e);
-        } catch (Exception e) {
-            throw new CreateReportException(e);
-        }
-
-    }
-
-    public ReportJob createAudienceReport(DfpSession session,
-            Date startDateWithTimezone, Date endDateWithTimezone)
-            throws CreateReportException {
-
-        logger.info("Creating Audience report");
-
-        // Dimensions to include in the report
-        Dimension[] dimensions = new Dimension[] {
-                Dimension.LINE_ITEM_ID,
-                Dimension.AUDIENCE_SEGMENT_ID,
-                Dimension.MONTH_AND_YEAR,
-                Dimension.AD_UNIT_ID,
-                Dimension.AD_UNIT_NAME
-        };
-
-        // Columns to include in the report
-        Column[] columns = new Column[] {
-                Column.AD_SERVER_IMPRESSIONS,
-                Column.TOTAL_LINE_ITEM_LEVEL_CLICKS,
-                Column.TOTAL_LINE_ITEM_LEVEL_CPM_AND_CPC_REVENUE
-        };
-
-        try {
-            // Get the ReportService.
-            ReportServiceInterface reportService = createReportService(session);
-
-            // Create report query.
-            ReportQuery reportQuery = new ReportQuery();
-            reportQuery.setDimensions(dimensions);
-            // reportQuery.setDimensionAttributes(dimensionAttributes);
-            reportQuery.setAdUnitView(ReportQueryAdUnitView.TOP_LEVEL);
-            reportQuery.setColumns(columns);
-
-            // Create report date range
-            reportQuery.setDateRangeType(DateRangeType.CUSTOM_DATE);
-
-            reportQuery.setStartDate(startDateWithTimezone);
-            reportQuery.setEndDate(endDateWithTimezone);
-
-            // Create report job.
-            ReportJob reportJob = new ReportJob();
-            reportJob.setReportQuery(reportQuery);
-
-            // Run report job.
-            return reportService.runReportJob(reportJob);
-
-        } catch (ApiException e) {
-            throw new CreateReportException(e);
-        } catch (RemoteException e) {
-            throw new CreateReportException(e);
-        } catch (Exception e) {
-            throw new CreateReportException(e);
-        }
-
+        return dimArray;
     }
 
     public InputStream downloadReport(DfpSession session, ReportJob reportJob)
@@ -881,14 +197,6 @@ public class ReportService {
             logger.error("Exception", e);
             throw new ReportDownloadException(e);
         }
-    }
-
-    public long[] getCustomFieldsIds() {
-        return customFieldsIds;
-    }
-
-    public void setCustomFieldsIds(long[] customFieldsIds) {
-        this.customFieldsIds = customFieldsIds;
     }
 
 }

@@ -21,21 +21,8 @@ Supported Operations:
 
 *Report Service*:
 
-* Create Reach Report
+* Create Report
 * Download Report
-* Create Actuals Report
-* Create Actuals Report Without Ads
-* Create All Active Line Items Report
-* Create Audience Report
-* Create Contracted Proposal Line Items Report
-* Create Contracted Proposal Line Items Report With Ad Units
-* Create Reach Lifetime Report
-* Create Targeting Report
-* Active Line Items Report
-* Age And Gender Report
-* Check If Report Is Ready
-* Total Contracted Impressions
-* Total Delivered Impressions
 
 *Reconciliation Report Service*:
 
@@ -108,4 +95,8 @@ Supported Operations:
 
 *Contact Service*:
 
-
+* Get Contacts By Statement
+* Get Contact By Id
+* Get Contact By Name
+* Create Contact
+* Update Contact

@@ -10,10 +10,10 @@ import java.util.List;
 
 import org.mule.api.annotations.Config;
 import org.mule.api.annotations.Connector;
-import org.mule.api.annotations.MetaDataScope;
 import org.mule.api.annotations.Processor;
 import org.mule.api.annotations.licensing.RequiresEnterpriseLicense;
 import org.mule.api.annotations.param.Default;
+import org.mule.api.annotations.param.Optional;
 import org.mule.modules.google.dfp.exceptions.AudienceSegmentException;
 import org.mule.modules.google.dfp.exceptions.CreateFailedException;
 import org.mule.modules.google.dfp.exceptions.CreateReportException;
@@ -70,7 +70,6 @@ import com.google.api.ads.dfp.axis.v201605.User;
  * 
  * @author Ricston, Ltd.
  */
-@MetaDataScope(DimensionCategory.class)
 @RequiresEnterpriseLicense
 @Connector(name = "google-dfp", schemaVersion = "1.0", friendlyName = "GoogleDfp", minMuleVersion = "3.6")
 public class GoogleDfpConnector {
@@ -79,48 +78,14 @@ public class GoogleDfpConnector {
     GoogleDfpConnectionStrategy connectionStrategy;
 
     /**
-     * Creates a report given a date range
+     * Creates a report with the given parameters dynamically
      * 
-     * @param startDate
-     *            the start of the report date
-     * @param endDate
-     *            the end of the report date
-     * @param ids
-     *            the proposal line ids
-     * @return The report job
-     * @throws CreateReportException
-     *             Create Report Exception
-     * 
-     */
-    @Processor
-    public ReportJob createContractedReport(Date startDate, Date endDate, List<Long> ids) throws CreateReportException {
-        return connectionStrategy.getReportService()
-                .createContractedProposalLineItemsReport(connectionStrategy.getSession(), startDate, endDate, ids);
-    }
-
-    /**
-     * Creates a report given a date range
-     * 
-     * @param startDate
-     *            the start of the report date
-     * @param endDate
-     *            the end of the report date
-     * @param ids
-     *            the proposal line ids
-     * @return The report job
-     * @throws CreateReportException
-     *             Create Report Exception
-     * 
-     */
-    @Processor
-    public ReportJob createContractedReportWithAdUnits(Date startDate, Date endDate, List<Long> ids) throws CreateReportException {
-        return connectionStrategy.getReportService()
-                .createContractedProposalLineItemsReportWithAdUnits(connectionStrategy.getSession(), startDate, endDate, ids);
-    }
-
-    /**
-     * Creates a report given a date range
-     * 
+     * @param dimensions
+     *            comma-delimited dimensions list
+     * @param columns
+     *            comma-delimited columns list
+     * @param dimensionAttributes
+     *            comma-delimited dimension attributes list
      * @param startDate
      *            the start of the report date
      * @param endDate
@@ -128,212 +93,12 @@ public class GoogleDfpConnector {
      * @return The report job
      * @throws CreateReportException
      *             Create Report Exception
-     * 
      */
     @Processor
-    public ReportJob createAudienceReport(Date startDate, Date endDate) throws CreateReportException {
+    public ReportJob createReport(String dimensions, String columns, @Optional String dimensionAttributes, Date startDate,
+            Date endDate) throws CreateReportException {
         return connectionStrategy.getReportService()
-                .createAudienceReport(connectionStrategy.getSession(), startDate, endDate);
-    }
-
-    /**
-     * Creates a report given a date range
-     * 
-     * @param startDate
-     *            the start of the report date
-     * @param endDate
-     *            the end of the report date
-     * @return The report job
-     * @throws CreateReportException
-     *             Create Report Exception
-     * 
-     */
-    @Processor
-    public ReportJob createTargetingReport(Date startDate, Date endDate) throws CreateReportException {
-        return connectionStrategy.getReportService()
-                .createTargetingReport(connectionStrategy.getSession(), startDate, endDate);
-    }
-
-    /**
-     * Creates a report given a date range
-     * 
-     * @param startDate
-     *            the start of the report date
-     * @param endDate
-     *            the end of the report date
-     * @return The report job
-     * @throws CreateReportException
-     *             Create Report Exception
-     * 
-     */
-    @Processor
-    public ReportJob createTotalContractedImpressionsReport(Date startDate, Date endDate) throws CreateReportException {
-        return connectionStrategy.getReportService()
-                .totalContractedImpressions(connectionStrategy.getSession(), startDate, endDate);
-    }
-
-    /**
-     * Creates a report given a date range
-     * 
-     * @param startDate
-     *            the start of the report date
-     * @param endDate
-     *            the end of the report date
-     * @return The report job
-     * @throws CreateReportException
-     *             Create Report Exception
-     * 
-     */
-    @Processor
-    public ReportJob createTotalDeliveredImpressionsReport(Date startDate, Date endDate) throws CreateReportException {
-        return connectionStrategy.getReportService()
-                .totalDeliveredImpressions(connectionStrategy.getSession(), startDate, endDate);
-    }
-
-    /**
-     * Creates a report given a date range
-     * 
-     * @param startDate
-     *            the start of the report date
-     * @param endDate
-     *            the end of the report date
-     * @return The report job
-     * @throws CreateReportException
-     *             Create Report Exception
-     * 
-     */
-    @Processor
-    public ReportJob createReachReport(Date startDate, Date endDate) throws CreateReportException {
-        return connectionStrategy.getReportService()
-                .createReachReport(connectionStrategy.getSession(), startDate, endDate);
-    }
-
-    /**
-     * Creates a report given a date range
-     * 
-     * @param startDate
-     *            the start of the report date
-     * @param endDate
-     *            the end of the report date
-     * @return The report job
-     * @throws CreateReportException
-     *             Create Report Exception
-     * 
-     */
-    @Processor
-    public ReportJob createIfReportIsReady(Date startDate, Date endDate) throws CreateReportException {
-        return connectionStrategy.getReportService()
-                .checkIfReportIsReady(connectionStrategy.getSession(), startDate, endDate);
-    }
-
-    /**
-     * Creates a report given a date range
-     * 
-     * @return The report job
-     * @throws CreateReportException
-     *             Create Report Exception
-     * 
-     */
-    @Processor
-    public ReportJob createReachLifetimeReport() throws CreateReportException {
-        return connectionStrategy.getReportService()
-                .createReachLifetimeReport(connectionStrategy.getSession());
-    }
-
-    /**
-     * Creates a report given a date range
-     * 
-     * @param startDate
-     *            the start of the report date
-     * @param endDate
-     *            the end of the report date
-     * @return The report job
-     * @throws CreateReportException
-     *             Create Report Exception
-     * 
-     */
-    @Processor
-    public ReportJob createAllActiveLineItemsReport(Date startDate, Date endDate) throws CreateReportException {
-        return connectionStrategy.getReportService()
-                .createAllActiveLineItemsReport(connectionStrategy.getSession(), startDate, endDate);
-    }
-
-    /**
-     * Creates a report given a date range
-     * 
-     * @param startDate
-     *            the start of the report date
-     * @param endDate
-     *            the end of the report date
-     * @param ids
-     *            the line items ids
-     * @return The report job
-     * @throws CreateReportException
-     *             Create Report Exception
-     * 
-     */
-    @Processor
-    public ReportJob createActualsReports(Date startDate, Date endDate, List<Long> ids) throws CreateReportException {
-        return connectionStrategy.getReportService()
-                .createActualsReport(connectionStrategy.getSession(), startDate, endDate, ids);
-    }
-
-    /**
-     * Creates a report given a date range
-     * 
-     * @param startDate
-     *            the start of the report date
-     * @param endDate
-     *            the end of the report date
-     * @param ids
-     *            the line items ids
-     * @return The report job
-     * @throws CreateReportException
-     *             Create Report Exception
-     * 
-     */
-    @Processor
-    public ReportJob createActualsReportsWithoutAds(Date startDate, Date endDate, List<Long> ids) throws CreateReportException {
-        return connectionStrategy.getReportService()
-                .createActualsReportWithoutAds(connectionStrategy.getSession(), startDate, endDate, ids);
-    }
-
-    /**
-     * Creates a report given a date range
-     * 
-     * @param startDate
-     *            the start of the report date
-     * @param endDate
-     *            the end of the report date
-     * @return The report job
-     * @throws CreateReportException
-     *             Create Report Exception
-     * 
-     */
-    @Processor
-    public ReportJob activeLineItemsReport(Date startDate, Date endDate) throws CreateReportException {
-        return connectionStrategy.getReportService()
-                .activeLineItemsReport(connectionStrategy.getSession(), startDate, endDate);
-    }
-
-    /**
-     * Creates a report given a date range
-     * 
-     * @param startDate
-     *            the start of the report date
-     * @param endDate
-     *            the end of the report date
-     * @param lineItems
-     *            the line items
-     * @return The report job
-     * @throws CreateReportException
-     *             Create Report Exception
-     * 
-     */
-    @Processor
-    public ReportJob ageAndGenderReport(Date startDate, Date endDate, List<Integer> lineItems) throws CreateReportException {
-        return connectionStrategy.getReportService()
-                .ageAndGenderReport(connectionStrategy.getSession(), startDate, endDate, lineItems);
+                .createReport(connectionStrategy.getSession(), startDate, endDate, dimensions, columns, dimensionAttributes);
     }
 
     /**

@@ -36,7 +36,7 @@ public class DownloadReportTestCases extends AbstractTestCase<GoogleDfpConnector
         startDate = TestDataBuilder.getDownloadReportStartDate();
         endDate = TestDataBuilder.getDownloadReportEndDate();
         dfp = getConnector();
-        createdReport = dfp.createReachReport(startDate, endDate);
+        createdReport = dfp.createReport("LINE_ITEM_ID,MONTH_AND_YEAR", "REACH", null, startDate, endDate);
     }
 
     protected InputStream downloadReport(ReportJob reportJob) throws Exception {

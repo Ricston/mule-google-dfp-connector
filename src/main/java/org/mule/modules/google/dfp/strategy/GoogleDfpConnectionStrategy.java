@@ -4,8 +4,6 @@
  */
 package org.mule.modules.google.dfp.strategy;
 
-import java.util.List;
-
 import org.mule.api.ConnectionException;
 import org.mule.api.ConnectionExceptionCode;
 import org.mule.api.annotations.Configurable;
@@ -110,13 +108,6 @@ public class GoogleDfpConnectionStrategy {
     private String networkCode;
 
     /**
-     * List of custom IDs
-     */
-    @Configurable
-    @Optional
-    private List<String> customIds;
-
-    /**
      * Connect
      * 
      * @param clientId
@@ -137,16 +128,6 @@ public class GoogleDfpConnectionStrategy {
 
             // Initialize and configure Report Service
             reportService = new ReportService();
-
-            if (customIds != null && !customIds.isEmpty()) {
-                long[] customFieldIds = new long[customIds.size()];
-
-                for (int i = 0; i < customIds.size(); i++) {
-                    customFieldIds[i] = Long.parseLong(customIds.get(i));
-                }
-
-                reportService.setCustomFieldsIds(customFieldIds);
-            }
 
             // Initialize and configure Company Service
             companyService = new CompanyService();
@@ -402,14 +383,6 @@ public class GoogleDfpConnectionStrategy {
     public void setReconciliationReportRowService(
             ReconciliationReportRowService reconciliationReportRowService) {
         this.reconciliationReportRowService = reconciliationReportRowService;
-    }
-
-    public List<String> getCustomIds() {
-        return customIds;
-    }
-
-    public void setCustomIds(List<String> customIds) {
-        this.customIds = customIds;
     }
 
     /**
