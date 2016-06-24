@@ -32,6 +32,8 @@ import org.mule.modules.google.dfp.automation.functional.GetLineItemsByIdTestCas
 import org.mule.modules.google.dfp.automation.functional.GetLineItemsByStatementTestCases;
 import org.mule.modules.google.dfp.automation.functional.GetOrdersByIdTestCases;
 import org.mule.modules.google.dfp.automation.functional.GetOrdersByStatementTestCases;
+import org.mule.modules.google.dfp.automation.functional.GetProductsByIdTestCases;
+import org.mule.modules.google.dfp.automation.functional.GetProductsByStatmentTestCases;
 import org.mule.modules.google.dfp.automation.functional.GetProposalRetractionReasonPqlTestCases;
 import org.mule.modules.google.dfp.automation.functional.GetRateCardsByStatementTestCases;
 import org.mule.modules.google.dfp.automation.functional.GetUsersByIdTestCases;
@@ -65,8 +67,8 @@ import org.mule.tools.devkit.ctf.mockup.ConnectorTestContext;
         GetLineItemsByStatementTestCases.class,
         GetOrdersByIdTestCases.class,
         GetOrdersByStatementTestCases.class,
-        // GetProductsByIdTestCases.class,
-        // GetProductsByStatmentTestCases.class,
+        GetProductsByIdTestCases.class,
+        GetProductsByStatmentTestCases.class,
         GetProposalRetractionReasonPqlTestCases.class,
         GetRateCardsByStatementTestCases.class,
         GetUsersByIdTestCases.class,

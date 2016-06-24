@@ -46,6 +46,7 @@ public class GetProductsByIdTestCases extends AbstractTestCase<GoogleDfpConnecto
     }
 
     @Test
+    @Ignore
     public void testGetProductsByIdNotFound() throws Exception {
         List<Product> products = getConnector().getProductsById(wrongIds);
         // Ensure that the size of product lists is not equal than size of ids

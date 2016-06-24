@@ -103,6 +103,7 @@ public class ReportService {
                 }
 
             } catch (IllegalArgumentException e) {
+                logger.info("Re-throwing IllegalArgumentException...", e);
                 String failString = dimensions[i];
                 throw new IllegalArgumentException("Unknown Dimension: " + failString);
             }
@@ -126,6 +127,7 @@ public class ReportService {
                 }
 
             } catch (IllegalArgumentException e) {
+                logger.info("Re-throwing IllegalArgumentException...", e);
                 String failString = dimensionsAtt[i];
                 throw new IllegalArgumentException("Unknown DimensionAttribute: " + failString);
             }
@@ -150,6 +152,7 @@ public class ReportService {
                 }
 
             } catch (IllegalArgumentException e) {
+                logger.info("Re-throwing IllegalArgumentException...", e);
                 String failString = dimensionsAtt[i];
                 throw new IllegalArgumentException("Unknown Column: " + failString);
             }

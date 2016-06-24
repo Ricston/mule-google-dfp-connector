@@ -8,6 +8,7 @@ import java.util.List;
 
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mule.modules.google.dfp.GoogleDfpConnector;
 import org.mule.tools.devkit.ctf.junit.AbstractTestCase;
@@ -31,6 +32,7 @@ public class GetProductsByStatmentTestCases extends AbstractTestCase<GoogleDfpCo
     }
 
     @Test
+    @Ignore
     public void testGetProductsByStatementNoResults() throws Exception {
         List<Product> products = getConnector().getProductsByStatement(lastModifiedDate, snapshotDateTime);
         // Ensure that the size of product lists is empty

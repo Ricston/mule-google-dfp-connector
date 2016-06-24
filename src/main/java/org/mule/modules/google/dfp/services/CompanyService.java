@@ -14,10 +14,8 @@ import org.mule.modules.google.dfp.exceptions.GetAdvertiserByNameException;
 import org.mule.modules.google.dfp.exceptions.GetAgencyByNameException;
 import org.mule.modules.google.dfp.exceptions.GetAllCompaniesException;
 import org.mule.modules.google.dfp.exceptions.GetCompanyByIdException;
-import org.mule.modules.google.dfp.exceptions.GetCompanyCommentByNameException;
 import org.mule.modules.google.dfp.exceptions.TooManyAdvertisersFoundException;
 import org.mule.modules.google.dfp.exceptions.TooManyAgenciesFoundException;
-import org.mule.modules.google.dfp.exceptions.TooManyCompaniesFoundException;
 import org.mule.modules.google.dfp.exceptions.UpdateFailedException;
 
 import com.google.api.ads.dfp.axis.factory.DfpServices;
@@ -152,42 +150,42 @@ public class CompanyService {
 
     }
 
-    public String getCompanyCommentByName(DfpSession session, String name)
-            throws GetCompanyCommentByNameException,
-            TooManyCompaniesFoundException {
-        try {
-            // Get the CompanyService.
-            CompanyServiceInterface companyService = createCompanyService(session);
-
-            // Create a statement to get company by name
-            StatementBuilder statementBuilder = new StatementBuilder().where(
-                    "name = :name")
-                    .withBindVariableValue("name", name);
-
-            // Get companies by statement.
-            CompanyPage page = companyService
-                    .getCompaniesByStatement(statementBuilder.toStatement());
-
-            if (page.getResults() == null || page.getTotalResultSetSize() != 1) {
-                throw new TooManyCompaniesFoundException(
-                        page.getTotalResultSetSize());
-            }
-
-            Company company = page.getResults(0);
-
-            logger.info("Company with ID " + company.getId() + " , name "
-                    + company.getName() + " type " + company.getType()
-                    + " and comment " + company.getComment() + " was found.");
-
-            return company.getComment();
-        } catch (ApiException e) {
-            throw new GetCompanyCommentByNameException(e);
-        } catch (RemoteException e) {
-            throw new GetCompanyCommentByNameException(e);
-        } catch (Exception e) {
-            throw new GetCompanyCommentByNameException(e);
-        }
-    }
+    // public String getCompanyCommentByName(DfpSession session, String name)
+    // throws GetCompanyCommentByNameException,
+    // TooManyCompaniesFoundException {
+    // try {
+    // // Get the CompanyService.
+    // CompanyServiceInterface companyService = createCompanyService(session);
+    //
+    // // Create a statement to get company by name
+    // StatementBuilder statementBuilder = new StatementBuilder().where(
+    // "name = :name")
+    // .withBindVariableValue("name", name);
+    //
+    // // Get companies by statement.
+    // CompanyPage page = companyService
+    // .getCompaniesByStatement(statementBuilder.toStatement());
+    //
+    // if (page.getResults() == null || page.getTotalResultSetSize() != 1) {
+    // throw new TooManyCompaniesFoundException(
+    // page.getTotalResultSetSize());
+    // }
+    //
+    // Company company = page.getResults(0);
+    //
+    // logger.info("Company with ID " + company.getId() + " , name "
+    // + company.getName() + " type " + company.getType()
+    // + " and comment " + company.getComment() + " was found.");
+    //
+    // return company.getComment();
+    // } catch (ApiException e) {
+    // throw new GetCompanyCommentByNameException(e);
+    // } catch (RemoteException e) {
+    // throw new GetCompanyCommentByNameException(e);
+    // } catch (Exception e) {
+    // throw new GetCompanyCommentByNameException(e);
+    // }
+    // }
 
     public String getAdvertiserByName(DfpSession session, String name)
             throws GetAdvertiserByNameException,
