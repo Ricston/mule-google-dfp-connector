@@ -48,7 +48,7 @@ http://www.mulesoft.org/schema/mule/email http://www.mulesoft.org/schema/mule/em
             <google-dfp:report-job id="#[payload.get(&quot;idReport&quot;)]"/>
         </google-dfp:download-report>
         <logger message="#[payload]" level="INFO" doc:name="Logger"/>
-        <file:outbound-endpoint path="${file.outputDir}" responseTimeout="10000" doc:name="File" outputPattern="${file.outputFilename}"/>
+        <file:outbound-endpoint path="${file.outputDir}" responseTimeout="10000" doc:name="File" outputPattern="${file.outputFilename}#[server.dateTime.format(&quot;ddMMyyyyHHmmss&quot;)]${file.outputFilenameExtension}"/>
     </flow>
 
 </mule>
