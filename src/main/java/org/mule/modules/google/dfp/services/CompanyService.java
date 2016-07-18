@@ -6,13 +6,16 @@ package org.mule.modules.google.dfp.services;
 
 import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.mule.modules.google.dfp.exceptions.CreateFailedException;
 import org.mule.modules.google.dfp.exceptions.GetAdvertiserByNameException;
 import org.mule.modules.google.dfp.exceptions.GetAgencyByNameException;
 import org.mule.modules.google.dfp.exceptions.GetAllCompaniesException;
+import org.mule.modules.google.dfp.exceptions.GetCompaniesException;
 import org.mule.modules.google.dfp.exceptions.GetCompanyByIdException;
 import org.mule.modules.google.dfp.exceptions.TooManyAdvertisersFoundException;
 import org.mule.modules.google.dfp.exceptions.TooManyAgenciesFoundException;
@@ -298,38 +301,107 @@ public class CompanyService {
         }
     }
 
-    public Company getCompanyById(DfpSession session, Long companyId)
-            throws GetCompanyByIdException {
+    public List<Company> getCompanies(DfpSession session, String queryString, Map<String, Object> queryParams, String queryOrder, Integer queryLimit, Integer queryOffset)
+            throws GetCompaniesException {
         try {
+            CompanyServiceInterface companyService = createCompanyService(session);
 
+            // Create a statement to get companies by the given parameters
+            StatementBuilder statementBuilder = new StatementBuilder()
+                    .where(queryString)
+                    .orderBy(queryOrder)
+                    .limit(queryLimit)
+                    .offset(queryOffset);
+
+            ServicesUtils.bindVariables(queryParams, statementBuilder);
+
+            // Default for total result set size.
+            int totalResultSetSize = 0;
+            List<Company> companiesFound = new ArrayList<Company>();
+
+            do {
+                // Get companies by statement.
+                CompanyPage page = companyService
+                        .getCompaniesByStatement(statementBuilder.toStatement());
+
+                if (page.getResults() != null) {
+                    totalResultSetSize = page.getTotalResultSetSize();
+                    Arrays.asList(page.getResults());
+                    companiesFound.addAll(Arrays.asList(page.getResults()));
+                } else {
+                    logger.info("No Companies found with given parameters");
+                }
+
+                statementBuilder
+                        .increaseOffsetBy(queryLimit);
+            } while (statementBuilder.getOffset() < totalResultSetSize);
+
+            logger.info("Number of Companies found:" + totalResultSetSize);
+            return companiesFound;
+        } catch (ApiException e) {
+            throw new GetCompaniesException(e);
+        } catch (RemoteException e) {
+            throw new GetCompaniesException(e);
+        } catch (Exception e) {
+            throw new GetCompaniesException(e);
+        }
+    }
+
+    public Company[] createCompanies(DfpSession session, List<Company> companiesToCreate)
+            throws CreateFailedException {
+
+        try {
             // Get the CompanyService.
             CompanyServiceInterface companyService = createCompanyService(session);
 
-            // Create a statement to get all companies.
-            StatementBuilder statementBuilder = new StatementBuilder().where(
-                    "id = :id")
-                    .withBindVariableValue("id", companyId);
+            Company[] companiesArray = new Company[companiesToCreate.size()];
+            companiesArray = companiesToCreate.toArray(companiesArray);
 
-            Company company = null;
+            // Create the companies on the server.
+            Company[] companies = companyService.createCompanies(companiesArray);
 
-            // Get companies by statement.
-            CompanyPage page = companyService
-                    .getCompaniesByStatement(statementBuilder.toStatement());
-
-            if (page.getResults() != null) {
-                company = page.getResults(0);
-                logger.info("Company with ID " + company.getId() + " , name "
-                        + company.getName() + " type " + company.getType()
-                        + " was found.");
+            for (Company comp : companies) {
+                logger.info(String
+                        .format("Company with ID \"%d\", name \"%s\", and comment \"%s\" was created.\"%n\"",
+                                comp.getId(), comp.getName(), comp.getComment()));
             }
 
-            return company;
+            return companies;
+
         } catch (ApiException e) {
-            throw new GetCompanyByIdException(e);
+            throw new CreateFailedException(e);
         } catch (RemoteException e) {
-            throw new GetCompanyByIdException(e);
+            throw new CreateFailedException(e);
         } catch (Exception e) {
-            throw new GetCompanyByIdException(e);
+            throw new CreateFailedException(e);
+        }
+    }
+
+    public Company[] updateCompanies(DfpSession session, List<Company> companiesToUpdate)
+            throws UpdateFailedException {
+
+        try {
+            CompanyServiceInterface companyService = createCompanyService(session);
+
+            Company[] companiesArray = new Company[companiesToUpdate.size()];
+            companiesArray = companiesToUpdate.toArray(companiesArray);
+
+            // Update the companies on the server.
+            Company[] companies = companyService.updateCompanies(companiesArray);
+
+            for (Company comp : companies) {
+                logger.info(String
+                        .format("Company with ID \"%d\", name \"%s\", and comment \"%s\" was updated.\"%n\"",
+                                comp.getId(), comp.getName(), comp.getComment()));
+            }
+
+            return companies;
+        } catch (ApiException e) {
+            throw new UpdateFailedException(e);
+        } catch (RemoteException e) {
+            throw new UpdateFailedException(e);
+        } catch (Exception e) {
+            throw new UpdateFailedException(e);
         }
     }
 
@@ -392,4 +464,38 @@ public class CompanyService {
         }
     }
 
+    public Company getCompanyById(DfpSession session, Long companyId)
+            throws GetCompanyByIdException {
+        try {
+
+            // Get the CompanyService.
+            CompanyServiceInterface companyService = createCompanyService(session);
+
+            // Create a statement to get all companies.
+            StatementBuilder statementBuilder = new StatementBuilder().where(
+                    "id = :id")
+                    .withBindVariableValue("id", companyId);
+
+            Company company = null;
+
+            // Get companies by statement.
+            CompanyPage page = companyService
+                    .getCompaniesByStatement(statementBuilder.toStatement());
+
+            if (page.getResults() != null) {
+                company = page.getResults(0);
+                logger.info("Company with ID " + company.getId() + " , name "
+                        + company.getName() + " type " + company.getType()
+                        + " was found.");
+            }
+
+            return company;
+        } catch (ApiException e) {
+            throw new GetCompanyByIdException(e);
+        } catch (RemoteException e) {
+            throw new GetCompanyByIdException(e);
+        } catch (Exception e) {
+            throw new GetCompanyByIdException(e);
+        }
+    }
 }

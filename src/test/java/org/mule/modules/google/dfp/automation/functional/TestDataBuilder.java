@@ -5,13 +5,20 @@
 package org.mule.modules.google.dfp.automation.functional;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.google.api.ads.dfp.axis.utils.v201605.DateTimes;
 import com.google.api.ads.dfp.axis.v201605.Company;
 import com.google.api.ads.dfp.axis.v201605.CompanyType;
 import com.google.api.ads.dfp.axis.v201605.Date;
 import com.google.api.ads.dfp.axis.v201605.DateTime;
+import com.google.api.ads.dfp.axis.v201605.LineItem;
+import com.google.api.ads.dfp.axis.v201605.Order;
+import com.google.api.ads.dfp.axis.v201605.Proposal;
+import com.google.api.ads.dfp.axis.v201605.ProposalLineItem;
 
 public class TestDataBuilder {
 
@@ -185,6 +192,121 @@ public class TestDataBuilder {
 
     public static Long getGetContactByIdWrongId() {
         return 22L;
+    }
+
+    public static Map<String, Object> getGetCompanies() {
+        Map<String, Object> queryParams = new HashMap<String, Object>();
+        queryParams.put("type", CompanyType.ADVERTISER.toString());
+        queryParams.put("id", 59503568);
+        return queryParams;
+    }
+
+    public static Map<String, Object> getGetLineItems() {
+        Map<String, Object> queryParams = new HashMap<String, Object>();
+        queryParams.put("id", Arrays.asList(113219888, 142097408));
+        return queryParams;
+    }
+
+    public static Map<String, Object> getGetLineItemsNotFound() {
+        Map<String, Object> queryParams = new HashMap<String, Object>();
+        queryParams.put("id", Arrays.asList(12));
+        return queryParams;
+    }
+
+    public static Map<String, Object> getGetOrders() {
+        Map<String, Object> queryParams = new HashMap<String, Object>();
+        queryParams.put("id", Arrays.asList(312984608, 424294568));
+        return queryParams;
+    }
+
+    public static Map<String, Object> getGetOrdersNotFound() {
+        Map<String, Object> queryParams = new HashMap<String, Object>();
+        queryParams.put("id", Arrays.asList(12));
+        return queryParams;
+    }
+
+    public static Map<String, Object> getGetProducts() {
+        Map<String, Object> queryParams = new HashMap<String, Object>();
+        return queryParams;
+    }
+
+    public static Map<String, Object> getGetProductsNotFound() {
+        Map<String, Object> queryParams = new HashMap<String, Object>();
+        queryParams.put("id", Arrays.asList(12));
+        return queryParams;
+    }
+
+    public static Map<String, Object> getGetProposalLineItemsNotFound() {
+        Map<String, Object> queryParams = new HashMap<String, Object>();
+        queryParams.put("id", Arrays.asList(12));
+        return queryParams;
+    }
+
+    public static Map<String, Object> getGetProposalLineItems() {
+        Map<String, Object> queryParams = new HashMap<String, Object>();
+        return queryParams;
+    }
+
+    public static Map<String, Object> getGetProposals() {
+        Map<String, Object> queryParams = new HashMap<String, Object>();
+        return queryParams;
+    }
+
+    public static Map<String, Object> getGetProposalsNotFound() {
+        Map<String, Object> queryParams = new HashMap<String, Object>();
+        queryParams.put("id", Arrays.asList(12));
+        return queryParams;
+    }
+
+    public static Map<String, Object> getGetReconciliationLineItemReports() {
+        Map<String, Object> queryParams = new HashMap<String, Object>();
+        return queryParams;
+    }
+
+    public static Map<String, Object> getGetReconciliationOrderReports() {
+        Map<String, Object> queryParams = new HashMap<String, Object>();
+        return queryParams;
+    }
+
+    public static Map<String, Object> getGetReconciliationOrderReportsNotFound() {
+        Map<String, Object> queryParams = new HashMap<String, Object>();
+        queryParams.put("id", Arrays.asList(12));
+        return queryParams;
+    }
+
+    public static Map<String, Object> getGetReconciliationReportRows() {
+        Map<String, Object> queryParams = new HashMap<String, Object>();
+        return queryParams;
+    }
+
+    public static Map<String, Object> getGetReconciliationReports() {
+        Map<String, Object> queryParams = new HashMap<String, Object>();
+        return queryParams;
+    }
+
+    public static LineItem getCreateLineItemsNewLineItem() {
+        LineItem newLineItem = new LineItem();
+        newLineItem.setName("TestLineItem");
+        newLineItem.setOrderId(312984608L);
+        return newLineItem;
+    }
+
+    public static Order getCreateOrdersNewOrder() {
+        Order newOrder = new Order();
+        newOrder.setName("TestOrder");
+        return newOrder;
+    }
+
+    public static ProposalLineItem getCreateProposalLineItemsNewProposalLineItem() {
+        ProposalLineItem newProposalLineItem = new ProposalLineItem();
+        newProposalLineItem.setName("TestProposalLineItem");
+        return newProposalLineItem;
+    }
+
+    public static Proposal getCreateProposalsNewProposal() {
+        Proposal newProposal = new Proposal();
+        newProposal.setName("TestProposal");
+        return newProposal;
     }
 
 }

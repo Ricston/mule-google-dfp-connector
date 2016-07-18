@@ -31,6 +31,8 @@ import org.mule.modules.google.dfp.services.ProductTemplateService;
 import org.mule.modules.google.dfp.services.ProposalLineItemService;
 import org.mule.modules.google.dfp.services.ProposalService;
 import org.mule.modules.google.dfp.services.RateCardService;
+import org.mule.modules.google.dfp.services.ReconciliationLineItemReportService;
+import org.mule.modules.google.dfp.services.ReconciliationOrderReportService;
 import org.mule.modules.google.dfp.services.ReconciliationReportRowService;
 import org.mule.modules.google.dfp.services.ReconciliationReportService;
 import org.mule.modules.google.dfp.services.ReportService;
@@ -69,6 +71,8 @@ public class GoogleDfpConnectionStrategy {
     private PqlService pqlService;
     private AudienceSegmentService audienceSegmentService;
     private CustomTargetingService customTargetingService;
+    private ReconciliationOrderReportService reconciliationOrderReportService;
+    private ReconciliationLineItemReportService reconciliationLineItemReportService;
 
     /**
      * The refresh token for Google DFP
@@ -78,7 +82,7 @@ public class GoogleDfpConnectionStrategy {
     private String refreshToken;
 
     /**
-     * The token server URL for Google DFP
+     * The token server URL for Google DFP19
      */
     @Configurable
     @Optional
@@ -175,6 +179,12 @@ public class GoogleDfpConnectionStrategy {
 
             // Initialize and configure pql service
             pqlService = new PqlService();
+
+            // Initialize and configure reconciliation order report service
+            reconciliationOrderReportService = new ReconciliationOrderReportService();
+
+            // Initialize and configure reconciliation line item report service
+            reconciliationLineItemReportService = new ReconciliationLineItemReportService();
 
             /*
              * Generate a refreshable OAuth2 credential similar to a ClientLogin token and can be used in place of a service account.
@@ -459,5 +469,21 @@ public class GoogleDfpConnectionStrategy {
      */
     public void setNetworkCode(String networkCode) {
         this.networkCode = networkCode;
+    }
+
+    public ReconciliationOrderReportService getReconciliationOrderReportService() {
+        return reconciliationOrderReportService;
+    }
+
+    public void setReconciliationOrderReportService(ReconciliationOrderReportService reconciliationOrderReportService) {
+        this.reconciliationOrderReportService = reconciliationOrderReportService;
+    }
+
+    public ReconciliationLineItemReportService getReconciliationLineItemReportService() {
+        return reconciliationLineItemReportService;
+    }
+
+    public void setReconciliationLineItemReportService(ReconciliationLineItemReportService reconciliationLineItemReportService) {
+        this.reconciliationLineItemReportService = reconciliationLineItemReportService;
     }
 }

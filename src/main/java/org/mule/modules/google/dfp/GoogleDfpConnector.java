@@ -7,12 +7,15 @@ package org.mule.modules.google.dfp;
 import java.io.InputStream;
 import java.rmi.RemoteException;
 import java.util.List;
+import java.util.Map;
 
 import org.mule.api.annotations.Config;
 import org.mule.api.annotations.Connector;
+import org.mule.api.annotations.MetaDataScope;
 import org.mule.api.annotations.Processor;
 import org.mule.api.annotations.licensing.RequiresEnterpriseLicense;
 import org.mule.api.annotations.param.Default;
+import org.mule.api.annotations.param.MetaDataKeyParam;
 import org.mule.api.annotations.param.Optional;
 import org.mule.modules.google.dfp.exceptions.AudienceSegmentException;
 import org.mule.modules.google.dfp.exceptions.CreateFailedException;
@@ -22,6 +25,7 @@ import org.mule.modules.google.dfp.exceptions.GetAdvertiserByNameException;
 import org.mule.modules.google.dfp.exceptions.GetAgencyByNameException;
 import org.mule.modules.google.dfp.exceptions.GetAllCompaniesException;
 import org.mule.modules.google.dfp.exceptions.GetAllContactsException;
+import org.mule.modules.google.dfp.exceptions.GetCompaniesException;
 import org.mule.modules.google.dfp.exceptions.GetCompanyByIdException;
 import org.mule.modules.google.dfp.exceptions.GetContactByIdException;
 import org.mule.modules.google.dfp.exceptions.GetContactByNameException;
@@ -30,17 +34,25 @@ import org.mule.modules.google.dfp.exceptions.GetLineItemsException;
 import org.mule.modules.google.dfp.exceptions.GetOrdersException;
 import org.mule.modules.google.dfp.exceptions.GetProductTemplatesException;
 import org.mule.modules.google.dfp.exceptions.GetProductsByStatementException;
+import org.mule.modules.google.dfp.exceptions.GetProductsException;
 import org.mule.modules.google.dfp.exceptions.GetProposalLineItemsException;
 import org.mule.modules.google.dfp.exceptions.GetProposalsException;
 import org.mule.modules.google.dfp.exceptions.GetRateCardsException;
+import org.mule.modules.google.dfp.exceptions.GetReconciliationLineItemReportsException;
+import org.mule.modules.google.dfp.exceptions.GetReconciliationOrderReportsException;
+import org.mule.modules.google.dfp.exceptions.GetReconciliationReportRowsException;
+import org.mule.modules.google.dfp.exceptions.GetReconciliationReportsException;
 import org.mule.modules.google.dfp.exceptions.GetUsersException;
-import org.mule.modules.google.dfp.exceptions.ReconciliationReportException;
-import org.mule.modules.google.dfp.exceptions.ReconciliationReportRowException;
+import org.mule.modules.google.dfp.exceptions.PerformLineItemsException;
+import org.mule.modules.google.dfp.exceptions.PerformOrdersException;
+import org.mule.modules.google.dfp.exceptions.PerformProductsException;
+import org.mule.modules.google.dfp.exceptions.PerformProposalLineItemsException;
+import org.mule.modules.google.dfp.exceptions.PerformProposalsException;
+import org.mule.modules.google.dfp.exceptions.PerformReconciliationOrderReportsException;
 import org.mule.modules.google.dfp.exceptions.ReportDownloadException;
 import org.mule.modules.google.dfp.exceptions.TooManyAdvertisersFoundException;
 import org.mule.modules.google.dfp.exceptions.TooManyAgenciesFoundException;
 import org.mule.modules.google.dfp.exceptions.UpdateFailedException;
-import org.mule.modules.google.dfp.reconciliationreport.ReconciliationQueryParams;
 import org.mule.modules.google.dfp.strategy.GoogleDfpConnectionStrategy;
 
 import com.google.api.ads.dfp.axis.v201605.ApiException;
@@ -60,6 +72,8 @@ import com.google.api.ads.dfp.axis.v201605.ProductTemplate;
 import com.google.api.ads.dfp.axis.v201605.Proposal;
 import com.google.api.ads.dfp.axis.v201605.ProposalLineItem;
 import com.google.api.ads.dfp.axis.v201605.RateCard;
+import com.google.api.ads.dfp.axis.v201605.ReconciliationLineItemReport;
+import com.google.api.ads.dfp.axis.v201605.ReconciliationOrderReport;
 import com.google.api.ads.dfp.axis.v201605.ReconciliationReport;
 import com.google.api.ads.dfp.axis.v201605.ReconciliationReportRow;
 import com.google.api.ads.dfp.axis.v201605.ReportJob;
@@ -117,6 +131,30 @@ public class GoogleDfpConnector {
     }
 
     /**
+     * Retrieve the companies that match with the queryString
+     * 
+     * @param queryString
+     *            the query string for the statement
+     * @param queryParams
+     *            a map with the query params included in the query string
+     * @param queryOrder
+     *            the query order for the statement
+     * @param queryLimit
+     *            the query limit for the statement
+     * @param queryOffset
+     *            the query offset for the statement
+     * @return List<Company> List of companies that match with the parameters
+     * @throws GetCompaniesException
+     *             Get Companies Exception
+     */
+    @Processor
+    public List<Company> getCompanies(String queryString, Map<String, Object> queryParams, String queryOrder, @Default("500") Integer queryLimit, @Default("0") Integer queryOffset)
+            throws GetCompaniesException {
+        return connectionStrategy.getCompanyService()
+                .getCompanies(connectionStrategy.getSession(), queryString, queryParams, queryOrder, queryLimit, queryOffset);
+    }
+
+    /**
      * Retrieve all companies
      * 
      * @param lastModifiedDate
@@ -131,6 +169,225 @@ public class GoogleDfpConnector {
     public List<Company> getAllCompanies(DateTime lastModifiedDate, DateTime snapshotDateTime) throws GetAllCompaniesException {
         return connectionStrategy.getCompanyService()
                 .getAllCompanies(connectionStrategy.getSession(), lastModifiedDate, snapshotDateTime);
+    }
+
+    /**
+     * Retrieve the reconciliation report IDs given the start date
+     *
+     * @param startDate
+     *            Start date used for searching reconciliation reports
+     * @return List of reconciliation report
+     * @throws GetReconciliationReportsException
+     *             Reconciliation Report By ID Exception
+     */
+    @Processor
+    public List<ReconciliationReport> getReconciliationReportIdsByStartDate(@Default("#[payload]") Date startDate) throws GetReconciliationReportsException {
+        try {
+            String dateFormat = "%04d-%02d-%02d";
+            String stringDate = String.format(dateFormat, startDate.getYear(), startDate.getMonth(), startDate.getDay());
+            return connectionStrategy.getReconciliationReportService()
+                    .getReconciliationReportByStartDate(connectionStrategy.getSession(), stringDate);
+        } catch (Exception e) {
+            throw new GetReconciliationReportsException(e);
+        }
+    }
+
+    /**
+     * Retrieve the Reconciliation Report Rows that match with the queryString
+     * 
+     * @param queryString
+     *            the query string for the statement
+     * @param queryParams
+     *            a map with the query params included in the query string
+     * @param queryOrder
+     *            the query order for the statement
+     * @param queryLimit
+     *            the query limit for the statement
+     * @param queryOffset
+     *            the query offset for the statement
+     * @return List<ReconciliationReportRow> List of reconciliation report rows that match with the parameters
+     * @throws GetReconciliationReportRowsException
+     *             Get Reconciliation Report Rows Exception
+     */
+    @Processor
+    public List<ReconciliationReportRow> getReconciliationReportRows(String queryString, Map<String, Object> queryParams, String queryOrder, @Default("500") Integer queryLimit,
+            @Default("0") Integer queryOffset) throws GetReconciliationReportRowsException {
+        return connectionStrategy.getReconciliationReportRowService()
+                .getReconciliationReportRows(connectionStrategy.getSession(), queryString, queryParams, queryOrder, queryLimit, queryOffset);
+
+    }
+
+    /**
+     * Update a list of Reconciliation Report Rows
+     * 
+     * @param reconciliationReportRows
+     *            The Reconciliation Report Rows for update
+     * @return Array of Reconciliation Report Rows that has been updated
+     * @throws UpdateFailedException
+     *             Update Failed Exception
+     */
+    @Processor
+    public ReconciliationReportRow[] updateReconciliationReportRows(@Default("#[payload]") List<ReconciliationReportRow> reconciliationReportRows) throws UpdateFailedException {
+        return connectionStrategy.getReconciliationReportRowService()
+                .updateReconciliationReportRows(connectionStrategy.getSession(), reconciliationReportRows);
+    }
+
+    /**
+     * Retrieve the Reconciliation Reports that match with the queryString
+     * 
+     * @param queryString
+     *            the query string for the statement
+     * @param queryParams
+     *            a map with the query params included in the query string
+     * @param queryOrder
+     *            the query order for the statement
+     * @param queryLimit
+     *            the query limit for the statement
+     * @param queryOffset
+     *            the query offset for the statement
+     * @return List<ReconciliationReport> List of reconciliation reports that match with the parameters
+     * @throws GetReconciliationReporsException
+     *             Get Reconciliation Reports Exception
+     */
+    @Processor
+    public List<ReconciliationReport> getReconciliationReports(String queryString, Map<String, Object> queryParams, String queryOrder, @Default("500") Integer queryLimit,
+            @Default("0") Integer queryOffset) throws GetReconciliationReportsException {
+        return connectionStrategy.getReconciliationReportService()
+                .getReconciliationReports(connectionStrategy.getSession(), queryString, queryParams, queryOrder, queryLimit, queryOffset);
+
+    }
+
+    /**
+     * Update a list of Reconciliation Reports
+     * 
+     * @param reconciliationReports
+     *            The Reconciliation Reports for update
+     * @return Array of ReconciliationReport that has been updated
+     * @throws UpdateFailedException
+     *             Update Failed Exception
+     */
+    @Processor
+    public ReconciliationReport[] updateReconciliationReports(@Default("#[payload]") List<ReconciliationReport> reconciliationReports) throws UpdateFailedException {
+        return connectionStrategy.getReconciliationReportService()
+                .updateReconciliationReports(connectionStrategy.getSession(), reconciliationReports);
+    }
+
+    /**
+     * Retrieve the Reconciliation Line Item Reports that match with the queryString
+     * 
+     * @param queryString
+     *            the query string for the statement
+     * @param queryParams
+     *            a map with the query params included in the query string
+     * @param queryOrder
+     *            the query order for the statement
+     * @param queryLimit
+     *            the query limit for the statement
+     * @param queryOffset
+     *            the query offset for the statement
+     * @return List<ReconciliationLineItemReport> List of reconciliation line item reports that match with the parameters
+     * @throws GetReconciliationLineItemReportsException
+     *             Get Reconciliation Line Item Reports Exception
+     */
+    @Processor
+    public List<ReconciliationLineItemReport> getReconciliationLineItemReports(String queryString, Map<String, Object> queryParams, String queryOrder,
+            @Default("500") Integer queryLimit, @Default("0") Integer queryOffset) throws GetReconciliationLineItemReportsException {
+        return connectionStrategy.getReconciliationLineItemReportService()
+                .getReconciliationLineItemReports(connectionStrategy.getSession(), queryString, queryParams, queryOrder, queryLimit, queryOffset);
+
+    }
+
+    /**
+     * Update a list of Reconciliation Line Item Reports
+     * 
+     * @param reconciliationLineItemReports
+     *            The Reconciliation Line Item Reports for update
+     * @return Array of ReconciliationLineItemReport that has been updated
+     * @throws UpdateFailedException
+     *             Update Failed Exception
+     */
+    @Processor
+    public ReconciliationLineItemReport[] updateReconciliationLineItemReports(@Default("#[payload]") List<ReconciliationLineItemReport> reconciliationLineItemReports)
+            throws UpdateFailedException {
+        return connectionStrategy.getReconciliationLineItemReportService()
+                .updateReconciliationLineItemReports(connectionStrategy.getSession(), reconciliationLineItemReports);
+    }
+
+    /**
+     * Retrieve the Reconciliation Order Reports that match with the queryString
+     * 
+     * @param queryString
+     *            the query string for the statement
+     * @param queryParams
+     *            a map with the query params included in the query string
+     * @param queryOrder
+     *            the query order for the statement
+     * @param queryLimit
+     *            the query limit for the statement
+     * @param queryOffset
+     *            the query offset for the statement
+     * @return List<ReconciliationOrderReport> List of reconciliation order reports that match with the parameters
+     * @throws GetReconciliationOrderReportsException
+     *             Get Reconciliation Order Reports Exception
+     */
+    @Processor
+    public List<ReconciliationOrderReport> getReconciliationOrderReports(String queryString, Map<String, Object> queryParams, String queryOrder,
+            @Default("500") Integer queryLimit, @Default("0") Integer queryOffset) throws GetReconciliationOrderReportsException {
+        return connectionStrategy.getReconciliationOrderReportService()
+                .getReconciliationOrderReports(connectionStrategy.getSession(), queryString, queryParams, queryOrder, queryLimit, queryOffset);
+
+    }
+
+    /**
+     * Update a list of Reconciliation Order Reports
+     * 
+     * @param reconciliationOrderReports
+     *            The Reconciliation Order Reports for update
+     * @return Array of ReconciliationOrderReport that has been updated
+     * @throws UpdateFailedException
+     *             Update Failed Exception
+     */
+    @Processor
+    public ReconciliationOrderReport[] updateReconciliationOrderReports(@Default("#[payload]") List<ReconciliationOrderReport> reconciliationOrderReports)
+            throws UpdateFailedException {
+        return connectionStrategy.getReconciliationOrderReportService()
+                .updateReconciliationOrderReports(connectionStrategy.getSession(), reconciliationOrderReports);
+    }
+
+    /**
+     * Perform the choosen action over the Reconciliation Order Reports that match with the query string given by parameter
+     * 
+     * @param queryString
+     *            the query string for the statement
+     * @param queryParams
+     *            a map with the query params included in the query string
+     * @param reconciliationOrderReportAction
+     *            Action for perform over the Reconciliation Order Reports that match with the query string
+     * @return Number of Reconciliation Order Reports updated
+     * @throws PerformReconciliationOrderReportsException
+     *             Perform Reconciliation Order Reports Exception
+     */
+    @MetaDataScope(PerformReconciliationOrderReportsCategory.class)
+    @Processor
+    public Integer performReconciliationOrderReports(String queryString, Map<String, Object> queryParams, @MetaDataKeyParam String reconciliationOrderReportAction)
+            throws PerformReconciliationOrderReportsException {
+        return connectionStrategy.getReconciliationOrderReportService()
+                .performReconciliationOrderReports(connectionStrategy.getSession(), reconciliationOrderReportAction, queryString, queryParams);
+    }
+
+    /**
+     * Retrieve the company by ID. Null is returned if the company is not found
+     *
+     * @param companyId
+     *            The company ID
+     * @return The company
+     * @throws GetCompanyByIdException
+     *             Get Company By ID Exception
+     */
+    @Processor
+    public Company getCompanyById(Long companyId) throws GetCompanyByIdException {
+        return connectionStrategy.getCompanyService()
+                .getCompanyById(connectionStrategy.getSession(), companyId);
     }
 
     /**
@@ -168,63 +425,8 @@ public class GoogleDfpConnector {
     }
 
     /**
-     * Retrieve the reconciliation report IDs given the start date
-     * 
-     * @param startDate
-     *            Start date used for searching reconciliation reports
-     * @return List of reconciliation report
-     * @throws ReconciliationReportException
-     *             Reconciliation Report By ID Exception
-     */
-    @Processor
-    public List<ReconciliationReport> getReconciliationReportIdsByStartDate(@Default("#[payload]") Date startDate) throws ReconciliationReportException {
-        try {
-            String dateFormat = "%04d-%02d-%02d";
-            String stringDate = String.format(dateFormat, startDate.getYear(), startDate.getMonth(), startDate.getDay());
-            return connectionStrategy.getReconciliationReportService()
-                    .getReconciliationReportByStartDate(connectionStrategy.getSession(), stringDate);
-        } catch (Exception e) {
-            throw new ReconciliationReportException(e);
-        }
-    }
-
-    /**
-     * Retrieve Reconciliation report rows given the reconciliation report ID, order ID and line item ID
-     * 
-     * @param queryParams
-     *            query parameters to get reconciliation report row
-     * @return List of reconcialtion report rows
-     * @throws ReconciliationReportRowException
-     *             Reconciliation Report Row Exception
-     */
-    @Processor
-    public List<ReconciliationReportRow> getReconciliationReportRows(@Default("#[payload]") ReconciliationQueryParams queryParams) throws ReconciliationReportRowException {
-        try {
-            return connectionStrategy.getReconciliationReportRowService()
-                    .getReconciliationReportRows(connectionStrategy.getSession(), queryParams);
-        } catch (Exception e) {
-            throw new ReconciliationReportRowException(e);
-        }
-    }
-
-    /**
      * Retrieve the company by ID. Null is returned if the company is not found
-     * 
-     * @param companyId
-     *            The company ID
-     * @return The company
-     * @throws GetCompanyByIdException
-     *             Get Company By ID Exception
-     */
-    @Processor
-    public Company getCompanyById(Long companyId) throws GetCompanyByIdException {
-        return connectionStrategy.getCompanyService()
-                .getCompanyById(connectionStrategy.getSession(), companyId);
-    }
-
-    /**
-     * Retrieve the company by ID. Null is returned if the company is not found
-     * 
+     *
      * @param ids
      *            list of ids
      * @return List of companies
@@ -268,6 +470,60 @@ public class GoogleDfpConnector {
     }
 
     /**
+     * Create a list of Companies
+     * 
+     * @param companies
+     *            The Companies for create
+     * @return Array of Companies that has been created
+     * @throws CreateFailedException
+     *             Create Failed Exception
+     */
+    @Processor
+    public Company[] createCompanies(@Default("#[payload]") List<Company> companies) throws CreateFailedException {
+        return connectionStrategy.getCompanyService()
+                .createCompanies(connectionStrategy.getSession(), companies);
+    }
+
+    /**
+     * Update a list of Companies
+     * 
+     * @param companies
+     *            The Companies for update
+     * @return Array of Companies that has been updated
+     * @throws UpdateFailedException
+     *             Update Failed Exception
+     */
+    @Processor
+    public Company[] updateCompanies(@Default("#[payload]") List<Company> companies) throws UpdateFailedException {
+        return connectionStrategy.getCompanyService()
+                .updateCompanies(connectionStrategy.getSession(), companies);
+    }
+
+    /**
+     * Retrieve the Products that match with the queryString
+     * 
+     * @param queryString
+     *            the query string for the statement
+     * @param queryParams
+     *            a map with the query params included in the query string
+     * @param queryOrder
+     *            the query order for the statement
+     * @param queryLimit
+     *            the query limit for the statement
+     * @param queryOffset
+     *            the query offset for the statement
+     * @return List<Product> List of products that match with the parameters
+     * @throws GetProductsException
+     *             Get Products Exception
+     */
+    @Processor
+    public List<Product> getProducts(String queryString, Map<String, Object> queryParams, String queryOrder, @Default("500") Integer queryLimit,
+            @Default("0") Integer queryOffset) throws GetProductsException {
+        return connectionStrategy.getProductService()
+                .getProducts(connectionStrategy.getSession(), queryString, queryParams, queryOrder, queryLimit, queryOffset);
+    }
+
+    /**
      * Retrieve all products
      * 
      * @param lastModifiedDate
@@ -285,12 +541,47 @@ public class GoogleDfpConnector {
     }
 
     /**
-     * Retrieve a list of products by id
+     * Update a list of Products
      * 
+     * @param Product
+     *            The Products for update
+     * @return Array of Products that has been updated
+     * @throws UpdateFailedException
+     *             Update Failed Exception
+     */
+    @Processor
+    public Product[] updateProducts(@Default("#[payload]") List<Product> products) throws UpdateFailedException {
+        return connectionStrategy.getProductService()
+                .updateProducts(connectionStrategy.getSession(), products);
+    }
+
+    /**
+     * Perform the choosen action over the Products that match with the query string given by parameter
+     * 
+     * @param queryString
+     *            the query string for the statement
+     * @param queryParams
+     *            a map with the query params included in the query string
+     * @param productAction
+     *            Action for perform over the Products that match with the query string
+     * @return Number of Products updated
+     * @throws PerformProductsException
+     *             Perform Products Exception
+     */
+    @MetaDataScope(PerformProductsCategory.class)
+    @Processor
+    public Integer performProducts(String queryString, Map<String, Object> queryParams, @MetaDataKeyParam String productAction) throws PerformProductsException {
+        return connectionStrategy.getProductService()
+                .performProducts(connectionStrategy.getSession(), productAction, queryString, queryParams);
+    }
+
+    /**
+     * Retrieve a list of products by id
+     *
      * @param ids
      *            the ids of the products
      * @return List of products
-     * @throws GetProductsByStatementException
+     * @throws GetProductsException
      *             Get Products By Statement Exception
      */
     @Processor
@@ -332,6 +623,30 @@ public class GoogleDfpConnector {
     }
 
     /**
+     * Retrieve the Line Items that match with the queryString
+     * 
+     * @param queryString
+     *            the query string for the statement
+     * @param queryParams
+     *            a map with the query params included in the query string
+     * @param queryOrder
+     *            the query order for the statement
+     * @param queryLimit
+     *            the query limit for the statement
+     * @param queryOffset
+     *            the query offset for the statement
+     * @return List<LineItem> List of line items that match with the parameters
+     * @throws GetLineItemsException
+     *             Get Line Items Exception
+     */
+    @Processor
+    public List<LineItem> getLineItems(String queryString, Map<String, Object> queryParams, String queryOrder, @Default("500") Integer queryLimit, @Default("0") Integer queryOffset)
+            throws GetLineItemsException {
+        return connectionStrategy.getLineItemService()
+                .getLineItems(connectionStrategy.getSession(), queryString, queryParams, queryOrder, queryLimit, queryOffset);
+    }
+
+    /**
      * Retrieve line items by modified date
      * 
      * @param lastModifiedDate
@@ -346,6 +661,57 @@ public class GoogleDfpConnector {
     public List<LineItem> getLineItemsByStatement(DateTime lastModifiedDate, DateTime snapshotDateTime) throws GetLineItemsException {
         return connectionStrategy.getLineItemService()
                 .getLineItemsByStatement(connectionStrategy.getSession(), lastModifiedDate, snapshotDateTime);
+    }
+
+    /**
+     * Create a list of Line Items
+     * 
+     * @param lineItems
+     *            The Line Items for create
+     * @return Array of Line Items that has been created
+     * @throws CreateFailedException
+     *             Create Failed Exception
+     */
+    @Processor
+    public LineItem[] createLineItems(@Default("#[payload]") List<LineItem> lineItems) throws CreateFailedException {
+        return connectionStrategy.getLineItemService()
+                .createLineItems(connectionStrategy.getSession(), lineItems);
+    }
+
+    /**
+     * Update a list of Line Items
+     * 
+     * @param lineItems
+     *            The Line Items for update
+     * @return Array of Line Items that has been updated
+     * @throws UpdateFailedException
+     *             Update Failed Exception
+     */
+    @Processor
+    public LineItem[] updateLineItems(@Default("#[payload]") List<LineItem> lineItems) throws UpdateFailedException {
+        return connectionStrategy.getLineItemService()
+                .updateLineItems(connectionStrategy.getSession(), lineItems);
+    }
+
+    /**
+     * Perform the choosen action over the Line Items that match with the query string given by parameter
+     * 
+     * @param queryString
+     *            the query string for the statement
+     * @param queryParams
+     *            a map with the query params included in the query string
+     * @param lineItemAction
+     *            Action for perform over the Line Items that match with the query string
+     * @return Number of Line Items updated
+     * @throws PerformLineItemsException
+     *             Perform Line Items Exception
+     */
+    @Processor
+    @MetaDataScope(PerformLineItemsCategory.class)
+    public Integer performLineItems(String queryString, Map<String, Object> queryParams, @MetaDataKeyParam String lineItemAction)
+            throws PerformLineItemsException {
+        return connectionStrategy.getLineItemService()
+                .performLineItems(connectionStrategy.getSession(), lineItemAction, queryString, queryParams);
     }
 
     /**
@@ -393,7 +759,7 @@ public class GoogleDfpConnector {
 
     /**
      * Retrieve line items filtered by order IDs
-     * 
+     *
      * @param orderIds
      *            the order ids of the line items
      * @return List of line items
@@ -408,7 +774,7 @@ public class GoogleDfpConnector {
 
     /**
      * Retrieve line items filtered by order IDs
-     * 
+     *
      * @param ids
      *            the line items ids
      * @return List of line items
@@ -497,25 +863,157 @@ public class GoogleDfpConnector {
     }
 
     /**
-     * Retrieve proposals by modified date
+     * Retrieve the Orders that match with the queryString
      * 
-     * @param lastModifiedDate
-     *            the last modified date of the companies
-     * @param snapshotDateTime
-     *            the snapshot date of the companies
-     * @return List of Proposals
-     * @throws GetProposalsException
-     *             Get proposals exception
+     * @param queryString
+     *            the query string for the statement
+     * @param queryParams
+     *            a map with the query params included in the query string
+     * @param queryOrder
+     *            the query order for the statement
+     * @param queryLimit
+     *            the query limit for the statement
+     * @param queryOffset
+     *            the query offset for the statement
+     * @return List<Order> List of orders that match with the parameters
+     * @throws GetOrdersException
+     *             Get Orders Exception
      */
     @Processor
-    public List<Proposal> getProposalsByStatement(DateTime lastModifiedDate, DateTime snapshotDateTime) throws GetProposalsException {
+    public List<Order> getOrders(String queryString, Map<String, Object> queryParams, String queryOrder, @Default("500") Integer queryLimit, @Default("0") Integer queryOffset)
+            throws GetOrdersException {
+        return connectionStrategy.getOrderService()
+                .getOrders(connectionStrategy.getSession(), queryString, queryParams, queryOrder, queryLimit, queryOffset);
+    }
+
+    /**
+     * Create a list of Orders
+     * 
+     * @param orders
+     *            The Orders for create
+     * @return Array of Orders that has been created
+     * @throws CreateFailedException
+     *             Create Failed Exception
+     */
+    @Processor
+    public Order[] createOrders(@Default("#[payload]") List<Order> orders) throws CreateFailedException {
+        return connectionStrategy.getOrderService()
+                .createOrders(connectionStrategy.getSession(), orders);
+    }
+
+    /**
+     * Update a list of Orders
+     * 
+     * @param orders
+     *            The Orders for update
+     * @return Array of Orders that has been updated
+     * @throws UpdateFailedException
+     *             Update Failed Exception
+     */
+    @Processor
+    public Order[] updateOrders(@Default("#[payload]") List<Order> orders) throws UpdateFailedException {
+        return connectionStrategy.getOrderService()
+                .updateOrders(connectionStrategy.getSession(), orders);
+    }
+
+    /**
+     * Perform the choosen action over the Orders that match with the query string given by parameter
+     * 
+     * @param queryString
+     *            the query string for the statement
+     * @param queryParams
+     *            a map with the query params included in the query string
+     * @param orderAction
+     *            Action for perform over the Orders that match with the query string
+     * @return Number of Orders updated
+     * @throws PerformOrdersException
+     *             Perform Orders Exception
+     */
+    @MetaDataScope(PerformOrdersCategory.class)
+    @Processor
+    public Integer performOrders(String queryString, Map<String, Object> queryParams, @MetaDataKeyParam String orderAction) throws PerformOrdersException {
+        return connectionStrategy.getOrderService()
+                .performOrders(connectionStrategy.getSession(), orderAction, queryString, queryParams);
+    }
+
+    /**
+     * Retrieve the Proposals that match with the queryString
+     * 
+     * @param queryString
+     *            the query string for the statement
+     * @param queryParams
+     *            a map with the query params included in the query string *
+     * @param queryOrder
+     *            the query order for the statement
+     * @param queryLimit
+     *            the query limit for the statement
+     * @param queryOffset
+     *            the query offset for the statement
+     * @return List<Proposal> List of proposals that match with the parameters
+     * @throws GetProposalsException
+     *             Get Proposals Exception
+     */
+    @Processor
+    public List<Proposal> getProposals(String queryString, Map<String, Object> queryParams, String queryOrder, @Default("500") Integer queryLimit, @Default("0") Integer queryOffset)
+            throws GetProposalsException {
         return connectionStrategy.getProposalService()
-                .getProposalsByStatement(connectionStrategy.getSession(), lastModifiedDate, snapshotDateTime);
+                .getProposals(connectionStrategy.getSession(), queryString, queryParams, queryOrder, queryLimit, queryOffset);
+    }
+
+    /**
+     * Create a list of Proposals
+     * 
+     * @param proposals
+     *            The Proposals for create
+     * @return Array of Proposals that has been created
+     * @throws CreateFailedException
+     *             Create Failed Exception
+     */
+    @Processor
+    public Proposal[] createProposals(@Default("#[payload]") List<Proposal> proposals) throws CreateFailedException {
+        return connectionStrategy.getProposalService()
+                .createProposals(connectionStrategy.getSession(), proposals);
+    }
+
+    /**
+     * Update a list of Proposals
+     * 
+     * @param proposals
+     *            TheProposals for update
+     * @return Array of Proposals that has been updated
+     * @throws UpdateFailedException
+     *             Update Failed Exception
+     */
+    @Processor
+    public Proposal[] updateProposals(@Default("#[payload]") List<Proposal> proposals) throws UpdateFailedException {
+        return connectionStrategy.getProposalService()
+                .updateProposals(connectionStrategy.getSession(), proposals);
+    }
+
+    /**
+     * Perform the choosen action over the Proposals that match with the query string given by parameter
+     * 
+     * @param queryString
+     *            the query string for the statement
+     * @param queryParams
+     *            a map with the query params included in the query string
+     * @param proposalAction
+     *            Action for perform over the Proposals that match with the query string
+     * @return Number of Proposals updated
+     * @throws PerformProposalsException
+     *             Perform Proposals Exception
+     */
+    @MetaDataScope(PerformProposalsCategory.class)
+    @Processor
+    public Integer performProposals(String queryString, Map<String, Object> queryParams, @MetaDataKeyParam String proposalAction)
+            throws PerformProposalsException {
+        return connectionStrategy.getProposalService()
+                .performProposals(connectionStrategy.getSession(), proposalAction, queryString, queryParams);
     }
 
     /**
      * Retrieve proposals by ids
-     * 
+     *
      * @param ids
      *            the ids of the proposals
      * @return a list of proposals
@@ -529,25 +1027,83 @@ public class GoogleDfpConnector {
     }
 
     /**
-     * Retrieve proposals by modified date
+     * Retrieve the Proposal Line Items that match with the queryString
      * 
-     * @param lastModifiedDate
-     *            the last modified date of the companies
-     * @param snapshotDateTime
-     *            the snapshot date of the companies
-     * @return List of Proposal Line Items
+     * @param queryString
+     *            the query string for the statement
+     * @param queryParams
+     *            a map with the query params included in the query string
+     * @param queryOrder
+     *            the query order for the statement
+     * @param queryLimit
+     *            the query limit for the statement
+     * @param queryOffset
+     *            the query offset for the statement
+     * @return List<ProposalLineItem> List of proposal line items that match with the parameters
      * @throws GetProposalLineItemsException
-     *             Get proposal line items exception
+     *             Get Proposal Line Items Exception
      */
     @Processor
-    public List<ProposalLineItem> getProposalLineItemsByStatement(DateTime lastModifiedDate, DateTime snapshotDateTime) throws GetProposalLineItemsException {
+    public List<ProposalLineItem> getProposalLineItems(String queryString, Map<String, Object> queryParams, String queryOrder, @Default("500") Integer queryLimit,
+            @Default("0") Integer queryOffset) throws GetProposalLineItemsException {
         return connectionStrategy.getProposalLineItemService()
-                .getProposalLineItemsByStatement(connectionStrategy.getSession(), lastModifiedDate, snapshotDateTime);
+                .getProposalLineItems(connectionStrategy.getSession(), queryString, queryParams, queryOrder, queryLimit, queryOffset);
+    }
+
+    /**
+     * Create a list of Proposal Line Items
+     * 
+     * @param proposalLineItems
+     *            The Proposal Line Items for create
+     * @return Array of Proposal Line Items that has been created
+     * @throws CreateFailedException
+     *             Create Failed Exception
+     */
+    @Processor
+    public ProposalLineItem[] createProposalLineItems(@Default("#[payload]") List<ProposalLineItem> proposalLineItems) throws CreateFailedException {
+        return connectionStrategy.getProposalLineItemService()
+                .createProposalLineItems(connectionStrategy.getSession(), proposalLineItems);
+    }
+
+    /**
+     * Update a list of Proposal Line Items
+     * 
+     * @param proposalLineItems
+     *            The Proposal Line Items for update
+     * @return Array of Proposal Line Items that has been updated
+     * @throws UpdateFailedException
+     *             Update Failed Exception
+     */
+    @Processor
+    public ProposalLineItem[] updateProposalLineItems(@Default("#[payload]") List<ProposalLineItem> proposalLineItems) throws UpdateFailedException {
+        return connectionStrategy.getProposalLineItemService()
+                .updateProposalLineItems(connectionStrategy.getSession(), proposalLineItems);
+    }
+
+    /**
+     * Perform the choosen action over the Proposal Line Items that match with the query string given by parameter
+     * 
+     * @param queryString
+     *            the query string for the statement
+     * @param queryParams
+     *            a map with the query params included in the query string
+     * @param proposalLineItemAction
+     *            Action for perform over the Proposal Line Items that match with the query string
+     * @return Number of Proposal Line Items updated
+     * @throws PerformProposalLineItemsException
+     *             Perform Proposal Line Items Exception
+     */
+    @MetaDataScope(PerformProposalLineItemsCategory.class)
+    @Processor
+    public Integer performProposalLineItems(String queryString, Map<String, Object> queryParams, @MetaDataKeyParam String proposalLineItemAction)
+            throws PerformProposalLineItemsException {
+        return connectionStrategy.getProposalLineItemService()
+                .performProposalLineItems(connectionStrategy.getSession(), proposalLineItemAction, queryString, queryParams);
     }
 
     /**
      * Retrieve proposals by IDs
-     * 
+     *
      * @param ids
      *            the ids of the proposal line items
      * @return List of Proposal Line Items
@@ -562,7 +1118,7 @@ public class GoogleDfpConnector {
 
     /**
      * Retrieve proposals by proposal IDs
-     * 
+     *
      * @param proposalIds
      *            the proposal ids for the line items
      * @return List of Proposal LineI tems

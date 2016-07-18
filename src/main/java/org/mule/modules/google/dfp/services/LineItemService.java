@@ -6,17 +6,25 @@ package org.mule.modules.google.dfp.services;
 
 import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
+import org.mule.modules.google.dfp.exceptions.CreateFailedException;
 import org.mule.modules.google.dfp.exceptions.GetLineItemsException;
+import org.mule.modules.google.dfp.exceptions.PerformLineItemsException;
+import org.mule.modules.google.dfp.exceptions.UpdateFailedException;
 
 import com.google.api.ads.dfp.axis.factory.DfpServices;
 import com.google.api.ads.dfp.axis.utils.v201605.StatementBuilder;
+import com.google.api.ads.dfp.axis.v201605.ApiException;
 import com.google.api.ads.dfp.axis.v201605.DateTime;
 import com.google.api.ads.dfp.axis.v201605.LineItem;
+import com.google.api.ads.dfp.axis.v201605.LineItemAction;
 import com.google.api.ads.dfp.axis.v201605.LineItemPage;
 import com.google.api.ads.dfp.axis.v201605.LineItemServiceInterface;
+import com.google.api.ads.dfp.axis.v201605.UpdateResult;
 import com.google.api.ads.dfp.lib.client.DfpSession;
 import com.google.api.client.repackaged.com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
@@ -34,6 +42,150 @@ public class LineItemService {
                 LineItemServiceInterface.class);
 
         return lineItemService;
+    }
+
+    public List<LineItem> getLineItems(DfpSession session, String queryString, Map<String, Object> queryParams, String queryOrder, Integer queryLimit, Integer queryOffset)
+            throws GetLineItemsException {
+        try {
+            LineItemServiceInterface lineItemService = createLineItemService(session);
+
+            // Create a statement to get line items by the given parameters
+            StatementBuilder statementBuilder = new StatementBuilder()
+                    .where(queryString)
+                    .orderBy(queryOrder)
+                    .limit(queryLimit)
+                    .offset(queryOffset);
+
+            ServicesUtils.bindVariables(queryParams, statementBuilder);
+
+            // Default for total result set size.
+            int totalResultSetSize = 0;
+            List<LineItem> lineItemsFound = new ArrayList<LineItem>();
+
+            do {
+                // Get Line Items by statement.
+                LineItemPage page = lineItemService
+                        .getLineItemsByStatement(statementBuilder.toStatement());
+
+                if (page.getResults() != null) {
+                    totalResultSetSize = page.getTotalResultSetSize();
+                    Arrays.asList(page.getResults());
+                    lineItemsFound.addAll(Arrays.asList(page.getResults()));
+                } else {
+                    logger.info("No Line Items found with given parameters");
+                }
+
+                statementBuilder
+                        .increaseOffsetBy(queryLimit);
+            } while (statementBuilder.getOffset() < totalResultSetSize);
+
+            logger.info("Number of Line Items found:" + totalResultSetSize);
+            return lineItemsFound;
+        } catch (ApiException e) {
+            throw new GetLineItemsException(e);
+        } catch (RemoteException e) {
+            throw new GetLineItemsException(e);
+        } catch (Exception e) {
+            throw new GetLineItemsException(e);
+        }
+    }
+
+    public Integer performLineItems(DfpSession session, String lineItemActionString, String queryString, Map<String, Object> queryParams)
+            throws PerformLineItemsException {
+        try {
+            LineItemServiceInterface lineItemService = createLineItemService(session);
+
+            // Create a statement to get line items by the given parameters
+            StatementBuilder statementBuilder = new StatementBuilder()
+                    .where(queryString);
+
+            ServicesUtils.bindVariables(queryParams, statementBuilder);
+
+            // Number of line items performed
+            Integer lineItemsPerformed = 0;
+
+            String trimmedString = lineItemActionString.replace(" ", "")
+                    .trim();
+            LineItemAction lineItemAction = (LineItemAction) Class.forName("com.google.api.ads.dfp.axis.v201605." + trimmedString)
+                    .newInstance();
+
+            // Perform LineItemAction over Line Items by statement.
+            UpdateResult updateResult = lineItemService
+                    .performLineItemAction(lineItemAction, statementBuilder.toStatement());
+
+            if (updateResult != null) {
+                lineItemsPerformed = updateResult.getNumChanges();
+            } else {
+                logger.info("No Line Items found with given parameters");
+            }
+
+            logger.info("Number of Line Items performed:" + lineItemsPerformed);
+            return lineItemsPerformed;
+        } catch (ApiException e) {
+            throw new PerformLineItemsException(e);
+        } catch (RemoteException e) {
+            throw new PerformLineItemsException(e);
+        } catch (Exception e) {
+            throw new PerformLineItemsException(e);
+        }
+    }
+
+    public LineItem[] createLineItems(DfpSession session, List<LineItem> lineItemsToCreate)
+            throws CreateFailedException {
+
+        try {
+            // Get the LineItemService.
+            LineItemServiceInterface lineItemService = createLineItemService(session);
+
+            LineItem[] lineItemsArray = new LineItem[lineItemsToCreate.size()];
+            lineItemsArray = lineItemsToCreate.toArray(lineItemsArray);
+
+            LineItem[] lineItems = lineItemService.createLineItems(lineItemsArray);
+
+            for (LineItem item : lineItems) {
+                logger.info(String
+                        .format("Line Item with ID \"%d\", name \"%s\", and order id \"%d\" was created.\"%n\"",
+                                item.getId(), item.getName(), item.getOrderId()));
+            }
+
+            return lineItems;
+
+        } catch (ApiException e) {
+            throw new CreateFailedException(e);
+        } catch (RemoteException e) {
+            throw new CreateFailedException(e);
+        } catch (Exception e) {
+            throw new CreateFailedException(e);
+        }
+    }
+
+    public LineItem[] updateLineItems(DfpSession session, List<LineItem> lineItemsToUpdate)
+            throws UpdateFailedException {
+
+        try {
+            // Get the LineItemService.
+            LineItemServiceInterface lineItemService = createLineItemService(session);
+
+            LineItem[] lineItemsArray = new LineItem[lineItemsToUpdate.size()];
+            lineItemsArray = lineItemsToUpdate.toArray(lineItemsArray);
+
+            // Update the Line Items on the server.
+            LineItem[] lineItems = lineItemService.updateLineItems(lineItemsArray);
+
+            for (LineItem item : lineItems) {
+                logger.info(String
+                        .format("Line Item with ID \"%d\", name \"%s\", and order id \"%d\" was updated.\"%n\"",
+                                item.getId(), item.getName(), item.getOrderId()));
+            }
+
+            return lineItems;
+        } catch (ApiException e) {
+            throw new UpdateFailedException(e);
+        } catch (RemoteException e) {
+            throw new UpdateFailedException(e);
+        } catch (Exception e) {
+            throw new UpdateFailedException(e);
+        }
     }
 
     public List<LineItem> getLineItemsByStatement(DfpSession session,
