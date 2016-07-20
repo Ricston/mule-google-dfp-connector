@@ -9,6 +9,7 @@ import java.util.Arrays;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mule.modules.google.dfp.GoogleDfpConnector;
 import org.mule.tools.devkit.ctf.junit.AbstractTestCase;
@@ -30,6 +31,7 @@ public class CreateProposalLineItemsTestCases extends AbstractTestCase<GoogleDfp
     }
 
     @Test
+    @Ignore
     public void testCreateLineItems() throws Exception {
         createdProposalLineItem = getConnector().createProposalLineItems(Arrays.asList(newProposalLineItem))[0];
         Assert.assertNotNull(createdProposalLineItem);

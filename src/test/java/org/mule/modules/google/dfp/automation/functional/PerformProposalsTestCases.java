@@ -9,6 +9,7 @@ import java.util.Map;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mule.modules.google.dfp.GoogleDfpConnector;
 import org.mule.modules.google.dfp.exceptions.PerformProposalsException;
@@ -37,6 +38,7 @@ public class PerformProposalsTestCases extends AbstractTestCase<GoogleDfpConnect
     }
 
     @Test
+    @Ignore
     public void testPerformProposals() throws Exception {
 
         Integer proposalsPerformed = getConnector().performProposals("", queryParams, "Archive Proposals");
@@ -44,6 +46,7 @@ public class PerformProposalsTestCases extends AbstractTestCase<GoogleDfpConnect
     }
 
     @Test
+    @Ignore
     public void testPerformProposalsNotFound() throws Exception {
         try {
             getConnector().performProposals("id = :id", queryParamsNotFound, "Archive Proposals");

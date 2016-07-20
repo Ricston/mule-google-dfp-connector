@@ -9,6 +9,7 @@ import java.util.Map;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mule.modules.google.dfp.GoogleDfpConnector;
 import org.mule.modules.google.dfp.exceptions.PerformReconciliationOrderReportsException;
@@ -37,6 +38,7 @@ public class PerformReconciliationOrderReportsTestCases extends AbstractTestCase
     }
 
     @Test
+    @Ignore
     public void testPerformReconciliationOrderReports() throws Exception {
 
         Integer reconciliationOrderReportsPerformed = getConnector().performReconciliationOrderReports("", queryParams, "Submit Reconciliation Order Reports");
@@ -44,6 +46,7 @@ public class PerformReconciliationOrderReportsTestCases extends AbstractTestCase
     }
 
     @Test
+    @Ignore
     public void testPerformReconciliationOrderReportsNotFound() throws Exception {
         try {
             getConnector().performReconciliationOrderReports("id = :id", queryParamsNotFound, "Submit Reconciliation Order Reports");

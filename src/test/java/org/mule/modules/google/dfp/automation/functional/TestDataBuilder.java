@@ -11,14 +11,26 @@ import java.util.List;
 import java.util.Map;
 
 import com.google.api.ads.dfp.axis.utils.v201605.DateTimes;
+import com.google.api.ads.dfp.axis.v201605.AdUnitTargeting;
 import com.google.api.ads.dfp.axis.v201605.Company;
 import com.google.api.ads.dfp.axis.v201605.CompanyType;
+import com.google.api.ads.dfp.axis.v201605.CostType;
+import com.google.api.ads.dfp.axis.v201605.CreativePlaceholder;
+import com.google.api.ads.dfp.axis.v201605.CreativeSizeType;
 import com.google.api.ads.dfp.axis.v201605.Date;
 import com.google.api.ads.dfp.axis.v201605.DateTime;
+import com.google.api.ads.dfp.axis.v201605.Goal;
+import com.google.api.ads.dfp.axis.v201605.GoalType;
+import com.google.api.ads.dfp.axis.v201605.InventoryTargeting;
 import com.google.api.ads.dfp.axis.v201605.LineItem;
+import com.google.api.ads.dfp.axis.v201605.LineItemType;
+import com.google.api.ads.dfp.axis.v201605.Money;
 import com.google.api.ads.dfp.axis.v201605.Order;
 import com.google.api.ads.dfp.axis.v201605.Proposal;
 import com.google.api.ads.dfp.axis.v201605.ProposalLineItem;
+import com.google.api.ads.dfp.axis.v201605.Size;
+import com.google.api.ads.dfp.axis.v201605.Targeting;
+import com.google.api.ads.dfp.axis.v201605.UnitType;
 
 public class TestDataBuilder {
 
@@ -288,12 +300,42 @@ public class TestDataBuilder {
         LineItem newLineItem = new LineItem();
         newLineItem.setName("TestLineItem");
         newLineItem.setOrderId(312984608L);
+        Money money = new Money();
+        money.setCurrencyCode("EUR");
+        money.setMicroAmount(1000000L);
+        newLineItem.setCostPerUnit(money);
+        Goal goal = new Goal(GoalType.UNKNOWN, UnitType.IMPRESSIONS, 100L);
+        newLineItem.setPrimaryGoal(goal);
+        newLineItem.setStartDateTime(DateTimes.toDateTime("2017-01-01T00:00:00", "Europe/Madrid"));
+        newLineItem.setEndDateTime(DateTimes.toDateTime("2017-01-31T00:00:00", "Europe/Madrid"));
+        newLineItem.setLineItemType(LineItemType.NETWORK);
+        Targeting target = new Targeting();
+        InventoryTargeting invTargeting = new InventoryTargeting();
+        invTargeting.setExcludedAdUnits(new AdUnitTargeting[] { new AdUnitTargeting("424854728", true)
+        });
+        invTargeting.setTargetedAdUnits(new AdUnitTargeting[] { new AdUnitTargeting("531235328", true)
+        });
+        invTargeting.setTargetedPlacementIds(new long[] {});
+        target.setInventoryTargeting(invTargeting);
+        newLineItem.setTargeting(target);
+        newLineItem.setCostType(CostType.CPC);
+        CreativePlaceholder creative = new CreativePlaceholder();
+        Size size = new Size();
+        size.setHeight(50);
+        size.setWidth(360);
+        size.setIsAspectRatio(false);
+        creative.setSize(size);
+        creative.setCreativeSizeType(CreativeSizeType.ASPECT_RATIO);
+        newLineItem.setCreativePlaceholders(new CreativePlaceholder[] { creative
+        });
         return newLineItem;
     }
 
     public static Order getCreateOrdersNewOrder() {
         Order newOrder = new Order();
         newOrder.setName("TestOrder");
+        newOrder.setTraffickerId(136103528L);
+        newOrder.setAdvertiserId(59503208L);
         return newOrder;
     }
 
@@ -306,6 +348,7 @@ public class TestDataBuilder {
     public static Proposal getCreateProposalsNewProposal() {
         Proposal newProposal = new Proposal();
         newProposal.setName("TestProposal");
+        newProposal.setProbabilityOfClose(100L);
         return newProposal;
     }
 

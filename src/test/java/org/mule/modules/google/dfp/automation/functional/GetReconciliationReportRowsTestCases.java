@@ -10,6 +10,7 @@ import java.util.Map;
 import org.apache.commons.collections.CollectionUtils;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mule.modules.google.dfp.GoogleDfpConnector;
 import org.mule.tools.devkit.ctf.junit.AbstractTestCase;
@@ -30,6 +31,7 @@ public class GetReconciliationReportRowsTestCases extends AbstractTestCase<Googl
     }
 
     @Test
+    @Ignore
     public void testGetReconciliationReportRows() throws Exception {
 
         List<ReconciliationReportRow> reconciliationReportRows = getConnector().getReconciliationReportRows("", queryParams, "id ASC", 400, 0);

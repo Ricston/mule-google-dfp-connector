@@ -9,6 +9,7 @@ import java.util.Map;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mule.modules.google.dfp.GoogleDfpConnector;
 import org.mule.modules.google.dfp.exceptions.PerformProductsException;
@@ -38,6 +39,7 @@ public class PerformProductsTestCases extends AbstractTestCase<GoogleDfpConnecto
     }
 
     @Test
+    @Ignore
     public void testPerformProducts() throws Exception {
 
         Integer productsPerformed = getConnector().performProducts("", queryParams, "Deactivate Products");
@@ -45,6 +47,7 @@ public class PerformProductsTestCases extends AbstractTestCase<GoogleDfpConnecto
     }
 
     @Test
+    @Ignore
     public void testPerformProductsNotFound() throws Exception {
         try {
             getConnector().performProducts("id = :id", queryParamsNotFound, "Deactivate Products");
