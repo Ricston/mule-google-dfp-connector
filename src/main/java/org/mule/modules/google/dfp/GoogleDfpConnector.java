@@ -246,7 +246,7 @@ public class GoogleDfpConnector {
      * @param queryOffset
      *            the query offset for the statement
      * @return List<ReconciliationReport> List of reconciliation reports that match with the parameters
-     * @throws GetReconciliationReporsException
+     * @throws GetReconciliationReportsException
      *             Get Reconciliation Reports Exception
      */
     @Processor
@@ -543,7 +543,7 @@ public class GoogleDfpConnector {
     /**
      * Update a list of Products
      * 
-     * @param Product
+     * @param products
      *            The Products for update
      * @return Array of Products that has been updated
      * @throws UpdateFailedException
@@ -581,7 +581,7 @@ public class GoogleDfpConnector {
      * @param ids
      *            the ids of the products
      * @return List of products
-     * @throws GetProductsException
+     * @throws GetProductsByStatementException
      *             Get Products By Statement Exception
      */
     @Processor
