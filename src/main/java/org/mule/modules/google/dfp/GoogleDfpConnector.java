@@ -17,6 +17,7 @@ import org.mule.api.annotations.licensing.RequiresEnterpriseLicense;
 import org.mule.api.annotations.param.Default;
 import org.mule.api.annotations.param.MetaDataKeyParam;
 import org.mule.api.annotations.param.Optional;
+import org.mule.api.annotations.param.RefOnly;
 import org.mule.modules.google.dfp.exceptions.AudienceSegmentException;
 import org.mule.modules.google.dfp.exceptions.CreateFailedException;
 import org.mule.modules.google.dfp.exceptions.CreateReportException;
@@ -227,7 +228,7 @@ public class GoogleDfpConnector {
      *             Update Failed Exception
      */
     @Processor
-    public ReconciliationReportRow[] updateReconciliationReportRows(@Default("#[payload]") List<ReconciliationReportRow> reconciliationReportRows) throws UpdateFailedException {
+    public ReconciliationReportRow[] updateReconciliationReportRows(@Default("#[payload]") @RefOnly List<ReconciliationReportRow> reconciliationReportRows) throws UpdateFailedException {
         return connectionStrategy.getReconciliationReportRowService()
                 .updateReconciliationReportRows(connectionStrategy.getSession(), reconciliationReportRows);
     }
@@ -267,7 +268,7 @@ public class GoogleDfpConnector {
      *             Update Failed Exception
      */
     @Processor
-    public ReconciliationReport[] updateReconciliationReports(@Default("#[payload]") List<ReconciliationReport> reconciliationReports) throws UpdateFailedException {
+    public ReconciliationReport[] updateReconciliationReports(@Default("#[payload]") @RefOnly List<ReconciliationReport> reconciliationReports) throws UpdateFailedException {
         return connectionStrategy.getReconciliationReportService()
                 .updateReconciliationReports(connectionStrategy.getSession(), reconciliationReports);
     }
@@ -307,7 +308,7 @@ public class GoogleDfpConnector {
      *             Update Failed Exception
      */
     @Processor
-    public ReconciliationLineItemReport[] updateReconciliationLineItemReports(@Default("#[payload]") List<ReconciliationLineItemReport> reconciliationLineItemReports)
+    public ReconciliationLineItemReport[] updateReconciliationLineItemReports(@Default("#[payload]") @RefOnly List<ReconciliationLineItemReport> reconciliationLineItemReports)
             throws UpdateFailedException {
         return connectionStrategy.getReconciliationLineItemReportService()
                 .updateReconciliationLineItemReports(connectionStrategy.getSession(), reconciliationLineItemReports);
@@ -348,7 +349,7 @@ public class GoogleDfpConnector {
      *             Update Failed Exception
      */
     @Processor
-    public ReconciliationOrderReport[] updateReconciliationOrderReports(@Default("#[payload]") List<ReconciliationOrderReport> reconciliationOrderReports)
+    public ReconciliationOrderReport[] updateReconciliationOrderReports(@Default("#[payload]") @RefOnly List<ReconciliationOrderReport> reconciliationOrderReports)
             throws UpdateFailedException {
         return connectionStrategy.getReconciliationOrderReportService()
                 .updateReconciliationOrderReports(connectionStrategy.getSession(), reconciliationOrderReports);
@@ -479,7 +480,7 @@ public class GoogleDfpConnector {
      *             Create Failed Exception
      */
     @Processor
-    public Company[] createCompanies(@Default("#[payload]") List<Company> companies) throws CreateFailedException {
+    public Company[] createCompanies(@Default("#[payload]") @RefOnly List<Company> companies) throws CreateFailedException {
         return connectionStrategy.getCompanyService()
                 .createCompanies(connectionStrategy.getSession(), companies);
     }
@@ -494,7 +495,7 @@ public class GoogleDfpConnector {
      *             Update Failed Exception
      */
     @Processor
-    public Company[] updateCompanies(@Default("#[payload]") List<Company> companies) throws UpdateFailedException {
+    public Company[] updateCompanies(@Default("#[payload]") @RefOnly List<Company> companies) throws UpdateFailedException {
         return connectionStrategy.getCompanyService()
                 .updateCompanies(connectionStrategy.getSession(), companies);
     }
@@ -550,7 +551,7 @@ public class GoogleDfpConnector {
      *             Update Failed Exception
      */
     @Processor
-    public Product[] updateProducts(@Default("#[payload]") List<Product> products) throws UpdateFailedException {
+    public Product[] updateProducts(@Default("#[payload]") @RefOnly List<Product> products) throws UpdateFailedException {
         return connectionStrategy.getProductService()
                 .updateProducts(connectionStrategy.getSession(), products);
     }
@@ -673,7 +674,7 @@ public class GoogleDfpConnector {
      *             Create Failed Exception
      */
     @Processor
-    public LineItem[] createLineItems(@Default("#[payload]") List<LineItem> lineItems) throws CreateFailedException {
+    public LineItem[] createLineItems(@Default("#[payload]") @RefOnly List<LineItem> lineItems) throws CreateFailedException {
         return connectionStrategy.getLineItemService()
                 .createLineItems(connectionStrategy.getSession(), lineItems);
     }
@@ -688,7 +689,7 @@ public class GoogleDfpConnector {
      *             Update Failed Exception
      */
     @Processor
-    public LineItem[] updateLineItems(@Default("#[payload]") List<LineItem> lineItems) throws UpdateFailedException {
+    public LineItem[] updateLineItems(@Default("#[payload]") @RefOnly List<LineItem> lineItems) throws UpdateFailedException {
         return connectionStrategy.getLineItemService()
                 .updateLineItems(connectionStrategy.getSession(), lineItems);
     }
@@ -896,7 +897,7 @@ public class GoogleDfpConnector {
      *             Create Failed Exception
      */
     @Processor
-    public Order[] createOrders(@Default("#[payload]") List<Order> orders) throws CreateFailedException {
+    public Order[] createOrders(@Default("#[payload]") @RefOnly List<Order> orders) throws CreateFailedException {
         return connectionStrategy.getOrderService()
                 .createOrders(connectionStrategy.getSession(), orders);
     }
@@ -911,7 +912,7 @@ public class GoogleDfpConnector {
      *             Update Failed Exception
      */
     @Processor
-    public Order[] updateOrders(@Default("#[payload]") List<Order> orders) throws UpdateFailedException {
+    public Order[] updateOrders(@Default("#[payload]") @RefOnly List<Order> orders) throws UpdateFailedException {
         return connectionStrategy.getOrderService()
                 .updateOrders(connectionStrategy.getSession(), orders);
     }
@@ -970,7 +971,7 @@ public class GoogleDfpConnector {
      *             Create Failed Exception
      */
     @Processor
-    public Proposal[] createProposals(@Default("#[payload]") List<Proposal> proposals) throws CreateFailedException {
+    public Proposal[] createProposals(@Default("#[payload]") @RefOnly List<Proposal> proposals) throws CreateFailedException {
         return connectionStrategy.getProposalService()
                 .createProposals(connectionStrategy.getSession(), proposals);
     }
@@ -985,7 +986,7 @@ public class GoogleDfpConnector {
      *             Update Failed Exception
      */
     @Processor
-    public Proposal[] updateProposals(@Default("#[payload]") List<Proposal> proposals) throws UpdateFailedException {
+    public Proposal[] updateProposals(@Default("#[payload]") @RefOnly List<Proposal> proposals) throws UpdateFailedException {
         return connectionStrategy.getProposalService()
                 .updateProposals(connectionStrategy.getSession(), proposals);
     }
@@ -1060,7 +1061,7 @@ public class GoogleDfpConnector {
      *             Create Failed Exception
      */
     @Processor
-    public ProposalLineItem[] createProposalLineItems(@Default("#[payload]") List<ProposalLineItem> proposalLineItems) throws CreateFailedException {
+    public ProposalLineItem[] createProposalLineItems(@Default("#[payload]") @RefOnly List<ProposalLineItem> proposalLineItems) throws CreateFailedException {
         return connectionStrategy.getProposalLineItemService()
                 .createProposalLineItems(connectionStrategy.getSession(), proposalLineItems);
     }
@@ -1075,7 +1076,7 @@ public class GoogleDfpConnector {
      *             Update Failed Exception
      */
     @Processor
-    public ProposalLineItem[] updateProposalLineItems(@Default("#[payload]") List<ProposalLineItem> proposalLineItems) throws UpdateFailedException {
+    public ProposalLineItem[] updateProposalLineItems(@Default("#[payload]") @RefOnly List<ProposalLineItem> proposalLineItems) throws UpdateFailedException {
         return connectionStrategy.getProposalLineItemService()
                 .updateProposalLineItems(connectionStrategy.getSession(), proposalLineItems);
     }
