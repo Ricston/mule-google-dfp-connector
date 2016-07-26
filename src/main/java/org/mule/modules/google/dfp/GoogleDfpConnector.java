@@ -228,7 +228,8 @@ public class GoogleDfpConnector {
      *             Update Failed Exception
      */
     @Processor
-    public ReconciliationReportRow[] updateReconciliationReportRows(@Default("#[payload]") @RefOnly List<ReconciliationReportRow> reconciliationReportRows) throws UpdateFailedException {
+    public ReconciliationReportRow[] updateReconciliationReportRows(@Default("#[payload]") @RefOnly List<ReconciliationReportRow> reconciliationReportRows)
+            throws UpdateFailedException {
         return connectionStrategy.getReconciliationReportRowService()
                 .updateReconciliationReportRows(connectionStrategy.getSession(), reconciliationReportRows);
     }
@@ -1272,7 +1273,7 @@ public class GoogleDfpConnector {
      *             Api Exception
      */
     @Processor
-    public List<String[]> getProposalRetractionReasonPql() throws ApiException, RemoteException, IllegalAccessException, ReportDownloadException {
+    public List<String[]> getProposalRetractionReasonPql() throws RemoteException, IllegalAccessException, ReportDownloadException {
         return connectionStrategy.getPqlService()
                 .getProposalRetractionReasonPql(connectionStrategy.getSession());
     }
@@ -1292,7 +1293,7 @@ public class GoogleDfpConnector {
      *             Illegal Access Exception
      */
     @Processor
-    public List<String[]> getAllLineItemsPql() throws ReportDownloadException, ApiException, RemoteException, IllegalAccessException {
+    public List<String[]> getAllLineItemsPql() throws ReportDownloadException, RemoteException, IllegalAccessException {
         return connectionStrategy.getPqlService()
                 .getAllLineItemsPql(connectionStrategy.getSession());
     }

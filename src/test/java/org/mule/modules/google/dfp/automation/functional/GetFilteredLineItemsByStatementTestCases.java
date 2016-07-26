@@ -7,6 +7,8 @@ package org.mule.modules.google.dfp.automation.functional;
 import java.util.List;
 
 import org.junit.Before;
+import org.junit.Ignore;
+import org.junit.Test;
 import org.mule.modules.google.dfp.GoogleDfpConnector;
 import org.mule.tools.devkit.ctf.junit.AbstractTestCase;
 
@@ -25,16 +27,18 @@ public class GetFilteredLineItemsByStatementTestCases extends AbstractTestCase<G
         wrongOrderIds = TestDataBuilder.getGetFilteredLineItemsByStatementWrongIds();
     }
 
-    // @Test
-    // public void testGetFilteredLineItemsByStatement() throws Exception {
-    // List<LineItem> lineItems = getConnector().getFilteredLineItemsByStatement(correctOrderIds);
-    // Assert.assertTrue(!lineItems.isEmpty());
-    // }
-    //
-    // @Test
-    // public void testGetFilteredLineItemsByStatementNotFound() throws Exception {
-    // List<LineItem> lineItems = getConnector().getFilteredLineItemsByStatement(wrongOrderIds);
-    // Assert.assertTrue(lineItems.isEmpty());
-    // }
+    @Test
+    @Ignore
+    public void testGetFilteredLineItemsByStatement() throws Exception {
+        // List<LineItem> lineItems = getConnector().getFilteredLineItemsByStatement(correctOrderIds);
+        // Assert.assertTrue(!lineItems.isEmpty());
+    }
+
+    @Test
+    @Ignore
+    public void testGetFilteredLineItemsByStatementNotFound() throws Exception {
+        // List<LineItem> lineItems = getConnector().getFilteredLineItemsByStatement(wrongOrderIds);
+        // Assert.assertTrue(lineItems.isEmpty());
+    }
 
 }

@@ -275,3 +275,221 @@
 <!-- BEGIN_INCLUDE(google-dfp:get-contact-by-id) -->
     <google-dfp:get-contact-by-id config-ref="Google-dfp" contactId="123"/>
 <!-- END_INCLUDE(google-dfp:get-contact-by-id) -->
+
+<!-- BEGIN_INCLUDE(google-dfp:get-companies) -->
+    <google-dfp:get-companies config-ref="Google-dfp" queryString="id = :id" queryOrder="id ASC" queryOffset="0" queryLimit="500">
+		<google-dfp:query-params>
+			<google-dfp:tuple key="id" value="12"/>
+		</google-dfp:query-params>
+	</google-dfp:get-companies>
+<!-- END_INCLUDE(google-dfp:get-companies) -->
+
+<!-- BEGIN_INCLUDE(google-dfp:get-reconciliation-report-rows) -->
+    <google-dfp:get-reconciliation-report-rows config-ref="Google-dfp" queryString="id = :id" queryOrder="id ASC" queryOffset="0" queryLimit="500">
+		<google-dfp:query-params>
+			<google-dfp:tuple key="id" value="12"/>
+		</google-dfp:query-params>
+	</google-dfp:get-reconciliation-report-rows>
+<!-- END_INCLUDE(google-dfp:get-reconciliation-report-rows) -->
+
+<!-- BEGIN_INCLUDE(google-dfp:get-reconciliation-reports) -->
+    <google-dfp:get-reconciliation-reports config-ref="Google-dfp" queryString="id = :id" queryOrder="id ASC" queryOffset="0" queryLimit="500">
+		<google-dfp:query-params>
+			<google-dfp:tuple key="id" value="12"/>
+		</google-dfp:query-params>
+	</google-dfp:get-reconciliation-reports>
+<!-- END_INCLUDE(google-dfp:get-reconciliation-reports) -->
+
+<!-- BEGIN_INCLUDE(google-dfp:get-reconciliation-line-item-reports) -->
+    <google-dfp:get-reconciliation-line-item-reports config-ref="Google-dfp" queryString="id = :id" queryOrder="id ASC" queryOffset="0" queryLimit="500">
+		<google-dfp:query-params>
+			<google-dfp:tuple key="id" value="12"/>
+		</google-dfp:query-params>
+	</google-dfp:get-reconciliation-line-item-reports>
+<!-- END_INCLUDE(google-dfp:get-reconciliation-line-item-reports) -->
+
+<!-- BEGIN_INCLUDE(google-dfp:get-reconciliation-order-reports) -->
+    <google-dfp:get-reconciliation-order-reports config-ref="Google-dfp" queryString="id = :id" queryOrder="id ASC" queryOffset="0" queryLimit="500">
+		<google-dfp:query-params>
+			<google-dfp:tuple key="id" value="12"/>
+		</google-dfp:query-params>
+	</google-dfp:get-reconciliation-order-reports>
+<!-- END_INCLUDE(google-dfp:get-reconciliation-order-reports) -->
+
+<!-- BEGIN_INCLUDE(google-dfp:get-products) -->
+    <google-dfp:get-products config-ref="Google-dfp" queryString="id = :id" queryOrder="id ASC" queryOffset="0" queryLimit="500">
+		<google-dfp:query-params>
+			<google-dfp:tuple key="id" value="12"/>
+		</google-dfp:query-params>
+	</google-dfp:get-products>
+<!-- END_INCLUDE(google-dfp:get-products) -->
+
+<!-- BEGIN_INCLUDE(google-dfp:get-line-items) -->
+    <google-dfp:get-line-items config-ref="Google-dfp" queryString="id = :id" queryOrder="id ASC" queryOffset="0" queryLimit="500">
+		<google-dfp:query-params>
+			<google-dfp:tuple key="id" value="12"/>
+		</google-dfp:query-params>
+	</google-dfp:get-line-items>
+<!-- END_INCLUDE(google-dfp:get-line-items) -->
+
+<!-- BEGIN_INCLUDE(google-dfp:get-orders) -->
+    <google-dfp:get-orders config-ref="Google-dfp" queryString="id = :id" queryOrder="id ASC" queryOffset="0" queryLimit="500">
+		<google-dfp:query-params>
+			<google-dfp:tuple key="id" value="12"/>
+		</google-dfp:query-params>
+	</google-dfp:get-orders>
+<!-- END_INCLUDE(google-dfp:get-orders) -->
+
+<!-- BEGIN_INCLUDE(google-dfp:get-proposals) -->
+    <google-dfp:get-proposals config-ref="Google-dfp" queryString="id = :id" queryOrder="id ASC" queryOffset="0" queryLimit="500">
+		<google-dfp:query-params>
+			<google-dfp:tuple key="id" value="12"/>
+		</google-dfp:query-params>
+	</google-dfp:get-proposals>
+<!-- END_INCLUDE(google-dfp:get-proposals) -->
+
+<!-- BEGIN_INCLUDE(google-dfp:get-proposal-line-items) -->
+    <google-dfp:get-proposal-line-items config-ref="Google-dfp" queryString="id = :id" queryOrder="id ASC" queryOffset="0" queryLimit="500">
+		<google-dfp:query-params>
+			<google-dfp:tuple key="id" value="12"/>
+		</google-dfp:query-params>
+	</google-dfp:get-proposal-line-items>
+<!-- END_INCLUDE(google-dfp:get-proposal-line-items) -->
+
+<!-- BEGIN_INCLUDE(google-dfp:perform-reconciliation-order-reports) -->
+    <google-dfp:perform-reconciliation-order-reports config-ref="Google-dfp" queryString="id = :id" reconciliationOrderReportAction="Submit Reconciliation Order Reports">
+		<google-dfp:query-params>
+			<google-dfp:tuple key="id" value="12"/>
+		</google-dfp:query-params>
+	</google-dfp:perform-reconciliation-order-reports>
+<!-- END_INCLUDE(google-dfp:perform-reconciliation-order-reports) -->
+
+<!-- BEGIN_INCLUDE(google-dfp:perform-products) -->
+    <google-dfp:perform-products config-ref="Google-dfp" queryString="id = :id" productAction="Activate Products">
+		<google-dfp:query-params>
+			<google-dfp:tuple key="id" value="12"/>
+		</google-dfp:query-params>
+	</google-dfp:perform-products>
+<!-- END_INCLUDE(google-dfp:perform-products) -->
+
+<!-- BEGIN_INCLUDE(google-dfp:perform-line-items) -->
+    <google-dfp:perform-line-items config-ref="Google-dfp" queryString="id = :id" lineItemAction="Activate Line Items">
+		<google-dfp:query-params>
+			<google-dfp:tuple key="id" value="12"/>
+		</google-dfp:query-params>
+	</google-dfp:perform-line-items>
+<!-- END_INCLUDE(google-dfp:perform-line-items) -->
+
+<!-- BEGIN_INCLUDE(google-dfp:perform-orders) -->
+    <google-dfp:perform-orders config-ref="Google-dfp" queryString="id = :id" orderAction="Approve Orders">
+		<google-dfp:query-params>
+			<google-dfp:tuple key="id" value="12"/>
+		</google-dfp:query-params>
+	</google-dfp:perform-orders>
+<!-- END_INCLUDE(google-dfp:perform-orders) -->
+
+<!-- BEGIN_INCLUDE(google-dfp:perform-proposals) -->
+    <google-dfp:perform-proposals config-ref="Google-dfp" queryString="id = :id" proposalAction="Archive Proposals">
+		<google-dfp:query-params>
+			<google-dfp:tuple key="id" value="12"/>
+		</google-dfp:query-params>
+	</google-dfp:perform-proposals>
+<!-- END_INCLUDE(google-dfp:perform-proposals) -->
+
+<!-- BEGIN_INCLUDE(google-dfp:perform-proposal-line-items) -->
+    <google-dfp:perform-proposal-line-items config-ref="Google-dfp" queryString="id = :id" proposalLineItemAction="Archive Proposal Line Items">
+		<google-dfp:query-params>
+			<google-dfp:tuple key="id" value="12"/>
+		</google-dfp:query-params>
+	</google-dfp:perform-proposal-line-items>
+<!-- END_INCLUDE(google-dfp:perform-proposal-line-items) -->
+
+<!-- BEGIN_INCLUDE(google-dfp:create-companies) -->
+    <google-dfp:create-companies config-ref="Google-dfp">
+    	<google-dfp:companies ref="#[payload]" />
+    </google-dfp:create-companies>
+<!-- END_INCLUDE(google-dfp:create-companies) -->
+
+<!-- BEGIN_INCLUDE(google-dfp:create-line-items) -->
+    <google-dfp:create-line-items config-ref="Google-dfp">
+    	<google-dfp:line-items ref="#[payload]" />
+    </google-dfp:create-line-items>
+<!-- END_INCLUDE(google-dfp:create-line-items) -->
+
+<!-- BEGIN_INCLUDE(google-dfp:create-orders) -->
+    <google-dfp:create-orders config-ref="Google-dfp">
+    	<google-dfp:orders ref="#[payload]" />
+    </google-dfp:create-orders>
+<!-- END_INCLUDE(google-dfp:create-orders) -->
+
+<!-- BEGIN_INCLUDE(google-dfp:create-proposals) -->
+    <google-dfp:create-proposals config-ref="Google-dfp">
+    	<google-dfp:proposals ref="#[payload]" />
+    </google-dfp:create-proposals>
+<!-- END_INCLUDE(google-dfp:create-proposals) -->
+
+<!-- BEGIN_INCLUDE(google-dfp:create-proposal-line-items) -->
+    <google-dfp:create-proposal-line-items config-ref="Google-dfp">
+    	<google-dfp:proposal-line-items ref="#[payload]" />
+    </google-dfp:create-proposal-line-items>
+<!-- END_INCLUDE(google-dfp:create-proposal-line-items) -->
+
+<!-- BEGIN_INCLUDE(google-dfp:update-products) -->
+    <google-dfp:update-products config-ref="Google-dfp">
+    	<google-dfp:products ref="#[payload]" />
+    </google-dfp:update-products>
+<!-- END_INCLUDE(google-dfp:update-products) -->
+
+<!-- BEGIN_INCLUDE(google-dfp:update-line-items) -->
+    <google-dfp:update-line-items config-ref="Google-dfp">
+    	<google-dfp:line-items ref="#[payload]" />
+    </google-dfp:update-line-items>
+<!-- END_INCLUDE(google-dfp:update-line-items) -->
+
+<!-- BEGIN_INCLUDE(google-dfp:update-companies) -->
+    <google-dfp:update-companies config-ref="Google-dfp">
+    	<google-dfp:companies ref="#[payload]" />
+    </google-dfp:update-companies>
+<!-- END_INCLUDE(google-dfp:update-companies) -->
+
+<!-- BEGIN_INCLUDE(google-dfp:update-orders) -->
+    <google-dfp:update-orders config-ref="Google-dfp">
+    	<google-dfp:orders ref="#[payload]" />
+    </google-dfp:update-orders>
+<!-- END_INCLUDE(google-dfp:update-orders) -->
+
+<!-- BEGIN_INCLUDE(google-dfp:update-proposals) -->
+    <google-dfp:update-proposals config-ref="Google-dfp">
+    	<google-dfp:proposals ref="#[payload]" />
+    </google-dfp:update-proposals>
+<!-- END_INCLUDE(google-dfp:update-proposals) -->
+
+<!-- BEGIN_INCLUDE(google-dfp:update-proposal-line-items) -->
+    <google-dfp:update-proposal-line-items config-ref="Google-dfp">
+    	<google-dfp:proposal-line-items ref="#[payload]" />
+    </google-dfp:update-proposal-line-items>
+<!-- END_INCLUDE(google-dfp:update-proposal-line-items) -->
+
+<!-- BEGIN_INCLUDE(google-dfp:update-reconciliation-report-rows) -->
+    <google-dfp:update-reconciliation-report-rows config-ref="Google-dfp">
+    	<google-dfp:reconciliation-report-rows ref="#[payload]" />
+    </google-dfp:update-reconciliation-report-rows>
+<!-- END_INCLUDE(google-dfp:update-reconciliation-report-rows) -->
+
+<!-- BEGIN_INCLUDE(google-dfp:update-reconciliation-reports) -->
+    <google-dfp:update-reconciliation-reports config-ref="Google-dfp">
+    	<google-dfp:reconciliation-reports ref="#[payload]" />
+    </google-dfp:update-reconciliation-reports>
+<!-- END_INCLUDE(google-dfp:update-reconciliation-reports) -->
+
+<!-- BEGIN_INCLUDE(google-dfp:update-reconciliation-line-item-reports) -->
+    <google-dfp:update-reconciliation-line-item-reports config-ref="Google-dfp">
+    	<google-dfp:reconciliation-line-item-reports ref="#[payload]" />
+    </google-dfp:update-reconciliation-line-item-reports>
+<!-- END_INCLUDE(google-dfp:update-reconciliation-line-item-reports) -->
+
+<!-- BEGIN_INCLUDE(google-dfp:update-reconciliation-order-reports) -->
+    <google-dfp:update-reconciliation-order-reports config-ref="Google-dfp">
+    	<google-dfp:reconciliation-order-reports ref="#[payload]" />
+    </google-dfp:update-reconciliation-order-reports>
+<!-- END_INCLUDE(google-dfp:update-reconciliation-order-reports) -->

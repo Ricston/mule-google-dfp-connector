@@ -59,7 +59,6 @@ import org.mule.modules.google.dfp.automation.functional.PerformProductsTestCase
 import org.mule.modules.google.dfp.automation.functional.PerformProposalLineItemsTestCases;
 import org.mule.modules.google.dfp.automation.functional.PerformProposalsTestCases;
 import org.mule.modules.google.dfp.automation.functional.PerformReconciliationOrderReportsTestCases;
-import org.mule.modules.google.dfp.automation.functional.TestDataBuilder;
 import org.mule.modules.google.dfp.automation.functional.UpdateCompaniesTestCases;
 import org.mule.modules.google.dfp.automation.functional.UpdateCompanyTestCases;
 import org.mule.modules.google.dfp.automation.functional.UpdateContactTestCases;
@@ -126,7 +125,6 @@ import org.mule.tools.devkit.ctf.mockup.ConnectorTestContext;
         PerformProposalLineItemsTestCases.class,
         PerformProposalsTestCases.class,
         PerformReconciliationOrderReportsTestCases.class,
-        TestDataBuilder.class,
         UpdateCompaniesTestCases.class,
         UpdateCompanyTestCases.class,
         UpdateContactTestCases.class,

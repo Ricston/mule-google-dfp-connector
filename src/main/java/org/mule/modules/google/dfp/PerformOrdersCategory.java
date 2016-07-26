@@ -18,6 +18,8 @@ import org.mule.common.metadata.MetaData;
 import org.mule.common.metadata.MetaDataKey;
 import org.mule.common.metadata.MetaDataModel;
 import org.mule.common.metadata.builder.DefaultMetaDataBuilder;
+import org.mule.common.metadata.builder.DynamicObjectBuilder;
+import org.mule.common.metadata.datatype.DataType;
 
 @MetaDataCategory
 public class PerformOrdersCategory {
@@ -49,6 +51,8 @@ public class PerformOrdersCategory {
     @MetaDataRetriever
     public MetaData getMetaData(MetaDataKey key) throws Exception {
         DefaultMetaDataBuilder builder = new DefaultMetaDataBuilder();
+        DynamicObjectBuilder<?> dynamicObject = builder.createDynamicObject("dynamicobject");
+        dynamicObject.addSimpleField(key.getId(), DataType.STRING);
         MetaDataModel model = builder.build();
         return new DefaultMetaData(model);
     }
