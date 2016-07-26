@@ -1,0 +1,11 @@
+{
+    "inputMessageMetadata": {
+        "messagePayload": {
+            "connectorName": "GoogleDfp__Config",
+            "typeId": "com.google.api.ads.dfp.axis.v201605.Company"
+        }
+    },
+    "outputMessageMetadata": {},
+    "id": "44a79095-3dda-4b6f-aa6f-59f57bc7ec39",
+    "version": "5.2.0.0"
+}

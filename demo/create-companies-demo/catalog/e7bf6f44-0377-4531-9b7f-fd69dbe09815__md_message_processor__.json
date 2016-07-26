@@ -1,0 +1,18 @@
+{
+    "inputMessageMetadata": {
+        "messagePayload": {
+            "model": {
+                "connectorName": "GoogleDfp__Config",
+                "typeId": "com.google.api.ads.dfp.axis.v201605.Company"
+            },
+            "isArray": false,
+            "dataType": "LIST",
+            "metaDataModelPropertiesManager": {
+                "properties": []
+            }
+        }
+    },
+    "outputMessageMetadata": {},
+    "id": "e7bf6f44-0377-4531-9b7f-fd69dbe09815",
+    "version": "5.2.0.0"
+}
