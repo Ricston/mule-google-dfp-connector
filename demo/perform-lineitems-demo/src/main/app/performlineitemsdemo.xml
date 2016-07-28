@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:dw="http://www.mulesoft.org/schema/mule/ee/dw" xmlns:metadata="http://www.mulesoft.org/schema/mule/metadata" xmlns:tracking="http://www.mulesoft.org/schema/mule/ee/tracking" xmlns:json="http://www.mulesoft.org/schema/mule/json" xmlns:file="http://www.mulesoft.org/schema/mule/file"
+	xmlns:spring="http://www.springframework.org/schema/beans"
+	xmlns:data-mapper="http://www.mulesoft.org/schema/mule/ee/data-mapper"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:google-dfp="http://www.mulesoft.org/schema/mule/google-dfp"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/google-dfp http://www.mulesoft.org/schema/mule/google-dfp/current/mule-google-dfp.xsd
+http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-current.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/data-mapper http://www.mulesoft.org/schema/mule/ee/data-mapper/current/mule-data-mapper.xsd
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd
+http://www.mulesoft.org/schema/mule/json http://www.mulesoft.org/schema/mule/json/current/mule-json.xsd
+http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/mule/ee/tracking/current/mule-tracking-ee.xsd
+http://www.mulesoft.org/schema/mule/ee/dw http://www.mulesoft.org/schema/mule/ee/dw/current/dw.xsd">
+
+	<context:property-placeholder location="demo.properties" />
+	
+
+	<http:listener-config name="HTTP_Listener_Configuration"
+		host="0.0.0.0" port="8081" doc:name="HTTP Listener Configuration" />
+    <google-dfp:google-dfp name="GoogleDfp__Config" clientId="${google-dfp.clientId}" clientSecret="${google-dfp.clientSecret}"
+		refreshToken="${google-dfp.refreshToken}" networkCode="${google-dfp.networkCode}"
+		applicationName="${google-dfp.applicationName}" endpoint="${google-dfp.endpoint}"
+		tokenServerUrl="${google-dfp.tokenServerUrl}" doc:name="GoogleDfp"/>    
+    <flow name="companyservicedemoFlow">
+        <http:listener config-ref="HTTP_Listener_Configuration" path="/" doc:name="HTTP"/>
+        <parse-template location="src/main/resources/form.html" doc:name="Parse Template"/>
+        <set-property propertyName="Content-Type" value="text/html" doc:name="Property"/>
+    </flow>
+    <flow name="performLineItemsArchiveFlow">
+        <http:listener config-ref="HTTP_Listener_Configuration" path="/performLineItems" allowedMethods="PUT" doc:name="HTTP"/>
+        <google-dfp:perform-line-items config-ref="GoogleDfp__Config" lineItemAction="Archive Line Items" queryString="orderId = '#[payload.get(&quot;orderId&quot;)]'" doc:name="Perform Line Items - Archive">
+            <google-dfp:query-params>
+                <google-dfp:query-param key="id">113219888</google-dfp:query-param>
+            </google-dfp:query-params>
+        </google-dfp:perform-line-items>
+        <json:object-to-json-transformer doc:name="Object to JSON"/>
+        <logger level="INFO" doc:name="Logger"/>
+    </flow>
+    <flow name="getLineItemsFlow">
+        <http:listener config-ref="HTTP_Listener_Configuration" path="/getLineItems" doc:name="HTTP"/>
+        <google-dfp:get-line-items config-ref="GoogleDfp__Config" queryOrder="id ASC" queryString="orderId = '#[payload.get(&quot;updatedOrderId&quot;)]'" doc:name="Get Line Items">
+            <google-dfp:query-params>
+                <google-dfp:query-param key="id">113219888</google-dfp:query-param>
+            </google-dfp:query-params>
+        </google-dfp:get-line-items>
+        <json:object-to-json-transformer doc:name="Object to JSON"/>
+        <logger level="INFO" doc:name="Logger"/>
+    </flow>
+    <flow name="performLineItemsUnarchiveFlow">
+        <http:listener config-ref="HTTP_Listener_Configuration" path="/performLineItemsUnarchive" allowedMethods="PUT" doc:name="HTTP"/>
+        <google-dfp:perform-line-items config-ref="GoogleDfp__Config" lineItemAction="Unarchive Line Items" queryString="orderId = '#[payload.get(&quot;orderIdUnarchive&quot;)]'" doc:name="Perform Line Items - Unarchive">
+            <google-dfp:query-params/>
+        </google-dfp:perform-line-items>
+        <json:object-to-json-transformer doc:name="Object to JSON"/>
+        <logger level="INFO" doc:name="Logger"/>
+    </flow>
+
+
+</mule>
