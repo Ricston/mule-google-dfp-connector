@@ -68,8 +68,7 @@ payload map ((payload01 , indexOfPayload01) -> {
         <http:listener config-ref="HTTP_Listener_Configuration" path="/getCompanies" doc:name="HTTP"/>
         <set-variable variableName="substring" value="#[payload.get(&quot;companyOldPattern&quot;)  + '%' ]" doc:name="Variable"/>
         <google-dfp:get-companies config-ref="GoogleDfp__Config" queryOrder="name ASC" queryString="name like '#[flowVars.substring]'" doc:name="GoogleDfp">
-            <google-dfp:query-params>
-            </google-dfp:query-params>
+            <google-dfp:query-params/>
         </google-dfp:get-companies>
         <json:object-to-json-transformer doc:name="Object to JSON"/>
         <logger message="#[payload]" level="INFO" doc:name="Logger"/>
