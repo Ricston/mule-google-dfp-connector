@@ -36,7 +36,7 @@ http://www.mulesoft.org/schema/mule/ee/dw http://www.mulesoft.org/schema/mule/ee
 	<flow name="createCompanyFlow">
 		<http:listener config-ref="HTTP_Listener_Configuration"
 			path="/createCompany" doc:name="HTTP" allowedMethods="PUT" />
-        <custom-transformer class="com.ricston.googledemo.transformer.GoogleCompany" doc:name="Create Google Company"/>
+        <custom-transformer class="com.ricston.googledemo.transformer.CreateGoogleCompany" doc:name="Create Google Company"/>
         <google-dfp:create-company config-ref="GoogleDfp__Config" doc:name="Create GoogleDfp Company">
             <google-dfp:company ref="#[payload]"/>
         </google-dfp:create-company>

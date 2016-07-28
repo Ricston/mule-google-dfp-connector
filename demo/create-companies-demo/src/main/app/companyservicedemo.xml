@@ -34,7 +34,7 @@ http://www.mulesoft.org/schema/mule/ee/dw http://www.mulesoft.org/schema/mule/ee
     </flow>
     <flow name="createCompaniesDataWeaveFlow">
         <http:listener config-ref="HTTP_Listener_Configuration" path="/createCompaniesByPattern" doc:name="HTTP"/>
-        <custom-transformer class="com.ricston.googledemo.transformer.GoogleCompany" doc:name="Java"/>
+        <custom-transformer class="com.ricston.googledemo.transformer.CreateGoogleCompany" doc:name="Java"/>
         <dw:transform-message metadata:id="44a79095-3dda-4b6f-aa6f-59f57bc7ec39" doc:name="Transform Message">
             <dw:set-payload><![CDATA[%dw 1.0
 %output application/java
