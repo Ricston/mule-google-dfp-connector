@@ -30,7 +30,7 @@ It offers publishers a complete ad revenue engine, helping publishers streamline
 
 === Prerequisites
 
-This document assumes that you are familiar with Mule, http://www.mulesoft.org/documentation/display/35X/Anypoint+Connectors[Anypoint™ Connectors], and the http://www.mulesoft.org/documentation/display/35X/Anypoint+Studio+Essentials[Anypoint™ Studio interface]. To increase your familiarity with Studio, consider completing one or more http://www.mulesoft.org/documentation/display/35X/Basic+Studio+Tutorial[Anypoint™ Studio Tutorials]. Further, this page assumes that you have a basic understanding of http://www.mulesoft.org/documentation/display/35X/Mule+Concepts[Mule flows] and http://www.mulesoft.org/documentation/display/35X/Global+Elements[Mule Global Elements]. 
+This document assumes that you are familiar with Mule, http://www.mulesoft.org/documentation/display/36X/Anypoint+Connectors[Anypoint™ Connectors], and the http://www.mulesoft.org/documentation/display/36X/Anypoint+Studio+Essentials[Anypoint™ Studio interface]. To increase your familiarity with Studio, consider completing one or more http://www.mulesoft.org/documentation/display/35X/Basic+Studio+Tutorial[Anypoint™ Studio Tutorials]. Further, this page assumes that you have a basic understanding of http://www.mulesoft.org/documentation/display/35X/Mule+Concepts[Mule flows] and http://www.mulesoft.org/documentation/display/35X/Global+Elements[Mule Global Elements]. 
 
 To use the this connector, you will need an account on the Google DFP website. You will also require Anypoint™ Studio downloaded and installed on your development machine.
 
@@ -58,18 +58,18 @@ To install the Google DFP connector in Anypoint Studio:
 
 . Under the *Help* menu in Anypoint™ Studio, select *Install New Software*.	
 + 
-image::images/install01.png[]
+image::_images/install01.png[]
 . On the *Install* wizard, click the drop-down arrow for the *Work with:* field, then select the Anypoint™ Connector update site.
 +
-image::images/install02.png[]
+image::_images/install02.png[]
 . In the table below the *Filter* field, click to expand the *Certified* folder, and click the check box for *GoogleDfp Connector (Mule 3.6.0+)*. Click *Next*.
 +
-image::images/install03.png[]
+image::_images/install03.png[]
 . In Install Details, click *Next*.
 . In Review Licenses, review the license text, and click *I accept the terms of the license agreement*. Click *Finish*. The connector installs.
 . At the end of the installation, click *Yes* to restart Anypoint Studio. After Anypoint Studio restarts, the GoogleDfp connector appears in the list of connectors. 
 +
-image::images/install04.png[]
+image::_images/install04.png[]
 
 === Configuring
 
@@ -156,7 +156,7 @@ Create a new Company in Google DFP using a Mule application.
 === Anypoint™ Studio  Visual Editor
 . Drag an *HTTP* Endpoint into a new flow, and configure the http endpoint as follows:
 +
-image::images/usecase01.png[]
+image::_images/usecase01.png[]
 +
 |===
 |*Field*			|Value
@@ -170,16 +170,16 @@ image::images/usecase01.png[]
 . Add a *Java* transformer after HTTP endpoint to create a new Google Company to pass on to the connector. Configure the java transformer as shown below:
 
 +
-image::images/usecase02.png[]
+image::_images/usecase02.png[]
 +
 |===
 |Field				|Value
 
 |*Display Name*		|Create Google Company (or any other name you prefer)
-|*Class*			|The transformer class. In our example, this is com.ricston.googledemo.transformer.GoogleCompany
+|*Class*			|The transformer class. In our example, this is com.ricston.googledemo.transformer.CreateGoogleCompany
 |===
 
-.GoogleCompany.java
+.CreateGoogleCompany.java
 [source,java]
 ----
 package com.ricston.googledemo.transformer;
@@ -188,10 +188,10 @@ import org.mule.api.MuleMessage;
 import org.mule.api.transformer.TransformerException;
 import org.mule.transformer.AbstractMessageTransformer;
 
-import com.google.api.ads.dfp.axis.v201505.Company;
-import com.google.api.ads.dfp.axis.v201505.CompanyType;
+import com.google.api.ads.dfp.axis.v201605.Company;
+import com.google.api.ads.dfp.axis.v201605.CompanyType;
 
-public class GoogleCompany extends AbstractMessageTransformer {
+public class CreateGoogleCompany extends AbstractMessageTransformer {
 
 	@Override
 	public Object transformMessage(MuleMessage message, String outputEncoding)
@@ -213,7 +213,7 @@ public class GoogleCompany extends AbstractMessageTransformer {
 . Drag the *GoogleDFP* connector onto the canvas, then select it to open the properties editor console.
 . Click the + sign next to the *Connector Configuration* field to add a new GoogleDFP global element as shown below.
 +
-image::images/usecase04.png[]
+image::_images/usecase04.png[]
 . Configure the global element as follows:
 +
 |===
@@ -230,11 +230,11 @@ image::images/usecase04.png[]
 |*Custom Ids*		 	|Select 'From Message' and write the name of your spring bean
 |===
 +
-image::images/GlobalConfig.png[]
+image::_images/GlobalConfig.png[]
 +
 . In the properties editor of the GoogleDFP connector, configure the remaining parameters:
 +
-image::images/usecase05.png[]
+image::_images/usecase05.png[]
 +
 |===
 |Field				|Value
@@ -310,11 +310,11 @@ image::images/usecase05.png[]
 +
 [source,xml]
 ----
-<custom-transformer class="com.ricston.googledemo.transformer.GoogleCompany"
+<custom-transformer class="com.ricston.googledemo.transformer.CreateGoogleCompany"
 			doc:name="Create Google Company" />
 ----
 
-.GoogleCompany.java
+.CreateGoogleCompany.java
 [source,java]
 ----
 package com.ricston.googledemo.transformer;
@@ -326,7 +326,7 @@ import org.mule.transformer.AbstractMessageTransformer;
 import com.google.api.ads.dfp.axis.v201505.Company;
 import com.google.api.ads.dfp.axis.v201505.CompanyType;
 
-public class GoogleCompany extends AbstractMessageTransformer {
+public class CreateGoogleCompany extends AbstractMessageTransformer {
 
 	@Override
 	public Object transformMessage(MuleMessage message, String outputEncoding)
@@ -376,7 +376,7 @@ the following values of the global GoogleDFP config to match your Google DFP app
 
 This is how it will look in the visual editor:
 
-image::images/usecase00.png[]
+image::_images/usecase00.png[]
 
 Let us take a look at the xml code:
 
@@ -421,7 +421,7 @@ http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/htt
 		<http:listener config-ref="HTTP_Listener_Configuration"
 			path="/" doc:name="HTTP" allowedMethods="GET" />
 
-		<custom-transformer class="com.ricston.googledemo.transformer.GoogleCompany"
+		<custom-transformer class="com.ricston.googledemo.transformer.CreateGoogleCompany"
 			doc:name="Create Google Company" />
 
 		<google-dfp:create-company config-ref="GoogleDfp__Authentication"
