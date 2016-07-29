@@ -36,7 +36,6 @@ http://www.mulesoft.org/schema/mule/ee/dw http://www.mulesoft.org/schema/mule/ee
         <http:listener config-ref="HTTP_Listener_Configuration" path="/performLineItems" allowedMethods="PUT" doc:name="HTTP"/>
         <google-dfp:perform-line-items config-ref="GoogleDfp__Config" lineItemAction="Archive Line Items" queryString="orderId = '#[payload.get(&quot;orderId&quot;)]'" doc:name="Perform Line Items - Archive">
             <google-dfp:query-params>
-                <google-dfp:query-param key="id">113219888</google-dfp:query-param>
             </google-dfp:query-params>
         </google-dfp:perform-line-items>
         <json:object-to-json-transformer doc:name="Object to JSON"/>
@@ -46,7 +45,6 @@ http://www.mulesoft.org/schema/mule/ee/dw http://www.mulesoft.org/schema/mule/ee
         <http:listener config-ref="HTTP_Listener_Configuration" path="/getLineItems" doc:name="HTTP"/>
         <google-dfp:get-line-items config-ref="GoogleDfp__Config" queryOrder="id ASC" queryString="orderId = '#[payload.get(&quot;updatedOrderId&quot;)]'" doc:name="Get Line Items">
             <google-dfp:query-params>
-                <google-dfp:query-param key="id">113219888</google-dfp:query-param>
             </google-dfp:query-params>
         </google-dfp:get-line-items>
         <json:object-to-json-transformer doc:name="Object to JSON"/>
