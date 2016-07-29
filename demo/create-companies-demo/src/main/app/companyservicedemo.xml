@@ -56,7 +56,7 @@ payload as :object {
 %output application/java
 ---
 payload map ((payload01 , indexOfPayload01) -> {
-	name: payload01.name ++ (indexOfPayload01 as :string),	
+	name: payload01.name ++ (indexOfPayload01 + 1 as :string),	
 	type: payload01.type
 } as :company)
 ]]></dw:set-payload>

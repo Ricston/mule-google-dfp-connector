@@ -12,7 +12,7 @@ import org.mule.transformer.AbstractMessageTransformer;
 import com.google.api.ads.dfp.axis.v201605.Company;
 import com.google.api.ads.dfp.axis.v201605.CompanyType;
 
-public class GoogleCompany extends AbstractMessageTransformer {
+public class CreateGoogleCompany extends AbstractMessageTransformer {
 
     @Override
     public Object transformMessage(MuleMessage message, String outputEncoding)
