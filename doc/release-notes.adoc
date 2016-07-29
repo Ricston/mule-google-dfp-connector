@@ -1,7 +1,7 @@
 :System_Name: Google DoubleClick for Publishers 
-:Release_date: May 2016
+:Release_date: July 2016
 :Connector_Version: v2.0.0
-:Connector_Guide_Url: github_link_doc
+
 :Supported_Mule_Version: 3.6.1
 :System_Version: v201605
 
@@ -14,7 +14,7 @@
 . Features
 . Support Resources
 
-Release Notes for version {Connector_Version} of the {System_Name} connector. These Release Notes accompany the  {Connector_Guide_URL} guide.
+Release Notes for version {Connector_Version} of the {System_Name} connector. These Release Notes accompany the  https://github.com/ildefon/mule-google-dfp-connector/blob/develop/doc/user-manual.adoc[Connector guide].
  
 === Compatibility
 The {System_name} connector is compatible with:
@@ -35,9 +35,12 @@ The {System_name} connector is compatible with:
 * Get All Companies
 * Get Advertiser By Name
 * Get Agency By Name
-* Get Company By ID
+* Get Company By Id
 * Get Companies By Id
 * Get Company Comment By Name
+* Create Companies
+* Get Companies
+* Update Companies
 
 *Report Service*:
 
@@ -47,10 +50,14 @@ The {System_name} connector is compatible with:
 *Reconciliation Report Service*:
 
 * Get Reconciliation Report IDs By Start Date
+* Get Reconciliation Reports
+* Update Reconciliation Reports
 
 *Reconciliation Report Row Service*:
 
 * Get Reconciliation Report Rows
+* Get Reconciliation Report Rows 
+* Update Reconciliation Report Rows
 
 *Audience Segment Service*:
 
@@ -67,11 +74,19 @@ The {System_name} connector is compatible with:
 * Get Filtered Line Items By Statement
 * Get Line Items By Id
 * Get Line Items By Statement
+* Create Line Items
+* Get Line Items
+* Perform Line Items
+* Update Line Items
 
 *Order Service*:
 
 * Get Orders By Id
 * Get Orders By Statement
+* Create Orders
+* Get Orders
+* Perform Orders
+* Update Orders
 
 *Custom Targeting Service*:
 
@@ -87,6 +102,9 @@ The {System_name} connector is compatible with:
 
 * Get Products By Id
 * Get Products By Statement
+* Get Products
+* Perform Products
+* Update Products
 
 *Proposal Template Service*:
 
@@ -98,11 +116,19 @@ The {System_name} connector is compatible with:
 * Get Proposal Line Items By Id
 * Get Proposal Line Items By Proposal Id
 * Get Proposal Line Items By Statement
+* Create Proposal Line Items
+* Get Proposal Line Items
+* Perform Proposal Line Items
+* Update Proposal Line Items
 
 *Proposal Service*:
 
 * Get Proposals By Id
 * Get Proposals By Statement
+* Create Proposals
+* Get Proposals
+* Perform Proposals
+* Update Proposals
 
 *Rate Card Service*:
 
@@ -115,11 +141,22 @@ The {System_name} connector is compatible with:
 
 *Contact Service*:
 
-* Create Contact
+* Get Contacts By Statement
 * Get Contact By Id
 * Get Contact By Name
-* Get Contacts By Statement
+* Create Contact
 * Update Contact
+
+*Reconciliation Line Item Report Service*:
+
+* Get Reconciliation Line Item Reports
+* Update Reconciliation Line Item Reports
+
+*Reconciliation Order Report Service*:
+
+* Get Reconciliation Order Reports
+* Perform Reconciliation Order Reports
+* Update Reconciliation Order Reports
 
 === Support Resources
 

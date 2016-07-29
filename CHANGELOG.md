@@ -1,5 +1,5 @@
 # GoogleDfp Release Notes
-Date: June 2016
+Date: July 2016
 Version: 2.0.0
 Supported Mule Runtime Versions: 3.6.X
 
@@ -15,9 +15,12 @@ Supported Operations:
 * Get All Companies
 * Get Advertiser By Name
 * Get Agency By Name
-* Get Company By ID
+* Get Company By Id
 * Get Companies By Id
 * Get Company Comment By Name
+* Create Companies
+* Get Companies
+* Update Companies
 
 *Report Service*:
 
@@ -27,10 +30,14 @@ Supported Operations:
 *Reconciliation Report Service*:
 
 * Get Reconciliation Report IDs By Start Date
+* Get Reconciliation Reports
+* Update Reconciliation Reports
 
 *Reconciliation Report Row Service*:
 
 * Get Reconciliation Report Rows
+* Get Reconciliation Report Rows 
+* Update Reconciliation Report Rows
 
 *Audience Segment Service*:
 
@@ -47,11 +54,19 @@ Supported Operations:
 * Get Filtered Line Items By Statement
 * Get Line Items By Id
 * Get Line Items By Statement
+* Create Line Items
+* Get Line Items
+* Perform Line Items
+* Update Line Items
 
 *Order Service*:
 
 * Get Orders By Id
 * Get Orders By Statement
+* Create Orders
+* Get Orders
+* Perform Orders
+* Update Orders
 
 *Custom Targeting Service*:
 
@@ -67,6 +82,9 @@ Supported Operations:
 
 * Get Products By Id
 * Get Products By Statement
+* Get Products
+* Perform Products
+* Update Products
 
 *Proposal Template Service*:
 
@@ -78,11 +96,19 @@ Supported Operations:
 * Get Proposal Line Items By Id
 * Get Proposal Line Items By Proposal Id
 * Get Proposal Line Items By Statement
+* Create Proposal Line Items
+* Get Proposal Line Items
+* Perform Proposal Line Items
+* Update Proposal Line Items
 
 *Proposal Service*:
 
 * Get Proposals By Id
 * Get Proposals By Statement
+* Create Proposals
+* Get Proposals
+* Perform Proposals
+* Update Proposals
 
 *Rate Card Service*:
 
@@ -100,3 +126,14 @@ Supported Operations:
 * Get Contact By Name
 * Create Contact
 * Update Contact
+
+*Reconciliation Line Item Report Service*:
+
+* Get Reconciliation Line Item Reports
+* Update Reconciliation Line Item Reports
+
+*Reconciliation Order Report Service*:
+
+* Get Reconciliation Order Reports
+* Perform Reconciliation Order Reports
+* Update Reconciliation Order Reports

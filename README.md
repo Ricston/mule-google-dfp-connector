@@ -10,6 +10,8 @@ Mule ESB version 3.6.x
 * Report Service
 * Reconciliation Report Service
 * Reconciliation Report Row Service
+* Reconciliation Line Item Report Service
+* Reconciliation Order Report Service
 * Audience Segment Service
 * Custom Field Service
 * Line Item Service
