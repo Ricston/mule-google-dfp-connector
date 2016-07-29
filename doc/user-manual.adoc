@@ -323,8 +323,8 @@ import org.mule.api.MuleMessage;
 import org.mule.api.transformer.TransformerException;
 import org.mule.transformer.AbstractMessageTransformer;
 
-import com.google.api.ads.dfp.axis.v201505.Company;
-import com.google.api.ads.dfp.axis.v201505.CompanyType;
+import com.google.api.ads.dfp.axis.v201605.Company;
+import com.google.api.ads.dfp.axis.v201605.CompanyType;
 
 public class CreateGoogleCompany extends AbstractMessageTransformer {
 
